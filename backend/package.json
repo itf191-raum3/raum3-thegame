@@ -30,6 +30,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "eslint-plugin-prettier": "^3.4.0",
     "express": "^4.17.1"
   }
 }
