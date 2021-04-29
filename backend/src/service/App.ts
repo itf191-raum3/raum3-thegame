@@ -1,7 +1,6 @@
 // Temporarily has router responsibilities, will be rewritten later
 import {Request, Response} from "express";
-
-const express = require("express");
+import express from "express";
 
 export const app = express();
 
