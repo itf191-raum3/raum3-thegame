@@ -3,7 +3,8 @@ const App = require("../../../service/App");
 const request = require("supertest");
 
 describe("Test API Routes", () => {
-  test("Test route should respond with Hello world JSON object", () => {
+  // EXAMPLE TEST - should always be x'd out
+  xtest("Test route should respond with Hello world JSON object", () => {
     return request(App)
       .get("/api/test")
       .then(response => {
