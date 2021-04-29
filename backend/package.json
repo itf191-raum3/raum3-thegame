@@ -22,6 +22,7 @@
     "typescript": "^4.1.2"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   }
 }
