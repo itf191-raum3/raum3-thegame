@@ -1,48 +1,46 @@
-import { Button, Fade } from '@material-ui/core';
+import { Button, Slide } from '@material-ui/core';
 import { AppStateEnum } from 'App';
 import './WelcomePage.css';
 
 export function WelcomePage(props: WelcomePageProps) {
   const { changeAppState } = props;
-  const fadeInTimer = 1000;
-
-  document.title = 'Welcome';
+  const slideInTimer = 500;
 
   return (
     <div>
-      <Fade in={true} timeout={fadeInTimer * 2}>
-        <>
+      <div>
+        <Slide in={true} direction="down" timeout={slideInTimer} unmountOnExit mountOnEnter>
           <div className="WelcomePageTitle">
             Willkommen im Spiel
             <br />
             RAUM 3 THE GAME
           </div>
-          <div className="WelcomePageButton">
-            <Fade in={true} timeout={fadeInTimer * 4}>
-              <Button
-                classes={{ label: 'WelcomePageButtonText' }}
-                color={'primary'}
-                variant="contained"
-                onClick={() => changeAppState(AppStateEnum.EXERCISES)}
-              >
-                Ich will etwas lernen!
-              </Button>
-            </Fade>
-          </div>
-          <div className="WelcomePageButton">
-            <Fade in={true} timeout={fadeInTimer * 6}>
-              <Button
-                classes={{ label: 'WelcomePageButtonText' }}
-                color={'primary'}
-                variant="contained"
-                onClick={() => changeAppState(AppStateEnum.EDITOR)}
-              >
-                Ich will neue Fragen erstellen!
-              </Button>
-            </Fade>
-          </div>
-        </>
-      </Fade>
+        </Slide>
+        <div className="WelcomePageButton">
+          <Slide in={true} direction="right" timeout={slideInTimer} unmountOnExit mountOnEnter>
+            <Button
+              classes={{ label: 'WelcomePageButtonText' }}
+              color={'primary'}
+              variant="contained"
+              onClick={() => changeAppState(AppStateEnum.EXERCISES)}
+            >
+              Ich will etwas lernen!
+            </Button>
+          </Slide>
+        </div>
+        <div className="WelcomePageButton">
+          <Slide in={true} direction="left" timeout={slideInTimer} unmountOnExit mountOnEnter>
+            <Button
+              classes={{ label: 'WelcomePageButtonText' }}
+              color={'primary'}
+              variant="contained"
+              onClick={() => changeAppState(AppStateEnum.EDITOR)}
+            >
+              Ich will neue Fragen erstellen!
+            </Button>
+          </Slide>
+        </div>
+      </div>
     </div>
   );
 }
