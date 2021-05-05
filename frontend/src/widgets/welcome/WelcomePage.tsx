@@ -3,9 +3,36 @@ import { AppStateEnum } from 'App';
 import { useState } from 'react';
 import './WelcomePage.css';
 
+const slideInTimer = 700;
+
+function WelcomePageButton(props: WelcomePageButtonProps) {
+  const { dir, label, switchState, visible } = props;
+
+  return (
+    <div className="WelcomePageButton">
+      <Slide in={visible} direction={dir} timeout={slideInTimer} unmountOnExit mountOnEnter>
+        <Button
+          classes={{ label: 'WelcomePageButtonText' }}
+          color={'primary'}
+          variant="contained"
+          onClick={switchState}
+        >
+          {label}
+        </Button>
+      </Slide>
+    </div>
+  );
+}
+
+type WelcomePageButtonProps = {
+  visible: boolean;
+  dir: 'left' | 'right';
+  label: string;
+  switchState: () => void;
+};
+
 export function WelcomePage(props: WelcomePageProps) {
   const { changeAppState } = props;
-  const slideInTimer = 700;
 
   const [visible, setVisible] = useState<boolean>(true);
 
@@ -16,39 +43,25 @@ export function WelcomePage(props: WelcomePageProps) {
 
   return (
     <div>
-      <div>
-        <Slide in={visible} direction="down" timeout={slideInTimer} unmountOnExit mountOnEnter>
-          <div className="WelcomePageTitle">
-            Willkommen im Spiel
-            <br />
-            RAUM 3 THE GAME
-          </div>
-        </Slide>
-        <div className="WelcomePageButton">
-          <Slide in={visible} direction="right" timeout={slideInTimer} unmountOnExit mountOnEnter>
-            <Button
-              classes={{ label: 'WelcomePageButtonText' }}
-              color={'primary'}
-              variant="contained"
-              onClick={() => switchState(AppStateEnum.EXERCISES)}
-            >
-              Ich will etwas lernen!
-            </Button>
-          </Slide>
+      <Slide in={visible} direction="down" timeout={slideInTimer} unmountOnExit mountOnEnter>
+        <div className="WelcomePageTitle">
+          Willkommen im Spiel
+          <br />
+          RAUM 3 THE GAME
         </div>
-        <div className="WelcomePageButton">
-          <Slide in={visible} direction="left" timeout={slideInTimer} unmountOnExit mountOnEnter>
-            <Button
-              classes={{ label: 'WelcomePageButtonText' }}
-              color={'primary'}
-              variant="contained"
-              onClick={() => switchState(AppStateEnum.EDITOR)}
-            >
-              Ich will neue Fragen erstellen!
-            </Button>
-          </Slide>
-        </div>
-      </div>
+      </Slide>
+      <WelcomePageButton
+        dir="right"
+        label="Ich will etwas lernen!"
+        switchState={() => switchState(AppStateEnum.EXERCISES)}
+        visible={visible}
+      />
+      <WelcomePageButton
+        dir="left"
+        label="Ich will neue Fragen erstellen!"
+        switchState={() => switchState(AppStateEnum.EDITOR)}
+        visible={visible}
+      />
     </div>
   );
 }
