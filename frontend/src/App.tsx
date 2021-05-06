@@ -1,20 +1,26 @@
-import logo from './logo.svg';
+import { useState } from 'react';
+import { WelcomePage } from 'widgets/welcome/WelcomePage';
 import './App.css';
 
+export enum AppStateEnum {
+  WELCOMEPAGE,
+  EXERCISES,
+  EDITOR,
+}
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          LEARN REACT
-        </a>
-      </header>
-    </div>
-  );
+  const [appState, setAppState] = useState<AppStateEnum>(AppStateEnum.WELCOMEPAGE);
+
+  let content = <></>;
+  if (appState === AppStateEnum.WELCOMEPAGE) {
+    content = <WelcomePage changeAppState={setAppState} />;
+  } else if (appState === AppStateEnum.EDITOR) {
+    content = <>EDITOR: TO BE IMPLEMENTED</>;
+  } else if (appState === AppStateEnum.EXERCISES) {
+    content = <>EXERCISES: TO BE IMPLEMENTED</>;
+  }
+
+  return <div className="App">{content}</div>;
 }
 
 export default App;
