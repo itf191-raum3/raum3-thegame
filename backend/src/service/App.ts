@@ -1,6 +1,8 @@
 // Temporarily has router responsibilities, will be rewritten later
 import {Request, Response} from "express";
 import express from "express";
+import {createConnection} from "typeorm";
+
 
 export const app = express();
 
