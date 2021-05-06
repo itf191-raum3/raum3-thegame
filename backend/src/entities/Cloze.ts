@@ -4,8 +4,8 @@ import {Exercise} from "@/entities/Exercise";
 @ChildEntity()
 export class Cloze extends Exercise {
     @Column()
-    options: Array<string>
+    options: Array<string>;
 
     @Column()
-    isMultipleChoice: boolean
+    isMultipleChoice: boolean;
 }
