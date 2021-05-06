@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "compiler": "ttypescript"
+  },
   "compilerOptions": {
     "target": "es6",
     "allowJs": true,
@@ -13,6 +16,12 @@
     "isolatedModules": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
+    "emitDecoratorMetadata": true,
+    "plugins": [
+      {
+        "transform": "@zerollup/ts-transform-paths"
+      }
+    ],
     "paths": {
       "@/*": [
         "./*"
