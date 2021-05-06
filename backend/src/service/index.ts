@@ -1,3 +1,7 @@
-const NOOP = null;
+import "reflect-metadata";
+import {createConnection} from "typeorm";
 
-export {NOOP};
+createConnection().then(connection => {
+
+});
+
