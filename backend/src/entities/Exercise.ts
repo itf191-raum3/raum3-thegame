@@ -1,7 +1,8 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
 import {IExercise} from "@common/entities/IExercise";
 
 @Entity()
+@TableInheritance({ column: { type: "varchar", name: "type" } })
 export class Exercise implements IExercise {
     @PrimaryGeneratedColumn()
     id: number;
