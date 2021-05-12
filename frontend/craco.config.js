@@ -7,7 +7,7 @@ module.exports = {
         'no-unused-vars': 'off',
         'no-redeclare': 'off',
         'prettier/prettier': ['warn'],
-        'max-len': ['error', { code: 120, ignoreComments: true, ignorePattern: '^import .*' }],
+        'max-len': ['error', { code: 256, ignoreComments: true, ignorePattern: '^import .*' }],
         'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
         'react/jsx-uses-vars': 'warn',
         // 'react-hooks/exhaustive-deps': 'error',
