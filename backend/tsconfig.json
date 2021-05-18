@@ -36,6 +36,7 @@
     }
   },
   "exclude": [
-    "**/test/*Test.ts"
+    "**/test/*Test.ts",
+    "./dist"
   ]
 }
