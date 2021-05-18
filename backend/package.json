@@ -36,6 +36,7 @@
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.2",
     "ttypescript": "^1.5.12",
+    "typedoc": "^0.20.36",
     "typeorm": "^0.2.32"
   }
 }
