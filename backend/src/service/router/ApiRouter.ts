@@ -1,13 +1,13 @@
 import express from "express";
 import { forEach, isUndefined } from "lodash";
 import { logger } from "../../helpers/Logger";
-import { Route } from "../../../types/common";
+import { ApiRoute } from "../../../types/common";
 
 export class ApiRouter {
   private _router = express.Router();
-  readonly routes : Array<Route>;
+  readonly routes : Array<ApiRoute>;
 
-  constructor(routes: Array<Route>) {
+  constructor(routes: Array<ApiRoute>) {
     this.routes = routes;
     logger.info("Initializing routes...");
     forEach(this.routes, (route) => {
