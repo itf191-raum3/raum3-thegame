@@ -4,7 +4,7 @@ import {Subject} from "@/entities/Subject";
 import {JoinColumn} from "typeorm/browser";
 
 @Entity()
-@TableInheritance({ column: { type: "varchar", name: "type" } })
+@TableInheritance({column: {type: "varchar", name: "type"}})
 export class Exercise implements IExercise {
     @PrimaryGeneratedColumn("uuid")
     id: string;
