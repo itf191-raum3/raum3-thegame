@@ -1,0 +1,20 @@
+.ClozeRoot {
+  width: 40vw;
+}
+
+.IncorrectInput {
+  color: red;
+}
+
+.ContinueButton {
+  margin-top: 10px;
+}
+
+.ContinueButtonText {
+  font-size: 1.5em;
+}
+
+.InputBlank {
+  color: white !important;
+  border-bottom: white !important;
+}
