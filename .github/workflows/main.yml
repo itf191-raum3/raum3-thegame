@@ -33,10 +33,10 @@ jobs:
         run: yarn global add typescript
       - name: Create Typedoc Documentation Frontend
         working-directory: ./frontend
-        run: npx typedoc --tsconfig .\typedoc.json --out ../docs/frontend
+        run: typedoc --tsconfig .\typedoc.json --out ../docs/frontend
       - name: Create Typedoc Documentation Backend 
         working-directory: ./backend
-        run: npx typedoc --tsconfig .\typedoc.json --out ../docs/backend
+        run: typedoc --tsconfig .\typedoc.json --out ../docs/backend
       - name: Upload Docs to Github Repo
         uses: actions/upload-artifact@v2.2.3
         with:
