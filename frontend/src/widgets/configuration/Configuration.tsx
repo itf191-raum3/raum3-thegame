@@ -4,6 +4,56 @@ import acceptIcon from './accept_icon.png'
 import './Configuration.css'
 import { AppBar, Tab, Tabs } from "@material-ui/core";
 
+// Aufgaben[] getallexcersise (subject)
+// deleteExcesise (Aufgabe)
+// update (Aufgabe)
+// create (Aufgabe)
+  //UUID
+
+  //Aufgabe
+    //ID
+    //LAbel
+    //Possi
+    //correct
+    //Difficuly
+
+
+function loadEditTable(idStr:string){
+  var manantoryRows = 
+    <table className="editTabel">
+      <tr>
+        <th>Id</th>
+        <th>Aufgabe</th>
+        <th>Richtige Antworten</th>
+        <th>Antwortmöglichkeiten</th>
+      </tr>
+      <tr className="information">
+        <td className="id">{idStr}</td>
+        <td className="label"><input type="text" id="labelChange" placeholder="Aufgabenbeschreibung"/></td>
+        <td className="correctAnswers"><input type="text" id="fname" placeholder="Richtige Antworte"/></td>
+        <td className="allChoices"><input type="text" id="fname" placeholder="Antwortmöglichkeit"/></td>
+        <td className="deleteBnt"><img src={deleteIcon} alt="Löschen" className="bntLogo"/></td>
+        <td className="acceptBnt"><img src={acceptIcon} alt="Bearbeiten" className="bntLogo"/></td>
+      </tr>
+      <tr className="moreAnswers">
+        <td/>
+        <td/>
+        <td className="correctAnswers"><input type="text" id="fname" placeholder="Richtige Antworte"/></td>
+        <td className="allChoices"><input type="text" id="fname" placeholder="Antwortmöglichkeit"/></td>
+      </tr>
+    </table>
+
+  var optionalRow =
+    <tr className="moreAnswers">
+      <td/>
+      <td/>
+      <td className="correctAnswers"><input type="text" id="fname" placeholder="Richtige Antworte"/></td>
+      <td className="allChoices"><input type="text" id="fname" placeholder="Antwortmöglichkeit"/></td>
+    </tr>
+
+    return(manantoryRows)
+}
+
 function dataRow(idStr:string){
   return(
     <tr id={idStr}>
@@ -12,17 +62,29 @@ function dataRow(idStr:string){
       <td className="correctAnswers"></td>
       <td className="allChoices"></td>
       <td className="deleteBnt"><img src={deleteIcon} alt="Löschen" className="bntLogo"/></td>
-      <td className="editBnt"><img src={editIcon} alt="Bearbeiten" className="bntLogo"/></td>
+      <td className="editBnt"><img src={editIcon} alt="Bearbeiten" className="bntLogo" onClick={() => (loadEditTable(idStr))}/></td>
     </tr>
   );
 }
 
 function loadTable(subject: string){
+  return(
+    <table className="dataTabel">
+      <tr>
+        <th>Id</th>
+        <th>Aufgabe</th>
+        <th>Richtige Antworten</th>
+        <th>Antwortmöglichkeiten</th>
+      </tr>
+      {dataRow("s")}
+    </table>
+  );
 
+  // bekomme von server Aufgaben[]
 }
 
 function addDataSet(){
-
+  
 }
 
 function editDataSet(id: string){
@@ -41,7 +103,7 @@ function Configuration() {
         
       </header>
       <body>
-        <div className="main">
+        <div className="menu">
           <AppBar position="static">
           <Tabs value={"subject"} aria-label="simple tabs example">
             <Tab label="Software-Entwicklung"  onClick={() => (loadTable("AE"))}/>
@@ -49,41 +111,13 @@ function Configuration() {
             <Tab label="Deutsch"/>
           </Tabs>
           </AppBar>
-
-          <table className="editTabel">
-            <tr>
-              <th>Id</th>
-              <th>Aufgabe</th>
-              <th>Richtige Antworten</th>
-              <th>Antwortmöglichkeiten</th>
-            </tr>
-            <tr className="information">
-              <td className="id"></td>
-              <td className="label"><input type="text" id="labelChange" placeholder="Aufgabenbeschreibung"/></td>
-              <td className="correctAnswers"><input type="text" id="fname" placeholder="Richtige Antworte"/></td>
-              <td className="allChoices"><input type="text" id="fname" placeholder="Antwortmöglichkeit"/></td>
-              <td className="deleteBnt"><img src={deleteIcon} alt="Löschen" className="bntLogo"/></td>
-              <td className="acceptBnt"><img src={acceptIcon} alt="Bearbeiten" className="bntLogo"/></td>
-            </tr>
-            <tr className="moreAnswers">
-              <td/>
-              <td/>
-              <td className="correctAnswers"><input type="text" id="fname" placeholder="Richtige Antworte"/></td>
-              <td className="allChoices"><input type="text" id="fname" placeholder="Antwortmöglichkeit"/></td>
-              <td/>
-              <td/>
-            </tr>
-          </table>
-
-          <table className="dataTabel">
-            <tr>
-              <th>Id</th>
-              <th>Aufgabe</th>
-              <th>Richtige Antworten</th>
-              <th>Antwortmöglichkeiten</th>
-            </tr>
-            {dataRow("s")}
-          </table>
+        </div>
+        <div className="workingTable">
+          {loadEditTable("AE1-1")}
+          <br /><br />
+        </div>
+        <div className="showingTabel">
+          {loadTable("")}
         </div>
       </body>
     </div>
