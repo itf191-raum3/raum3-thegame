@@ -1,0 +1,6 @@
+{
+  "entryPoints": [
+    "./src/"],
+  "out": "../docs/Frontend",
+  "exclude": "**/*+(index|.spec|.e2e).ts"
+}

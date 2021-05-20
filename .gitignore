@@ -1,5 +1,6 @@
 # dependencies
 node_modules
+yarn.lock
 
 # testing
 coverage
@@ -15,3 +16,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /frontend/yarn.lock
+.idea
+*DS_Store
