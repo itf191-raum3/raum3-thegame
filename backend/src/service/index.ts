@@ -4,7 +4,7 @@ import {Exercise} from "@/entities/Exercise";
 
 createConnection().then(async connection => {
     const test = connection.manager.create<Exercise>(Exercise, {
-        id: 1,
+        id: "1",
         correctAnswers: ["right1", "right2"],
         label:"bloop",
     });
