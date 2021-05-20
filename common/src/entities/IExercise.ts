@@ -10,6 +10,4 @@ export interface IExercise {
     correctAnswers: Array<string>;
 
     possibleAnswers: Array<string>;
-
-    subject: ISubject;
 }
