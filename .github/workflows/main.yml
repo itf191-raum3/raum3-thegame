@@ -34,10 +34,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Create Typedoc Documentation Frontend
         working-directory: ./frontend
-        run: npx typedoc --tsconfig .\typedoc.json --out ../docs/frontend
+        run: npx typedoc --options typedoc.json --out ../docs/frontend
       - name: Create Typedoc Documentation Backend 
         working-directory: ./backend
-        run: yarn run typedoc --tsconfig .\typedoc.json --out ../docs/backend
+        run: npx typedoc --options typedoc.json --out ../docs/backend
       - name: Upload Docs to Github Repo
         uses: actions/upload-artifact@v2.2.3
         with:
