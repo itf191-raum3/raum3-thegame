@@ -1,5 +1,3 @@
-import {ISubject} from "./ISubject";
-
 export interface IExercise {
     id: string;
 
@@ -10,6 +8,4 @@ export interface IExercise {
     correctAnswers: Array<string>;
 
     possibleAnswers: Array<string>;
-
-    subject: ISubject;
 }

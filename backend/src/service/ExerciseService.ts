@@ -20,4 +20,15 @@ export class ExerciseService implements IExerciseService {
         return await getManager().find(Exercise, {where: {subject: {label: subjectLabel}}});
     }
 
+    async readExercise(id: string): Promise<IExercise> {
+        //TODO: pls implement this @Justin
+        return {
+            id: "INVALID",
+            label: "INVALID",
+            difficulty: -1,
+            correctAnswers: [],
+            possibleAnswers: []
+        };
+    }
+
 }
