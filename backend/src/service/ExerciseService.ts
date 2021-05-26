@@ -8,10 +8,10 @@ export class ExerciseService implements IExerciseService {
     }
 
     async deleteExercise(id: string): Promise<void> {
-        await getManager().delete<Exercise>(Exercise, await this.getExercise(id)); // this sucks
+        await getManager().delete<Exercise>(Exercise, await this.getExerciseById(id)); // this sucks
     }
 
-    async editExercise(exercise: Exercise): Promise<void> {
+    async updateExercise(exercise: Exercise): Promise<void> {
         await getManager().save(Exercise, exercise);
     }
 
@@ -19,7 +19,7 @@ export class ExerciseService implements IExerciseService {
         return await getManager().find(Exercise, {where: {subject: {label: subjectLabel}}});
     }
 
-    async getExercise(id: string): Promise<Exercise> {
+    async getExerciseById(id: string): Promise<Exercise> {
         return await getManager().findOneOrFail(Exercise, {where: {id: id}});
     }
 
