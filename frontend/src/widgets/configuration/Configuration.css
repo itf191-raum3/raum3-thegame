@@ -10,8 +10,8 @@
   width: 25px;
 }
 
-.id{
-  width: 40px;
+.id, .difficulty{
+  width: 20px;
 }
 
 .label, .correctAnswers, .allChoices{
@@ -22,6 +22,10 @@
   height: 25px;
   width: 25px;
   border-color:  transparent;
+}
+
+input{
+  width: 95%;
 }
 
 table, td, th {

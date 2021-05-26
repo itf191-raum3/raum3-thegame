@@ -2,13 +2,13 @@ import deleteIcon from './delete_icon.png';
 import editIcon from './edit_icon.png';
 import acceptIcon from './accept_icon.png'
 import './Configuration.css'
-import { AppBar, Tab, Tabs } from "@material-ui/core";
+import { AppBar, Tab, Table, Tabs } from "@material-ui/core";
+import { IExercise } from '../../../../common/src/entities/IExercise';
 
 // Aufgaben[] getallexcersise (subject)
-// deleteExcesise (Aufgabe)
-// update (Aufgabe)
-// create (Aufgabe)
-  //UUID
+// statusCode deleteExcesise (ID)
+// statusCode update (Aufgabe)
+// UUID create (Aufgabe) 
 
   //Aufgabe
     //ID
@@ -17,23 +17,25 @@ import { AppBar, Tab, Tabs } from "@material-ui/core";
     //correct
     //Difficuly
 
+var allExercises = new Array<IExercise>()
 
-function loadEditTable(idStr:string){
+function loadEditTable(idStr:number){
+
   var manantoryRows = 
     <table className="editTabel">
       <tr>
-        <th>Id</th>
+        <th>Schwierigkeit</th>
         <th>Aufgabe</th>
         <th>Richtige Antworten</th>
         <th>Antwortmöglichkeiten</th>
       </tr>
       <tr className="information">
-        <td className="id">{idStr}</td>
+        <td className="difficulty"><input type="text" id="labelChange" placeholder="Schwierigkeitsstufe"/></td>
         <td className="label"><input type="text" id="labelChange" placeholder="Aufgabenbeschreibung"/></td>
         <td className="correctAnswers"><input type="text" id="fname" placeholder="Richtige Antworte"/></td>
         <td className="allChoices"><input type="text" id="fname" placeholder="Antwortmöglichkeit"/></td>
-        <td className="deleteBnt"><img src={deleteIcon} alt="Löschen" className="bntLogo"/></td>
-        <td className="acceptBnt"><img src={acceptIcon} alt="Bearbeiten" className="bntLogo"/></td>
+        <td className="deleteBnt"><img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => (cancelEditing())}/></td>
+        <td className="acceptBnt"><img src={acceptIcon} alt="Bearbeiten" className="bntLogo"onClick={() => (changeData())}/></td>
       </tr>
       <tr className="moreAnswers">
         <td/>
@@ -54,33 +56,51 @@ function loadEditTable(idStr:string){
     return(manantoryRows)
 }
 
-function dataRow(idStr:string){
-  return(
-    <tr id={idStr}>
-      <td className="id">{idStr}</td>
-      <td className="label"></td>
-      <td className="correctAnswers"></td>
-      <td className="allChoices"></td>
-      <td className="deleteBnt"><img src={deleteIcon} alt="Löschen" className="bntLogo"/></td>
-      <td className="editBnt"><img src={editIcon} alt="Bearbeiten" className="bntLogo" onClick={() => (loadEditTable(idStr))}/></td>
-    </tr>
-  );
+function getDataRow(id:number){
+  const idStr = id+""
+  const exercise = allExercises[id]
+
+  const label = exercise.label
+  const difficulty = exercise.difficulty
+  const correctAnswers = exercise.correctAnswers
+  const possibleAnswers = exercise.possibleAnswers
+
+  const htmlString = '<tr id='+idStr+'>'+
+      '<td className="difficulty">'+difficulty+'</td>'+
+      '<td className="label">'+label+'</td>'+
+      '<td className="correctAnswers">'+correctAnswers+'</td><td className="allChoices">'+possibleAnswers+'</td>'+
+      '<td className="deleteBnt"><img src='+deleteIcon+' alt="Löschen" className="bntLogo" onClick={() => (deleteDataSet('+idStr+'))}/></td>'+
+      '<td className="editBnt"><img src='+editIcon+' alt="Bearbeiten" className="bntLogo" onClick={() => (editDataSet('+idStr+'))}/></td>'+
+    '</tr>'
+  return htmlString
 }
 
-function loadTable(subject: string){
+function getShowingTable(){
+  let dataTabel = document.getElementById("showingTabel")?.getElementsByTagName("table").item(0)
+  for (let index = 0; index < allExercises.length; index++) {
+    dataTabel?.insertAdjacentHTML("beforeend", getDataRow(index))
+  }
+}
+
+function loadTableStructure(){
   return(
     <table className="dataTabel">
       <tr>
-        <th>Id</th>
+        <th>Schwierigkeit</th>
         <th>Aufgabe</th>
         <th>Richtige Antworten</th>
         <th>Antwortmöglichkeiten</th>
       </tr>
-      {dataRow("s")}
     </table>
   );
+}
 
-  // bekomme von server Aufgaben[]
+function loadSubject(subject: string){
+  allExercises = []//Get all exercises
+
+
+
+// bekomme von server Aufgaben[]
 }
 
 function addDataSet(){
@@ -95,7 +115,15 @@ function deleteDataSet(id: string){
 
 }
 
-function Configuration() {
+function cancelEditing(){
+
+}
+
+function changeData(){
+
+}
+
+export function Configuration() {
   
   return (
     <div className="Configuration">
@@ -103,25 +131,23 @@ function Configuration() {
         
       </header>
       <body>
-        <div className="menu">
+        <div id="menu">
           <AppBar position="static">
           <Tabs value={"subject"} aria-label="simple tabs example">
-            <Tab label="Software-Entwicklung"  onClick={() => (loadTable("AE"))}/>
-            <Tab label="Netzwerk-Technik"/>
-            <Tab label="Deutsch"/>
+            <Tab label="Software-Entwicklung"  onClick={() => (loadSubject("AE"))}/>
+            <Tab label="Netzwerk-Technik" onClick={() => (loadSubject("ITS"))}/>
+            <Tab label="Deutsch" onClick={() => (loadSubject("D"))}/>
           </Tabs>
           </AppBar>
         </div>
-        <div className="workingTable">
-          {loadEditTable("AE1-1")}
+        <div id="workingTable">
+          {loadEditTable(0)}
           <br /><br />
         </div>
-        <div className="showingTabel">
-          {loadTable("")}
+        <div id="showingTabel">
+          {loadTableStructure()}
         </div>
       </body>
     </div>
   );
 }
-
-export default Configuration;
