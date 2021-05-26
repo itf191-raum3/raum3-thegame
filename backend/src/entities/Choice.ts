@@ -3,7 +3,7 @@ import {Exercise} from "@/entities/Exercise";
 
 @ChildEntity()
 export class Choice extends Exercise {
-    @Column()
+    @Column("json")
     options: Array<string>
 
     @Column()

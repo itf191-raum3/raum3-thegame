@@ -1,7 +1,5 @@
 // Temporarily has router responsibilities, will be rewritten later
-import {Request, Response} from "express";
-import express from "express";
-import {createConnection} from "typeorm";
+import express, {Request, Response} from "express";
 
 
 export const app = express();
@@ -9,5 +7,5 @@ export const app = express();
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.status(200).send({ message: "Hello World!" });
+    res.status(200).send({message: "Hello World!"});
 });
