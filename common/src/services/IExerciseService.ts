@@ -5,9 +5,9 @@ export interface IExerciseService {
     
     deleteExercise(id: string): Promise<void>;
 
-    editExercise(exercise: IExercise): Promise<void>;
+    updateExercise(exercise: IExercise): Promise<void>;
 
-    getExercise(id: string): Promise<IExercise>;
+    getExerciseById(id: string): Promise<IExercise>;
 
     getSubjectExercisesByLabel(subjectLabel: string): Promise<Array<IExercise>> ;
 }
