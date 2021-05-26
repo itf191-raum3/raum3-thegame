@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { WelcomePage } from 'widgets/welcome/WelcomePage';
+import { Configuration } from 'widgets/configuration/Configuration';
 import './App.css';
 
 export enum AppStateEnum {
@@ -15,7 +16,7 @@ function App() {
   if (appState === AppStateEnum.WELCOMEPAGE) {
     content = <WelcomePage changeAppState={setAppState} />;
   } else if (appState === AppStateEnum.EDITOR) {
-    content = <>EDITOR: TO BE IMPLEMENTED</>;
+    content = <Configuration/>;
   } else if (appState === AppStateEnum.EXERCISES) {
     content = <>EXERCISES: TO BE IMPLEMENTED</>;
   }
