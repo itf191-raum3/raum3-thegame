@@ -14,6 +14,12 @@ jobs:
         node-version: [15.x]
     steps:
       - uses: actions/checkout@v2
+      - name: Install Frontend npm packages 
+        working-directory: ./frontend
+        run: yarn install --frozen-lockfile
+      - name: Install Backend npm packages 
+        run: yarn install --frozen-lockfile
+        working-directory: ./backend
       - name: Create Typedoc Documentation Frontend
         working-directory: ./frontend
         run: npx typedoc --options typedoc.json --out ../docs/frontend
