@@ -7,7 +7,7 @@ on: push
 
 jobs:
 
-  create-docks:
+  create-docs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
