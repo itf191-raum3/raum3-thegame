@@ -2,6 +2,7 @@ import { ApiRoute } from "../../../types/common"
 import { Request, Response } from "express"
 import { ExerciseService } from "@/service/ExerciseService";
 import { v4 as uuid } from "uuid";
+import { Subject } from "@/entities/Subject";
 
 const exerciseService = new ExerciseService();
 
@@ -12,7 +13,8 @@ export const createExercise = async (req: Request, res: Response) => {
     label: req.body.label,
     difficulty: req.body.difficulty,
     correctAnswers: req.body.correctAnswers,
-    possibleAnswers: req.body.possibleAnswers
+    possibleAnswers: req.body.possibleAnswers,
+    subject: new Subject()
   }
   await exerciseService.createExercise(exercise);
 
@@ -20,26 +22,25 @@ export const createExercise = async (req: Request, res: Response) => {
 };
 
 export const readExercise = async (req: Request, res: Response) => {
-  const exercise = await exerciseService.readExercise(<string> req.query.id);
+  const exercise = await exerciseService.getExerciseById(<string> req.query.id);
   res.send(exercise); //TODO: redact correct answers
 };
 
 export const updateExercise = async (req: Request, res: Response) => {
-  await exerciseService.editExercise({
+  await exerciseService.updateExercise({
     id: <string> req.query.id,
     label: req.body.string,
     difficulty: req.body.difficulty,
     correctAnswers: req.body.correctAnswers,
-    possibleAnswers: req.body.possibleAnswers
+    possibleAnswers: req.body.possibleAnswers,
+    subject: new Subject()
   });
 
   res.sendStatus(200); //TODO: Error handling
 };
 
 export const deleteExercise = async (req: Request, res: Response) => {
-  //TODO: clear up if read is necessary
-  const exercise = await exerciseService.readExercise(<string> req.query.id);
-  await exerciseService.deleteExercise(exercise);
+  await exerciseService.deleteExercise(<string> req.query.id);
   res.sendStatus(200); //TODO: Error handling
 };
 
