@@ -4,9 +4,6 @@ import {ICloze} from "@common/entities/ICloze";
 
 @ChildEntity()
 export class Cloze extends Exercise implements ICloze {
-    @Column("json")
-    options: Array<string>;
-
     @Column()
-    isMultipleChoice: boolean;
+    isDropDown: boolean;
 }
