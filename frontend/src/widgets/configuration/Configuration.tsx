@@ -2,9 +2,8 @@ import deleteIcon from './delete_icon.png';
 import editIcon from './edit_icon.png';
 import acceptIcon from './accept_icon.png'
 import './Configuration.css'
-import { AppBar, Tab, Table, Tabs } from "@material-ui/core";
+import { AppBar, Tab, Tabs } from "@material-ui/core";
 import { IExercise } from '../../../../common/src/entities/IExercise';
-import { render } from '@testing-library/react';
 
 
 //fetch API()

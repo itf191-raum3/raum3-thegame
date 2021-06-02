@@ -5,7 +5,7 @@
   width: 100vw;
 }
 
-.bntLogo {
+img {
   height: 25px;
   width: 25px;
 }
@@ -16,12 +16,6 @@
 
 .label, .correctAnswers, .allChoices{
   width: 365px;
-}
-
-.deleteBnt, .acceptBnt, .editBnt{
-  height: 25px;
-  width: 25px;
-  border-color:  transparent;
 }
 
 input{
