@@ -5,12 +5,22 @@ import { DropdownBlank } from './DropdownBlank';
 import { InputBlank } from './InputBlank';
 import './ClozeWidget.css';
 
+function BottomButton(props: { label: string; onClick: () => void }) {
+  return (
+    <div className={'ContinueButton'}>
+      <Button color={'primary'} variant="contained" classes={{ label: 'ContinueButtonText' }} onClick={props.onClick}>
+        {props.label}
+      </Button>
+    </div>
+  );
+}
+
 export function ClozeWidget(props: ClozeWidgetProps) {
   const { check, finish, exercise } = props;
 
-  const [checkedExercise, setCheckedExercise] = useState<ICloze | undefined>(undefined);
+  const [correctAnswers, setCorrectAnswers] = useState<string[] | undefined>(undefined);
 
-  const useDropdown = exercise.options.length > 0;
+  const useDropdown = exercise.possibleAnswers.length > 0;
 
   const edit = useCallback(
     (input: string, index: number) => {
@@ -19,7 +29,7 @@ export function ClozeWidget(props: ClozeWidgetProps) {
     [exercise.correctAnswers]
   );
 
-  const content = !checkedExercise ? (
+  const content = !correctAnswers ? (
     <>
       <div>
         {exercise.correctAnswers.map((text, index) => {
@@ -27,49 +37,51 @@ export function ClozeWidget(props: ClozeWidgetProps) {
             return text;
           } else {
             return useDropdown ? (
-              <DropdownBlank key={index} fillBlank={(input: string) => edit(input, index)} options={exercise.options} />
+              <DropdownBlank
+                key={index}
+                fillBlank={(input: string) => edit(input, index)}
+                options={exercise.possibleAnswers}
+              />
             ) : (
               <InputBlank key={index} fillBlank={(input: string) => edit(input, index)} />
             );
           }
         })}
       </div>
-      <div className={'ContinueButton'}>
-        <Button
-          variant="outlined"
-          classes={{ label: 'ContinueButtonText', root: 'ContinueButton' }}
-          onClick={() => {
-            check(exercise)
-              .then(setCheckedExercise)
-              .catch((e) => console.log(e));
-          }}
-        >
-          {'Überprüfen'}
-        </Button>
-      </div>
+      <BottomButton
+        label={'Überprüfen'}
+        onClick={() => {
+          check(exercise)
+            .then(setCorrectAnswers)
+            .catch((e) => {
+              setCorrectAnswers([]);
+              console.log(e);
+            });
+        }}
+      />
     </>
   ) : (
     <>
-      <div className={'ContinueButton'}>
-        {checkedExercise.correctAnswers.map((text, index) => {
-          if (text !== exercise.correctAnswers[index]) {
-            return <span className={'IncorrectInput'}>{text}</span>;
+      <div>
+        {correctAnswers.map((text, index) => {
+          const givenAnswer = exercise.correctAnswers[index];
+
+          if (givenAnswer && givenAnswer.toLowerCase() !== text.toLowerCase()) {
+            return (
+              <span key={index} className={'IncorrectInput'}>
+                {text}
+              </span>
+            );
           } else {
-            return <span className={'CorrectInput'}>{text}</span>;
+            return (
+              <span key={index} className={'CorrectInput'}>
+                {text}
+              </span>
+            );
           }
         })}
       </div>
-      <div>
-        <Button
-          variant="outlined"
-          classes={{ label: 'ContinueButton' }}
-          onClick={() => {
-            finish();
-          }}
-        >
-          {'Nächste Aufgabe'}
-        </Button>
-      </div>
+      <BottomButton label={'Nächste Aufgabe'} onClick={() => finish()} />
     </>
   );
   return <div className={'ClozeRoot'}>{content}</div>;
@@ -77,6 +89,6 @@ export function ClozeWidget(props: ClozeWidgetProps) {
 
 export type ClozeWidgetProps = {
   exercise: ICloze;
-  check: (exercise: ICloze) => Promise<ICloze>;
+  check: (exercise: ICloze) => Promise<string[]>;
   finish: () => void;
 };

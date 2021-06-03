@@ -1,6 +1,17 @@
-import { TextField } from '@material-ui/core';
+import { TextField, withStyles } from '@material-ui/core';
 import { useState } from 'react';
 import './ClozeWidget.css';
+
+const WhiteTextField = withStyles({
+  root: {
+    '& .MuiInput-underline:before': {
+      borderBottomColor: 'white',
+    },
+    '& .MuiInput': {
+      color: 'white',
+    },
+  },
+})(TextField);
 
 export function InputBlank(props: BlankProps) {
   const { fillBlank } = props;
@@ -8,7 +19,7 @@ export function InputBlank(props: BlankProps) {
   const [input, setInput] = useState<string>('');
 
   return (
-    <TextField
+    <WhiteTextField
       style={{ margin: '0px 10px' }}
       classes={{ root: 'InputBlank' }}
       variant="standard"
