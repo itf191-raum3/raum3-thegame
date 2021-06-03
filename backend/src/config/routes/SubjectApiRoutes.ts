@@ -15,7 +15,7 @@ export const getExercisesForSubject = async (req: Request, res: Response, next: 
   }
 };
 
-export const exerciseApi : Array<ApiRoute> = [
+export const subjectApi : Array<ApiRoute> = [
   {
     path: "/subject/exercises",
     method: "GET",
