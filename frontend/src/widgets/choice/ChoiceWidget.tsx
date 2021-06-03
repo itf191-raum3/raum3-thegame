@@ -41,7 +41,6 @@ export function ChoiceWidget(props: ChoiceWidgetProps)
               return <p>{data}</p>
             }})}
     </div>;
-    console.log(content);
     return <div className={'ChoiceRoot'}>{content}</div>
 }
 

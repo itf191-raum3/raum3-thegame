@@ -2,7 +2,7 @@ import { IChoice } from '../../../../common/src/entities/IChoice';
 
 export function requestChoiceExerciseFromBackend(myChoiceExercise: IChoice)
 {
-    return fetch('localhost/', { method: 'GET', body: JSON.stringify({myChoiceExercise})})
+    return fetch('localhost/exercise', { method: 'GET', body: JSON.stringify({myChoiceExercise})})
     .then((response) => {
         if (response.ok) {
           return response.json();
