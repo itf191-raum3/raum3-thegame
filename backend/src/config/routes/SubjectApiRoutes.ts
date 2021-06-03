@@ -5,6 +5,17 @@ import { sample, isUndefined, each } from "lodash";
 
 const subjectService = new SubjectService();
 
+export const getAllSubjects = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const subjects = await subjectService.listSubjects();
+    return res.send({
+      subjects: subjects
+    })
+  } catch (err) {
+    return next(err);
+  }
+}
+
 export const getExercisesForSubject = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const subject = await subjectService.getSubjectById(<string>req.query.id);
@@ -36,6 +47,11 @@ export const getRandomExerciseForSubject = async (req: Request, res: Response, n
 }
 
 export const subjectApi : Array<ApiRoute> = [
+  {
+    path: "/subjects",
+    method: "GET",
+    handler: getAllSubjects
+  },
   {
     path: "/subject/exercises",
     method: "GET",
