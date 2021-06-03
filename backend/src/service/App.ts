@@ -1,7 +1,7 @@
 // Temporarily has router responsibilities, will be rewritten later
 import express, {Request, Response} from "express";
-import { ApiRouter } from "../service/router/ApiRouter";
-import { api } from "../config/routes/ApiRoutes"
+import { ApiRouter } from "@/service/router/ApiRouter";
+import { api } from "@/config/routes/ApiRoutes"
 
 export const app = express();
 
