@@ -3,6 +3,7 @@ import { WelcomePage } from 'widgets/welcome/WelcomePage';
 import './App.css';
 import {IChoice} from "../../common/src/entities/IChoice";
 import {ChoiceWidget} from "widgets/choice/ChoiceWidget";
+import { ISubject } from '../../common/src/entities/ISubject';
 
 export enum AppStateEnum {
   WELCOMEPAGE,
@@ -13,26 +14,36 @@ export enum AppStateEnum {
 function App() {
   const [appState, setAppState] = useState<AppStateEnum>(AppStateEnum.WELCOMEPAGE);
 
+  const demoSubject: ISubject = {
+    IExercises: [],
+    id: '0',
+    label: 'Test Subject',
+  };
+
   const demo: IChoice = {
-    id: 0,
-    options: ["test", "test2", "test3"],
+    id: '0',
+    possibleAnswers: ["test", "test2", "test3"],
     label: '',
     correctAnswers: [
       'Bespiel für ein Dropdown menu ',
       ' ',
     ],
-    isDropDown: true
+    difficulty: 1,
+    isMultipleChoice: true,
+    subject: demoSubject
   };
 
   const correctDemo: IChoice = {
-    id: 0,
-    options: [],
+    id: '0',
+    possibleAnswers: [],
     label: '',
     correctAnswers: [
       'Lösung Dropdownmenu  ',
       ' ',
     ],
-    isDropDown: true,
+    difficulty: 1,
+    isMultipleChoice: true,
+    subject: demoSubject
   };
 
   let content = <></>;

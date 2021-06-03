@@ -21,19 +21,24 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function ChoiceWidget(props: ChoiceWidgetProps)
 {
+    let counter = 0;
     var content = <div>
         {props.exercise.correctAnswers.map(data => {
             if(data == ' ')
             {
+              return (
                 <FormControl className={'ChoiceRoot'}>
             <InputLabel id="choiceBoxLabel">Auswahl</InputLabel>
-            <Select defaultValue="Auswahl" labelId="choiceBoxLabel">
-                {props.exercise.options.map(dataset =>  <MenuItem key={dataset} value={dataset}>{dataset}</MenuItem>)}
+            <Select labelId="choiceBoxLabel">
+                {props.exercise.possibleAnswers.map(dataset => 
+                {
+                  return <MenuItem key={dataset} value={dataset}>{dataset}</MenuItem>
+                })}
             </Select>
-            </FormControl>}
+            </FormControl>)}
             else
             {
-              <p>{data}</p>
+              return <p>{data}</p>
             }})}
     </div>;
     console.log(content);
