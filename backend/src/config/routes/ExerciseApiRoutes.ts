@@ -28,7 +28,7 @@ export const createExercise = async (req: Request, res: Response, next: NextFunc
 export const readExercise = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const exercise = await exerciseService.getExerciseById(<string>req.query.id);
-    return res.send(exercise); //TODO: redact correct answers
+    return res.send(exercise);
   } catch (err) {
     return next(err);
   }
