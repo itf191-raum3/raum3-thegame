@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { WelcomePage } from 'widgets/welcome/WelcomePage';
 import './App.css';
-import {IChoice} from "../../common/src/entities/IChoice";
-import {ChoiceWidget} from "widgets/choice/ChoiceWidget";
+import { IChoice } from '../../common/src/entities/IChoice';
+import { ChoiceWidget } from 'widgets/choice/ChoiceWidget';
 import { ISubject } from '../../common/src/entities/ISubject';
 
 export enum AppStateEnum {
@@ -22,28 +22,22 @@ function App() {
 
   const demo: IChoice = {
     id: '0',
-    possibleAnswers: ["test", "test2", "test3"],
+    possibleAnswers: ['test', 'test2', 'test3'],
     label: '',
-    correctAnswers: [
-      'Bespiel für ein Dropdown menu ',
-      ' ',
-    ],
+    correctAnswers: ['Bespiel für ein Dropdown menu ', ' '],
     difficulty: 1,
     isMultipleChoice: true,
-    subject: demoSubject
+    subject: demoSubject,
   };
 
   const correctDemo: IChoice = {
     id: '0',
     possibleAnswers: [],
     label: '',
-    correctAnswers: [
-      'Lösung Dropdownmenu  ',
-      ' ',
-    ],
+    correctAnswers: ['Lösung Dropdownmenu  ', ' '],
     difficulty: 1,
     isMultipleChoice: true,
-    subject: demoSubject
+    subject: demoSubject,
   };
 
   let content = <></>;
@@ -57,7 +51,7 @@ function App() {
       <ChoiceWidget
         exercise={demo}
         finish={() => setAppState(AppStateEnum.WELCOMEPAGE)}
-        check={async (e) => correctDemo}
+        check={async (e) => correctDemo.correctAnswers}
       />
     );
   }
