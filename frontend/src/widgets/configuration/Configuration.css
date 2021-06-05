@@ -30,3 +30,27 @@ table {
   border-collapse: collapse;
   width: 90%;
 }
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  cursor: pointer;
+  padding: 14px 16px;
+  float: left;
+}
+
+.navBtn {
+  background-color: #141248;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 25px;
+  color: #E8A222;
+  size: 35px;
+}
+
+.navBtn:hover {
+  background-color: #60117E;
+}
