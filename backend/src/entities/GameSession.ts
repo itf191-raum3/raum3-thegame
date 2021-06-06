@@ -1,5 +1,6 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 import {Subject} from "@/entities/Subject";
+import {Exercise} from "@/entities/Exercise";
 
 @Entity()
 export class GameSession {
@@ -9,9 +10,16 @@ export class GameSession {
     @Column()
     currentSubject: Subject;
 
-    @Column()
+    @Column({default: 1})
     maxDifficulty: number;
 
-    @Column()
+    @Column({default: 0})
     score: number;
+
+    answered: Array<Exercise>;
+
+
+    constructor(currentSubject: Subject) {
+        this.currentSubject = currentSubject;
+    }
 }
