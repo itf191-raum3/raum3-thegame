@@ -52,7 +52,7 @@ jobs:
       - run: yarn install --frozen-lockfile
         working-directory: ./frontend
       - name: Build Frontend and copy to Backend
-        run: npm run build --if-present
+        run: npm run build_and_copy --if-present
         working-directory: ./frontend
 
   build-backend:
