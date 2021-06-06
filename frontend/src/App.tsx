@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { WelcomePage } from 'widgets/welcome/WelcomePage';
 import { Configuration } from 'widgets/configuration/Configuration';
-import { ICloze } from '../../common/src/entities/ICloze';
-import { ISubject } from '../../common/src/entities/ISubject';
 import './App.css';
 import { ExerciseContainer } from 'widgets/exercise/ExerciseContainer';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -23,7 +21,7 @@ function App() {
   if (appState === AppStateEnum.WELCOMEPAGE) {
     content = <WelcomePage changeAppState={setAppState} />;
   } else if (appState === AppStateEnum.EDITOR) {
-    content = <Configuration/>;
+    content = <Configuration />;
   } else if (appState === AppStateEnum.EXERCISES) {
     content = <ExerciseContainer />;
   }
