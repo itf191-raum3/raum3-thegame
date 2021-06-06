@@ -6,7 +6,7 @@ export = {
   password: "PASSWORD_HERE",
   database: "DATABASE_HERE",
   synchronize: true,
-  dropSchema: true,
+  dropSchema: false,
   migrationsRun: true,
   logging: true,
   "entities": [
