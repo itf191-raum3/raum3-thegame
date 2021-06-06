@@ -1,13 +1,15 @@
 import {ExerciseService} from "@/service/ExerciseService";
 import {Exercise} from "@/entities/Exercise";
+import {IExerciseService} from "@common/services/IExerciseService";
 
 export class GameSession {
     gameSessionId: string;
     currentSubject: string;
     currentDifficulty: number;
     exercisePool: Array<Exercise>;
+    score: number;
 
-    private exerciseService: ExerciseService = new ExerciseService();
+    private exerciseService: IExerciseService = new ExerciseService();
 
     constructor(sessionId: string, currentSubject: string) {
         this.gameSessionId = sessionId;
