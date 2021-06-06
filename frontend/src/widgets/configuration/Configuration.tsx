@@ -44,7 +44,7 @@ export function Configuration() {
     workingExercise = clearExercise();
     setType('IChoice');
 
-    var createTabel = (
+    return (
       <table id="createTabel">
         <thead>{generateHeader()}</thead>
         <tbody>
@@ -98,8 +98,6 @@ export function Configuration() {
         </tbody>
       </table>
     );
-
-    return createTabel;
   }
 
   function loadEditTable(idStr: string) {
@@ -107,10 +105,11 @@ export function Configuration() {
     const exercise = getExerciseInList(idStr);
     const { difficulty, label, correctAnswers, possibleAnswers } = exercise;
 
-    setDifficulty(difficulty+"")
-    setLabel(label)
-    setCorrect(correctAnswers.join("; "))
-    setPossible(possibleAnswers.join("; "))
+    workingExercise.id = idStr;
+    setDifficulty(difficulty + '');
+    setLabel(label);
+    setCorrect(correctAnswers.join('; '));
+    setPossible(possibleAnswers.join('; '));
 
     var exerciseType = 'Unbekannt';
     if ('isDropdown' in exercise) {
@@ -127,18 +126,24 @@ export function Configuration() {
         <tbody>
           <tr className="information">
             <td>
-              <input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" defaultValue={workingExercise.difficulty} />
+              <input
+                type="number"
+                min="0"
+                id="difficulty"
+                placeholder="Schwierigkeit"
+                defaultValue={difficulty}
+              />
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
-              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={workingExercise.label} />
+              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={label} />
             </td>
             <td>
               <input
                 type="text"
                 id="correctAnswers"
                 placeholder="Richtige Antworten"
-                defaultValue={workingExercise.correctAnswers}
+                defaultValue={correctAnswers.join("; ")}
               />
             </td>
             <td>
@@ -146,7 +151,7 @@ export function Configuration() {
                 type="text"
                 id="allChoices"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue={workingExercise.possibleAnswers}
+                defaultValue={possibleAnswers.join("; ")}
               />
             </td>
             <td>
@@ -198,8 +203,8 @@ export function Configuration() {
           <td>{difficulty}</td>
           <td>{exerciseType}</td>
           <td>{label}</td>
-          <td>{correctAnswers.join('<br/>')}</td>
-          <td>{possibleAnswers.join('<br/>')}</td>
+          <td>{correctAnswers.join('\n')}</td>
+          <td>{possibleAnswers.join('\n')}</td>
           <td>
             <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => deleteDataSet(id)} />
           </td>
@@ -241,6 +246,12 @@ export function Configuration() {
         possibleAnswer.trim();
       });
 
+      correctAnswersList.forEach((correctAnswer) => {
+        if (arrayContains(possibleAnswersList, correctAnswers) === false) {
+          possibleAnswersList.push(correctAnswer);
+        }
+      });
+
       var newExercise = {
         label: label,
         difficulty: difficulty,
@@ -270,7 +281,7 @@ export function Configuration() {
   }
 
   function changeData() {
-    const { label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
+    const { id, label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
 
     if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
       var correctAnswersList = correctAnswers.split(';');
@@ -283,6 +294,12 @@ export function Configuration() {
         possibleAnswer.trim();
       });
 
+      correctAnswersList.forEach((correctAnswer) => {
+        if (arrayContains(possibleAnswersList, correctAnswers) === false) {
+          possibleAnswersList.push(correctAnswer);
+        }
+      });
+
       var newExercise = {
         label: label,
         difficulty: difficulty,
@@ -290,10 +307,10 @@ export function Configuration() {
         possibleAnswers: possibleAnswersList,
       };
 
-      fetchUpdateExercise(subject, newExercise);
-
-      setWorkingTable(loadCreateTable());
+      fetchUpdateExercise(id, newExercise);
+      
       loadSubject(subject);
+      setWorkingTable(loadCreateTable());
     }
   }
 
@@ -331,15 +348,14 @@ export function Configuration() {
   }
 
   function clearExercise() {
-    var clearExercise = {
+    return {
+      id: '',
       label: '',
       difficulty: '',
       correctAnswers: '',
       possibleAnswers: '',
       exerciseType: '',
     };
-
-    return clearExercise;
   }
 
   function getExerciseInList(exerciseID: string): IExercise {
@@ -382,7 +398,7 @@ export function Configuration() {
 }
 
 export function fetchGetSubject(subjectId: string): Promise<ISubject> {
-  return fetch('api/subjects/' + subjectId, { method: 'GET' })
+  return fetch(`api/subjects/${subjectId}`, { method: 'GET' })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -397,7 +413,7 @@ export function fetchGetSubject(subjectId: string): Promise<ISubject> {
 }
 
 export function fetchDeleteExercise(exerciseId: string) {
-  return fetch('api/exercise/' + exerciseId, { method: 'DELETE' })
+  return fetch(`api/exercise/${exerciseId}/delete`, { method: 'DELETE' })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -410,27 +426,45 @@ export function fetchDeleteExercise(exerciseId: string) {
 }
 
 export function fetchUpdateExercise(exerciseId: string, exercise: any) {
-  return fetch('api/exercise/' + exerciseId, { method: 'PUT', body: JSON.stringify(exercise), headers : {'Content-Type': 'application/json', 'Accept': 'application/json'}})
+  return fetch(`api/exercise/${exerciseId}/update`, {
+    method: 'POST',
+    body: JSON.stringify(exercise),
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+  })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
         return true;
       } else {
-        return Promise.reject(response.status + ' ' + response.statusText);
+        return false;
       }
     })
     .then((json) => {});
 }
 
 export function fetchCreateExercise(exerciseId: string, exerciseType: any, newExercise: any) {
-  return fetch('api/exercise/' + exerciseId + '?exerciseType=' + exerciseType, {method: 'POST', body: JSON.stringify(newExercise), headers : {'Content-Type': 'application/json', 'Accept': 'application/json'}})
+  return fetch(`api/exercise/${exerciseId}/create?exerciseType=${exerciseType}`, {
+    method: 'POST',
+    body: JSON.stringify(newExercise),
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+  })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
         return true;
       } else {
-        return Promise.reject(response.status + ' ' + response.statusText);
+        return false;
       }
     })
     .then((json) => {});
+}
+
+function arrayContains(array: string[], searchElement: string): boolean {
+  var contains = false;
+
+  array.forEach((element) => {
+    if (element === searchElement) contains = true;
+  });
+
+  return contains;
 }

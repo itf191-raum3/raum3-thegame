@@ -1,9 +1,8 @@
 .Configuration {
   background-color: #282c34;
-  color: #AA4342;
+  color: #aa4342;
   height: 90%;
   width: 90%;
-  float: center;
 }
 
 img {
@@ -11,19 +10,24 @@ img {
   width: 25px;
 }
 
-.id, .difficulty{
+.id,
+.difficulty {
   width: 20px;
 }
 
-.label, .correctAnswers, .allChoices{
+.label,
+.correctAnswers,
+.allChoices {
   width: 365px;
 }
 
-input{
+input {
   width: 95%;
 }
 
-table, td, th {
+table,
+td,
+th {
   border: 1px solid #fff;
 }
 
@@ -37,21 +41,19 @@ ul {
   margin: 0;
   cursor: pointer;
   padding: 14px 16px;
-  float: center;
 }
 
 .navBtn {
   background-color: #141248;
-  float: center;
   border: none;
   outline: none;
   cursor: pointer;
   padding: 14px 16px;
   font-size: 25px;
-  color: #E8A222;
+  color: #e8a222;
   size: 35px;
 }
 
 .navBtn:hover {
-  background-color: #60117E;
+  background-color: #60117e;
 }

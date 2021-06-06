@@ -4,7 +4,7 @@ import {ExerciseService} from "@/service/ExerciseService";
 import {v4 as uuid} from "uuid";
 import {each, find, isUndefined} from "lodash";
 import {SubjectService} from "@/service/SubjectService";
-import { gameSessions, GameSessionService } from "@/service/GameSessionService";
+import {gameSessions, GameSessionService} from "@/service/GameSessionService";
 
 const exerciseService = new ExerciseService();
 const subjectService = new SubjectService();
@@ -56,7 +56,7 @@ export const updateExercise = async (req: Request, res: Response, next: NextFunc
     try {
         const exercise = await exerciseService.getExerciseById(<string>req.params.id);
         const updatedExercise = {
-            id: <string>req.query.id,
+            id: <string>req.params.id,
             label: req.body.label,
             difficulty: req.body.difficulty,
             correctAnswers: req.body.correctAnswers,
@@ -98,7 +98,7 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
     const gameSessionId = req.params.gameSessionId;
     const gameSession = find(gameSessions, ['id', gameSessionId]);
     try {
-        if(isUndefined(gameSession)) {
+        if (isUndefined(gameSession)) {
             return next("GameSession not found");
         }
 
@@ -121,27 +121,9 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
     }
 }
 
-export const getNextExercise = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const gameSessionId = req.params.gameSessionId;
-        const gameSession = find(gameSessions, ['id', gameSessionId]);
-
-        if(isUndefined(gameSession)) {
-            return next("GameSession not found");
-        }
-
-        const exercise = await gameSessionService.getRandomExercise(gameSession);
-        return res.send({
-            exercise: exercise
-        })
-    } catch (err) {
-        return next(err);
-    }
-}
-
 export const exerciseApi: Array<ApiRoute> = [
     {
-        path: "/exercise/:label",
+        path: "/exercise/:label/create",
         method: "POST",
         handler: createExercise
     },
@@ -151,12 +133,12 @@ export const exerciseApi: Array<ApiRoute> = [
         handler: readExercise
     },
     {
-        path: "/exercise/:id",
-        method: "PUT",
+        path: "/exercise/:id/update",
+        method: "POST",
         handler: updateExercise
     },
     {
-        path: "/exercise/:id",
+        path: "/exercise/:id/delete",
         method: "DELETE",
         handler: deleteExercise
     },
@@ -164,10 +146,5 @@ export const exerciseApi: Array<ApiRoute> = [
         path: "/exercise/:gameSessionId/answers",
         method: "POST",
         handler: checkExerciseAnswers
-    },
-    {
-        path: "/exercise/:gameSessionId/next",
-        method: "GET",
-        handler: getNextExercise
     }
 ]

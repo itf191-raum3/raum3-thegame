@@ -1,12 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import {NextFunction, Request, Response} from "express";
 
 interface ApiRoute {
-  path: string,
-  method: string,
-  handler: (req: Request, res: Response, next: NextFunction) => any
+    path: string,
+    method: string,
+    handler: (req: Request, res: Response, next: NextFunction) => any
 }
 
 interface PageRoute {
-  path: string,
-  page: string
+    path: string,
+    page: string
 }
