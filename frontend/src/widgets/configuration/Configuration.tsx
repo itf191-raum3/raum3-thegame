@@ -6,6 +6,7 @@ import addIcon from './add_icon.png';
 
 import { IExercise } from '../../../../common/src/entities/IExercise';
 import { useState } from 'react';
+import { ISubject } from '../../../../common/src/entities/ISubject';
 
 const columnNames = ['Schwierigkeit', 'Aufgabentype', 'Aufgabe', 'Richtige Antworten', 'Antwortmöglichkeiten', '', ''];
 
@@ -210,9 +211,9 @@ export function Configuration() {
   function loadSubject(subjectID: string) {
     subject = subjectID;
 
-    fetchGetAllExercise(subject)
-      .then((exercise) => {
-        setallExercises(exercise);
+    fetchGetSubject(subject)
+      .then((subjectObj) => {
+        setallExercises(subjectObj.exercises);
       })
       .catch((_errorMsg) => {
         console.error(_errorMsg);
@@ -375,7 +376,7 @@ export function Configuration() {
   }
 }
 
-export function fetchGetAllExercise(subjectId: string): Promise<IExercise[]> {
+export function fetchGetSubject(subjectId: string): Promise<ISubject> {
   return fetch('api/subject/exercises/' + subjectId, { method: 'GET' })
     .then((response) => {
       console.dir(response);
@@ -386,7 +387,7 @@ export function fetchGetAllExercise(subjectId: string): Promise<IExercise[]> {
       }
     })
     .then((json) => {
-      return json as IExercise[];
+      return json as ISubject;
     });
 }
 
