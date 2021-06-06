@@ -2,7 +2,7 @@ import {ExerciseService} from "@/service/ExerciseService";
 import {Exercise} from "@/entities/Exercise";
 
 export class GameSession {
-    sessionId: string;
+    gameSessionId: string;
     currentSubject: string;
     currentDifficulty: number;
     exercisePool: Array<Exercise>;
@@ -10,7 +10,7 @@ export class GameSession {
     private exerciseService: ExerciseService = new ExerciseService();
 
     constructor(sessionId: string, currentSubject: string) {
-        this.sessionId = sessionId;
+        this.gameSessionId = sessionId;
         this.currentSubject = currentSubject;
     }
 
