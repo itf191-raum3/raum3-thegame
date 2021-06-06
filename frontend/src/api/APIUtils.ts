@@ -12,7 +12,7 @@ function isCheckResponse(obj: any): obj is CheckResponse {
 
 // TODO check routes
 export function checkCloze(clozeExercise: ICloze, sessionId: string): Promise<CheckResponse> {
-  return fetch(`exercise/${sessionId}/?id=${clozeExercise.id}`, {
+  return fetch(`/api/exercise/${sessionId}/?id=${clozeExercise.id}`, {
     method: 'POST',
     body: JSON.stringify({ answers: clozeExercise.correctAnswers }),
   })
@@ -33,7 +33,7 @@ export function checkCloze(clozeExercise: ICloze, sessionId: string): Promise<Ch
 }
 
 export async function fetchExercise(sessionId: string): Promise<IExercise> {
-  return fetch(`/exercise/${sessionId}/next`, {
+  return fetch(`/api/exercise/${sessionId}/next`, {
     method: 'GET',
   })
     .then((response) => {
@@ -49,7 +49,7 @@ export async function fetchExercise(sessionId: string): Promise<IExercise> {
 }
 
 export function initializeGameSession(subjectId: string): Promise<string> {
-  return fetch('session/create', { method: 'GET', body: JSON.stringify({ subject: subjectId }) })
+  return fetch('/api/session/create', { method: 'GET', body: JSON.stringify({ subject: subjectId }) })
     .then((response) => {
       if (response.ok) {
         return response.json();
