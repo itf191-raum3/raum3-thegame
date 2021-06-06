@@ -9,7 +9,6 @@ function isCheckResponse(obj: any): obj is CheckResponse {
   return 'answers' in obj && 'isCorrect' in obj;
 }
 
-// TODO check routes
 export function checkExercise(exercise: IExercise, sessionId: string): Promise<CheckResponse> {
   return fetch(`/api/session/${sessionId}/checkAnswers/${exercise.id}`, {
     method: 'POST',
@@ -75,5 +74,22 @@ export function initializeGameSession(subjectId: string): Promise<string> {
     })
     .then((id) => {
       return id;
+    });
+}
+
+export function checkPassword(password: string): Promise<boolean> {
+  return fetch('api/auth', {
+    method: 'POST',
+    body: JSON.stringify({ password }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      return res.ok;
+    })
+    .catch((e) => {
+      console.log(e);
+      return false;
     });
 }
