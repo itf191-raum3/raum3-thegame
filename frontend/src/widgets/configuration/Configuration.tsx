@@ -14,24 +14,30 @@ import { useState } from 'react';
 // statusCode deleteExcesise (ID)
 // statusCode update (Aufgabe)
 // UUID create (Aufgabe) 
-const columnNames = ["Schwierigkeit", "Aufgabe", "Richtige Antworten", "Antwortmöglichkeiten", "", ""]
+const columnNames = ["Schwierigkeit", "Aufgabentype", "Aufgabe", "Richtige Antworten", "Antwortmöglichkeiten", "", ""]
 
 export function Configuration() {
+  var subject = ""
   const [allExercises, setallExercises] = useState<IExercise[]>(Array<IExercise>())
   const [workingTable, setWorkingTable] = useState<JSX.Element>()
 
   function loadCreateTable(){
     var createTabel = 
-      <table id="editTabel">
+      <table id="createTabel">
         <thead>
           {generateHeader()}
         </thead>
         <tbody>
           <tr className="information">
-            <td><input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" value=""/></td>
-            <td><input type="text" id="label" placeholder="Aufgabenstellung" value=""/></td>
-            <td><input type="text" id="correctAnswers" placeholder="Richtige Antworten" value=""/></td>
-            <td><input type="text" id="allChoices" placeholder="Antwortmöglichkeiten" value=""/></td>
+            <td><input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" defaultValue=""/></td>
+            <td><select id="exersiceType">
+              <option value="choice">Auswahlaufgabe</option>
+              <option value="cloze">Lückentext</option>
+            </select>
+            </td>
+            <td><input type="text" id="label" placeholder="Aufgabenstellung" defaultValue=""/></td>
+            <td><input type="text" id="correctAnswers" placeholder="Richtige Antworten" defaultValue=""/></td>
+            <td><input type="text" id="allChoices" placeholder="Antwortmöglichkeiten" defaultValue=""/></td>
             <td><img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => (cancelEditing())}/></td>
             <td><img src={addIcon} alt="Bearbeiten" className="bntLogo"onClick={() => (addDataSet())}/></td>
           </tr>
@@ -45,17 +51,28 @@ export function Configuration() {
     const exercise = getExerciseInList(idStr)
     const {difficulty, label, correctAnswers, possibleAnswers} = exercise
     
+    var selectCloze = false
+    var selectChoice = false
+    if('isDropdown' in exercise)
+      selectCloze = true
+    else if('isMultipleChoice' in exercise)
+      selectChoice = true
+
     var editTabel = 
       <table id="editTabel">
         <thead>
           {generateHeader()}
         </thead>
         <tbody>
-          <tr>
-            <td><input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" value={difficulty}/></td>
-            <td><input type="text" id="label" placeholder="Aufgabenstellung" value={label}/></td>
-            <td><input type="text" id="correctAnswers" placeholder="Richtige Antworten" value={correctAnswers.join("; ")}/></td>
-            <td><input type="text" id="allChoices" placeholder="Antwortmöglichkeiten" value={possibleAnswers.join("; ")}/></td>
+          <tr className="information">
+            <td><input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" value ={difficulty}/></td>
+            <td><select id="exersiceType">
+                <option value="choice" selected={selectChoice}>Auswahlaufgabe</option>
+                <option value="cloze" selected={selectCloze}>Lückentext</option>
+              </select></td>
+            <td><input type="text" id="label" placeholder="Aufgabenstellung" value ={label}/></td>
+            <td><input type="text" id="correctAnswers" placeholder="Richtige Antworten" value ={correctAnswers.join("; ")}/></td>
+            <td><input type="text" id="allChoices" placeholder="Antwortmöglichkeiten" value ={possibleAnswers.join("; ")}/></td>
             <td><img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => (cancelEditing())}/></td>
             <td><img src={acceptIcon} alt="Bearbeiten" className="bntLogo"onClick={() => (changeData())}/></td>
           </tr>
@@ -113,10 +130,16 @@ export function Configuration() {
 
     allExercises.forEach(exercise => {
       const {id, difficulty, label, correctAnswers, possibleAnswers} = exercise;
-      
+      var exerciseType = "Unbekannt"
+      if('isDropdown' in exercise)
+        exerciseType = "Lückentext"
+      else if('isMultipleChoice' in exercise)
+        exerciseType = "Auswahlaufgabe"
+
       dataRows.push(
         <tr id={id}>
           <td>{difficulty}</td>
+          <td>{exerciseType}</td>
           <td>{label}</td>
           <td>{correctAnswers.join("<br/>")}</td>
           <td>{possibleAnswers.join("<br/>")}</td>
@@ -129,38 +152,52 @@ export function Configuration() {
     return dataRows;
   }
 
-  function loadSubject (subject: string){
-     // TODO: bekomme von server Aufgaben[]
-     var tempList = []
-     tempList.push(
-      { id: "123",
-        label: "Was!",
-        difficulty: 1,
-        correctAnswers: ["2"],
-        possibleAnswers: ["3"],
-      }
-    )
+  function loadSubject (subjectID: string){
+    subject = subjectID
 
-    tempList.push(
-      { id: "Test",
-        label: "Test123!",
-        difficulty: 2,
-        correctAnswers: ["Ja"],
-        possibleAnswers: ["Nei"],
-      }
-    )
+     
+     fetchGetAllExercise(subject).then(exercise => {
+      setallExercises(exercise)
+     }).catch(errorMsg => {
+       console.error("Error")
+     })
 
     setWorkingTable(loadCreateTable())
-    setallExercises(tempList)
   }
 
   function addDataSet(){
-    //TODO: Get values
-    //TODO: Create exercise
-    //TODO: Insert in database -> set ID
+    var difficulty = document.getElementById("difficulty")?.nodeValue
+    var exersiceType = document.getElementById("exersiceType")?.nodeValue
+    var label = document.getElementById("label")?.nodeValue
+    var correctAnswers = document.getElementById("correctAnswers")?.nodeValue?.split(";")
+    var possibleAnswers = document.getElementById("possibleAnswers")?.nodeValue?.split(";")
+
+    if(correctAnswers == undefined)
+     correctAnswers = []
+    
+    correctAnswers.forEach(correctAnswer => {
+      correctAnswer.trim();
+    });
+
+    if(possibleAnswers == undefined)
+    possibleAnswers = []
+    
+    possibleAnswers.forEach(possibleAnswer => {
+      possibleAnswer.trim();
+    });
+
+    var newExercise = {
+        label: label,
+        difficulty: difficulty,
+        correctAnswers: correctAnswers,
+        possibleAnswers: possibleAnswers,
+      }
+
+    //TODO: Insert in database
+
+    loadSubject(subject)
 
     setWorkingTable(loadCreateTable())
-    //loadDataTable()
   }
 
   function editDataSet(id: string):any{
@@ -182,6 +219,7 @@ export function Configuration() {
   }
 
   function cancelEditing(){
+    setWorkingTable(<table>{generateHeader()}</table>)
     setWorkingTable(loadCreateTable())
   }
 
@@ -191,7 +229,7 @@ export function Configuration() {
 
 
     setWorkingTable(loadCreateTable())
-    //loadDataTable()
+    loadSubject(subject)
   }
 
   return (
@@ -215,4 +253,56 @@ export function Configuration() {
       </body>
     </div>
   );
+}
+
+export function fetchGetAllExercise(subjectId: string): Promise<IExercise[]> {
+  return fetch('/subject/exercises/?id=' + subjectId, { method: 'GET' }).then((response) => {
+    console.dir(response);
+    if (response.ok) {
+      return response.json();
+    } else {
+      return Promise.reject(response.status + ' ' + response.statusText);
+    }
+  }).then((json) => {
+    return json as IExercise[];
+  });
+}
+
+export function fetchDeleteExercise(exerciseId: string) {
+  return fetch('/exercise/?id=' + exerciseId, { method: 'DELETE' }).then((response) => {
+    console.dir(response);
+    if (response.ok) {
+      return response.json();
+    } else {
+      return Promise.reject(response.status + ' ' + response.statusText);
+    }
+  }).then((json) => {
+    
+  });
+}
+
+export function fetchUpdateExercise(exerciseId: string) {
+  return fetch('/exercise/?id=' + exerciseId, { method: 'PUT' }).then((response) => {
+    console.dir(response);
+    if (response.ok) {
+      return response.json();
+    } else {
+      return Promise.reject(response.status + ' ' + response.statusText);
+    }
+  }).then((json) => {
+    
+  });
+}
+
+export function fetchCreateExercise(subjectId: string) {
+  return fetch('/subject/exercises/?id=' + subjectId, { method: 'GET' }).then((response) => {
+    console.dir(response);
+    if (response.ok) {
+      return response.json();
+    } else {
+      return Promise.reject(response.status + ' ' + response.statusText);
+    }
+  }).then((json) => {
+
+  });
 }
