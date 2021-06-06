@@ -5,5 +5,5 @@ export interface ISubject {
 
     label: string;
 
-    IExercises: Array<IExercise>;
+    exercises: Array<IExercise>;
 }
