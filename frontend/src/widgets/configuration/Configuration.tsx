@@ -405,7 +405,7 @@ export function fetchDeleteExercise(exerciseId: string) {
 }
 
 export function fetchUpdateExercise(exerciseId: string, exercise: any) {
-  return fetch('api/exercise/' + exerciseId, { method: 'PUT', body: JSON.stringify(exercise) })
+  return fetch('api/exercise/' + exerciseId, { method: 'PUT', body: exercise})
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -418,10 +418,7 @@ export function fetchUpdateExercise(exerciseId: string, exercise: any) {
 }
 
 export function fetchCreateExercise(exerciseId: string, exerciseType: any, newExercise: any) {
-  return fetch('api/exercise/' + exerciseId + '?exerciseType=' + exerciseType, {
-    method: 'POST',
-    body: JSON.stringify(newExercise),
-  })
+  return fetch('api/exercise/' + exerciseId + '?exerciseType=' + exerciseType, {method: 'POST', body: newExercise})
     .then((response) => {
       console.dir(response);
       if (response.ok) {
