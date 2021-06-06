@@ -34,8 +34,8 @@ function App() {
           position: 'absolute',
           left: '40px',
           top: '40px',
-          height: '100px',
-          width: '100px',
+          height: '57px',
+          width: '57px',
           border: '5px solid',
         }}
         onClick={() => setAppState(AppStateEnum.WELCOMEPAGE)}
