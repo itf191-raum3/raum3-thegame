@@ -107,6 +107,7 @@ export function Configuration() {
     const exercise = getExerciseInList(idStr);
     const { difficulty, label, correctAnswers, possibleAnswers } = exercise;
 
+    workingExercise.id = idStr
     setDifficulty(difficulty+"")
     setLabel(label)
     setCorrect(correctAnswers.join("; "))
@@ -198,8 +199,8 @@ export function Configuration() {
           <td>{difficulty}</td>
           <td>{exerciseType}</td>
           <td>{label}</td>
-          <td>{correctAnswers.join('<br/>')}</td>
-          <td>{possibleAnswers.join('<br/>')}</td>
+          <td>{correctAnswers.join('\n')}</td>
+          <td>{possibleAnswers.join('\n')}</td>
           <td>
             <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => deleteDataSet(id)} />
           </td>
@@ -228,7 +229,7 @@ export function Configuration() {
   }
 
   function addDataSet() {
-    const { label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
+    const {label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
 
     if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
       var correctAnswersList = correctAnswers.split(';');
@@ -270,7 +271,7 @@ export function Configuration() {
   }
 
   function changeData() {
-    const { label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
+    const {id, label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
 
     if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
       var correctAnswersList = correctAnswers.split(';');
@@ -290,7 +291,7 @@ export function Configuration() {
         possibleAnswers: possibleAnswersList,
       };
 
-      fetchUpdateExercise(subject, newExercise);
+      fetchUpdateExercise(id, newExercise);
 
       setWorkingTable(loadCreateTable());
       loadSubject(subject);
@@ -332,6 +333,7 @@ export function Configuration() {
 
   function clearExercise() {
     var clearExercise = {
+      id: '',
       label: '',
       difficulty: '',
       correctAnswers: '',
