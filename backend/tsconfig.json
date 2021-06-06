@@ -32,7 +32,7 @@
       ],
       "@common/*": [
         "../../common/src/*"
-      ],
+      ]
     }
   },
   "exclude": [
