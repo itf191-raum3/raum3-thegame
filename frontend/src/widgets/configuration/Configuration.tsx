@@ -199,7 +199,7 @@ export function Configuration() {
       possibleAnswers: possibleAnswers
     }
 
-    fetchCreateExercise(subject, newExercise)
+    fetchCreateExercise(subject, exerciseType, newExercise)
 
     loadSubject(subject)
 
@@ -321,8 +321,8 @@ export function fetchUpdateExercise(exerciseId: string, exercise:any) {
   });
 }
 
-export function fetchCreateExercise(subjectId: string, newExercise:any) {
-  return fetch('/exercise/?id=' + subjectId, { method: 'POST', body:JSON.stringify(newExercise)}).then((response) => {
+export function fetchCreateExercise(exerciseId: string, exerciseType: string, newExercise:any) {
+  return fetch('/exercise/?id=' + exerciseId +"&exerciseType="+exerciseType, { method: 'POST', body:JSON.stringify(newExercise)}).then((response) => {
     console.dir(response);
     if (response.ok) {
       return response.json();
