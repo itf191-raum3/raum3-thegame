@@ -11,7 +11,7 @@ function isCheckResponse(obj: any): obj is CheckResponse {
 
 // TODO check routes
 export function checkExercise(exercise: IExercise, sessionId: string): Promise<CheckResponse> {
-  return fetch(`/api/exercise/${sessionId}/answers/${exercise.id}`, {
+  return fetch(`/api/session/${sessionId}/checkAnswers/${exercise.id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
