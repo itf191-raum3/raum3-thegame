@@ -432,7 +432,7 @@ export function fetchUpdateExercise(exerciseId: string, exercise: any) {
       if (response.ok) {
         return true;
       } else {
-        return Promise.reject(response.status + ' ' + response.statusText);
+        return false;
       }
     })
     .then((json) => {});
@@ -445,7 +445,7 @@ export function fetchCreateExercise(exerciseId: string, exerciseType: any, newEx
       if (response.ok) {
         return true;
       } else {
-        return Promise.reject(response.status + ' ' + response.statusText);
+        return false;
       }
     })
     .then((json) => {});
