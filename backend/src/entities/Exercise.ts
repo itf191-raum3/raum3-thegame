@@ -1,7 +1,6 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
 import {IExercise} from "@common/entities/IExercise";
 import {Subject} from "@/entities/Subject";
-import {JoinColumn} from "typeorm/browser";
 
 @Entity()
 @TableInheritance({column: {type: "varchar", name: "type"}})
