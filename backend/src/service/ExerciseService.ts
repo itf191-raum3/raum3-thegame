@@ -3,7 +3,6 @@ import {Exercise} from "@/entities/Exercise";
 import {Cloze} from "@/entities/Cloze";
 import {Choice} from "@/entities/Choice";
 import {IExerciseService} from "@common/services/IExerciseService";
-import {Subject} from "@/entities/Subject";
 
 export class ExerciseService implements IExerciseService {
     async createCloze(cloze: Cloze): Promise<void> {
@@ -15,7 +14,7 @@ export class ExerciseService implements IExerciseService {
     }
 
     async deleteExercise(id: string): Promise<void> {
-        await getManager().delete<Exercise>(Exercise, await this.getExerciseById(id)); // this sucks
+        await getManager().delete<Exercise>(Exercise, {id: id})
     }
 
     async updateCloze(cloze: Cloze): Promise<void> {
