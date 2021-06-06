@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ClozeWidget } from 'widgets/cloze/ClozeWidget';
 import { WelcomePage } from 'widgets/welcome/WelcomePage';
-import { ICloze } from '../../common/src/entities/ICloze';
-import { ISubject } from '../../common/src/entities/ISubject';
 import './App.css';
+import { ExerciseContainer } from 'widgets/exercise/ExerciseContainer';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { IconButton } from '@material-ui/core';
 
 export enum AppStateEnum {
   WELCOMEPAGE,
@@ -14,64 +14,42 @@ export enum AppStateEnum {
 function App() {
   const [appState, setAppState] = useState<AppStateEnum>(AppStateEnum.WELCOMEPAGE);
 
-  const demoSubject: ISubject = {
-    exercises: [],
-    id: '0',
-    label: 'dldldl',
-  };
-  const demo: ICloze = {
-    id: '0',
-    possibleAnswers: ['Lückentext', 'Wörtern', 'überprüft'],
-    label: '',
-    correctAnswers: [
-      'Hier sehen wir einen ',
-      '',
-      ' der mit ',
-      '',
-      ' gefüllt werden sollte. Die Aufgabe kann auch ',
-      '',
-      ' werden.',
-    ],
-    isDropDown: false,
-    difficulty: 1,
-    subject: demoSubject,
-  };
-
-  const correctDemo: ICloze = {
-    id: '0',
-    possibleAnswers: [],
-    label: '',
-    correctAnswers: [
-      'Hier sehen wir einen ',
-      'Lückentext',
-      ' der mit ',
-      'Wörtern',
-      ' gefüllt werden sollte. Die Aufgabe kann auch ',
-      'überprüft',
-      ' werden.',
-    ],
-    isDropDown: false,
-    difficulty: 1,
-    subject: demoSubject,
-  };
-
+  // define page content
   let content = <></>;
+  let returnButton = <></>;
   if (appState === AppStateEnum.WELCOMEPAGE) {
     content = <WelcomePage changeAppState={setAppState} />;
   } else if (appState === AppStateEnum.EDITOR) {
     content = <>EDITOR: TO BE IMPLEMENTED</>;
   } else if (appState === AppStateEnum.EXERCISES) {
-    // content = <>EXERCISES: TO BE IMPLEMENTED</>;
-    content = (
-      <ClozeWidget
-        exercise={demo}
-        finish={() => setAppState(AppStateEnum.WELCOMEPAGE)}
-        check={async (e) => correctDemo.correctAnswers}
-      />
+    content = <ExerciseContainer />;
+  }
+
+  if (appState !== AppStateEnum.WELCOMEPAGE) {
+    returnButton = (
+      <IconButton
+        color="primary"
+        style={{
+          position: 'absolute',
+          left: '40px',
+          top: '40px',
+          height: '100px',
+          width: '100px',
+          border: '5px solid',
+        }}
+        onClick={() => setAppState(AppStateEnum.WELCOMEPAGE)}
+      >
+        <ArrowBackIcon color="primary" style={{ height: '90%', width: '90%' }} />
+      </IconButton>
     );
   }
 
-  return <div className="App">{content}</div>;
+  return (
+    <div className="App">
+      {returnButton}
+      {content}
+    </div>
+  );
 }
 
 export default App;
