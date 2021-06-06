@@ -1,16 +1,21 @@
 import {IExercise} from "../entities/IExercise";
-import {Exercise} from "../../../backend/src/entities/Exercise";
+import {IChoice} from "../entities/IChoice";
+import {ICloze} from "../entities/ICloze";
 
 export interface IExerciseService {
-    createExercise(exercise: IExercise): Promise<void>;
-    
+    createCloze(cloze: ICloze): Promise<void>;
+
+    createChoice(choice: IChoice): Promise<void>;
+
     deleteExercise(id: string): Promise<void>;
 
-    updateExercise(exercise: IExercise): Promise<void>;
+    updateCloze(cloze: ICloze): Promise<void>;
 
-    getExerciseById(id: string): Promise<IExercise>;
+    updateChoice(choice: IChoice): Promise<void>;
 
     getSubjectExercisesByLabel(subjectLabel: string): Promise<Array<IExercise>>;
 
-    getSubjectExercisesByDifficulty(subjectLabel: string, difficulty: number): Promise<Array<Exercise>>
+    getExerciseById(id: string): Promise<IExercise>;
+
+    getSubjectExercisesByDifficulty(subjectLabel: string, difficulty: number): Promise<Array<IExercise>>;
 }
