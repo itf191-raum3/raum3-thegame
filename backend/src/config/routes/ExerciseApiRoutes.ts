@@ -121,24 +121,6 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
     }
 }
 
-export const getNextExercise = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const gameSessionId = req.params.gameSessionId;
-        const gameSession = find(gameSessions, ['id', gameSessionId]);
-
-        if (isUndefined(gameSession)) {
-            return next("GameSession not found");
-        }
-
-        const exercise = await gameSessionService.getRandomExercise(gameSession);
-        return res.send({
-            exercise: exercise
-        })
-    } catch (err) {
-        return next(err);
-    }
-}
-
 export const exerciseApi: Array<ApiRoute> = [
     {
         path: "/exercise/:label/create",
@@ -164,10 +146,5 @@ export const exerciseApi: Array<ApiRoute> = [
         path: "/exercise/:gameSessionId/answers",
         method: "POST",
         handler: checkExerciseAnswers
-    },
-    {
-        path: "/exercise/:gameSessionId/next",
-        method: "GET",
-        handler: getNextExercise
     }
 ]
