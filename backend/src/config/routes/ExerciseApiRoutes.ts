@@ -12,7 +12,15 @@ const gameSessionService = new GameSessionService();
 
 export const createExercise = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const subject = await subjectService.getSubjectById(<string>req.params.id);
+        console.log(req.body)
+        console.log(req.body)
+        console.log(req.body)
+        console.log(req.body)
+        console.log(req.body)
+        console.log(req.body)
+        console.log(req.body)
+        console.log(req.body)
+        const subject = await subjectService.getSubjectByLabel(<string>req.params.label);
 
         const exercise = {
             id: uuid(),
@@ -57,7 +65,7 @@ export const updateExercise = async (req: Request, res: Response, next: NextFunc
         const exercise = await exerciseService.getExerciseById(<string>req.params.id);
         const updatedExercise = {
             id: <string>req.query.id,
-            label: req.body.string,
+            label: req.body.label,
             difficulty: req.body.difficulty,
             correctAnswers: req.body.correctAnswers,
             possibleAnswers: req.body.possibleAnswers,
@@ -141,7 +149,7 @@ export const getNextExercise = async (req: Request, res: Response, next: NextFun
 
 export const exerciseApi: Array<ApiRoute> = [
     {
-        path: "/exercise/:id",
+        path: "/exercise/:label",
         method: "POST",
         handler: createExercise
     },
