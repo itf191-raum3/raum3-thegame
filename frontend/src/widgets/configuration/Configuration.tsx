@@ -13,7 +13,7 @@ const columnNames = ['Schwierigkeit', 'Aufgabentype', 'Aufgabe', 'Richtige Antwo
 export function Configuration() {
   var workingExercise = clearExercise();
 
-  var subject = '';
+  var subject = 'AE';
   const [allExercises, setallExercises] = useState<IExercise[]>(Array<IExercise>());
   const [workingTable, setWorkingTable] = useState<JSX.Element>();
 
