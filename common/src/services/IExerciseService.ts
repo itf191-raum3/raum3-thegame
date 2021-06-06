@@ -16,6 +16,4 @@ export interface IExerciseService {
     getSubjectExercisesByLabel(subjectLabel: string): Promise<Array<IExercise>>;
 
     getExerciseById(id: string): Promise<IExercise>;
-
-    getSubjectExercisesByDifficulty(subjectLabel: string, difficulty: number): Promise<Array<IExercise>>;
 }
