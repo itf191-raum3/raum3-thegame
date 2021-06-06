@@ -7,8 +7,14 @@ import {IGameSessionService} from "@common/services/IGameSessionService";
 
 export class GameSessionService implements IGameSessionService {
     async createGameSession(subject: Subject): Promise<GameSession> {
-        let gameSession = new GameSession(subject);
-        await getManager().insert(GameSession, gameSession);
+        let gameSession;
+        await getManager().insert(GameSession, {
+            currentSubject: subject
+        }).then(result => {
+            gameSession = result.generatedMaps[0];
+            console.log("gameSession", gameSession);
+        });
+        // @ts-ignore
         return gameSession;
     }
 

@@ -17,9 +17,4 @@ export class GameSession {
     score: number;
 
     answered: Array<Exercise>;
-
-
-    constructor(currentSubject: Subject) {
-        this.currentSubject = currentSubject;
-    }
 }
