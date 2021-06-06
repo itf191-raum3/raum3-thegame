@@ -29,8 +29,6 @@ export function ChoiceWidget(props: ChoiceWidgetProps) {
           return [];
         }
       });
-      console.log(newAnswers);
-      console.log(exercise);
       setAnswers([...newAnswers]);
     },
     [exercise]
