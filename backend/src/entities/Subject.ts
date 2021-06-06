@@ -11,5 +11,5 @@ export class Subject implements ISubject {
     label: string;
 
     @OneToMany(() => Exercise, exercise => exercise.subject)
-    IExercises: Array<Exercise>;
+    exercises: Array<Exercise>;
 }

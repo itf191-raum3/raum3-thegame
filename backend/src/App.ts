@@ -1,4 +1,4 @@
-// Temporarily has router responsibilities, will be rewritten later
+// Temporarily has router responsibilities, will be rewritten later (will never happen)
 import express, {Request, Response} from "express";
 import {ApiRouter} from "@/service/router/ApiRouter";
 import {exerciseApi} from "@/config/routes/ExerciseApiRoutes"

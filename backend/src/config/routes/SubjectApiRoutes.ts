@@ -20,7 +20,7 @@ export const getExercisesForSubject = async (req: Request, res: Response, next: 
     try {
         const subject = await subjectService.getSubjectById(<string>req.query.id);
         return res.send({
-            exercises: subject.IExercises
+            exercises: subject.exercises
         });
     } catch (err) {
         return next(err);
@@ -30,7 +30,7 @@ export const getExercisesForSubject = async (req: Request, res: Response, next: 
 export const getRandomExerciseForSubject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const subject = await subjectService.getSubjectById(<string>req.query.id);
-        const exercise = sample(subject.IExercises);
+        const exercise = sample(subject.exercises);
         if (!isUndefined(exercise)) {
             const redactedAnswers: Array<string> = [];
             each(exercise.correctAnswers, () => {
