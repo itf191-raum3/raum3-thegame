@@ -4,6 +4,7 @@ import { ICloze } from '../../../../common/src/entities/ICloze';
 import { DropdownBlank } from './DropdownBlank';
 import { InputBlank } from './InputBlank';
 import './ClozeWidget.css';
+import { CheckResponse } from 'api/APIUtils';
 
 function BottomButton(props: { label: string; onClick: () => void }) {
   return (
@@ -18,7 +19,7 @@ function BottomButton(props: { label: string; onClick: () => void }) {
 export function ClozeWidget(props: ClozeWidgetProps) {
   const { check, finish, exercise } = props;
 
-  const [correctAnswers, setCorrectAnswers] = useState<string[] | undefined>(undefined);
+  const [correctAnswers, setCorrectAnswers] = useState<CheckResponse | undefined>(undefined);
 
   const useDropdown = exercise.possibleAnswers.length > 0;
 
@@ -54,7 +55,7 @@ export function ClozeWidget(props: ClozeWidgetProps) {
           check(exercise)
             .then(setCorrectAnswers)
             .catch((e) => {
-              setCorrectAnswers([]);
+              setCorrectAnswers({ answers: ['Error'], isCorrect: [false] });
               console.log(e);
             });
         }}
@@ -63,22 +64,14 @@ export function ClozeWidget(props: ClozeWidgetProps) {
   ) : (
     <>
       <div>
-        {correctAnswers.map((text, index) => {
-          const givenAnswer = exercise.correctAnswers[index];
+        {correctAnswers.answers.map((text, index) => {
+          const isCorrect = correctAnswers.isCorrect[index];
 
-          if (givenAnswer && givenAnswer.toLowerCase() !== text.toLowerCase()) {
-            return (
-              <span key={index} className={'IncorrectInput'}>
-                {text}
-              </span>
-            );
-          } else {
-            return (
-              <span key={index} className={'CorrectInput'}>
-                {text}
-              </span>
-            );
-          }
+          return (
+            <span key={index} className={isCorrect ? 'CorrectInput' : 'IncorrectInput'}>
+              {text}
+            </span>
+          );
         })}
       </div>
       <BottomButton label={'Nächste Aufgabe'} onClick={() => finish()} />
@@ -89,6 +82,6 @@ export function ClozeWidget(props: ClozeWidgetProps) {
 
 export type ClozeWidgetProps = {
   exercise: ICloze;
-  check: (exercise: ICloze) => Promise<string[]>;
+  check: (exercise: ICloze) => Promise<CheckResponse>;
   finish: () => void;
 };
