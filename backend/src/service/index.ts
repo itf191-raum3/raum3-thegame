@@ -1,8 +1,6 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
-import {Exercise} from "@/entities/Exercise";
-import { Server } from "@/service/Server";
-import {ExerciseService} from "@/service/ExerciseService";
+import {Server} from "@/service/Server";
 
 const server = new Server();
 

@@ -1,4 +1,4 @@
-import { app } from "@/service/App"
+import {app} from "@/service/App"
 
 export class Server {
     start() {

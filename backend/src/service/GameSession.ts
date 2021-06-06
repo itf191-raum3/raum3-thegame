@@ -16,8 +16,9 @@ export class GameSession {
         this.currentSubject = currentSubject;
     }
 
+
     async getNextExercise(): Promise<Exercise | undefined> {
-        if(this.currentDifficulty > 10)
+        if (this.currentDifficulty > 10)
             return undefined;
 
         if (this.exercisePool.length == 0)

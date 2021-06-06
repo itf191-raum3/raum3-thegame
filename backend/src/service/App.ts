@@ -1,11 +1,11 @@
 // Temporarily has router responsibilities, will be rewritten later
 import express, {Request, Response} from "express";
-import { ApiRouter } from "@/service/router/ApiRouter";
-import { exerciseApi } from "@/config/routes/ExerciseApiRoutes"
-import { subjectApi } from "@/config/routes/SubjectApiRoutes";
-import { PageRouter } from "@/service/router/PageRouter";
-import { pages } from "@/config/routes/PageRoutes";
-import { resolve } from "path";
+import {ApiRouter} from "@/service/router/ApiRouter";
+import {exerciseApi} from "@/config/routes/ExerciseApiRoutes"
+import {subjectApi} from "@/config/routes/SubjectApiRoutes";
+import {PageRouter} from "@/service/router/PageRouter";
+import {pages} from "@/config/routes/PageRoutes";
+import {resolve} from "path";
 
 export const app = express();
 
