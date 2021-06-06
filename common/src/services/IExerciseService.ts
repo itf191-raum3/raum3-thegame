@@ -9,5 +9,5 @@ export interface IExerciseService {
 
     getExerciseById(id: string): Promise<IExercise>;
 
-    getSubjectExercisesByLabel(subjectLabel: string): Promise<Array<IExercise>> ;
+    getSubjectExercisesByLabel(subjectLabel: string): Promise<Array<IExercise>>;
 }

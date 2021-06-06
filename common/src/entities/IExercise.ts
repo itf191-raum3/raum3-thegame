@@ -1,4 +1,4 @@
-import {ISubject} from "./ISubject";
+import { ISubject } from "./ISubject";
 
 export interface IExercise {
     id: string;
