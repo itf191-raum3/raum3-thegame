@@ -9,8 +9,11 @@ export = {
   dropSchema: false,
   migrationsRun: true,
   logging: true,
-  "entities": [
+  entities: [
     "./src/entities/**/*.ts"
+  ],
+  migrations: [
+    "./src/migrations/**/*.ts"
   ]
 }
 

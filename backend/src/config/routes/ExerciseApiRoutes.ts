@@ -12,14 +12,6 @@ const gameSessionService = new GameSessionService();
 
 export const createExercise = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log(req.body)
-        console.log(req.body)
-        console.log(req.body)
-        console.log(req.body)
-        console.log(req.body)
-        console.log(req.body)
-        console.log(req.body)
-        console.log(req.body)
         const subject = await subjectService.getSubjectByLabel(<string>req.params.label);
 
         const exercise = {
