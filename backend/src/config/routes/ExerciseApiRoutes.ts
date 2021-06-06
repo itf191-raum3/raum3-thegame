@@ -4,7 +4,7 @@ import {ExerciseService} from "@/service/ExerciseService";
 import {v4 as uuid} from "uuid";
 import {each, find, isUndefined} from "lodash";
 import {SubjectService} from "@/service/SubjectService";
-import { gameSessions, GameSessionService } from "@/service/GameSessionService";
+import {gameSessions, GameSessionService} from "@/service/GameSessionService";
 
 const exerciseService = new ExerciseService();
 const subjectService = new SubjectService();
@@ -98,7 +98,7 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
     const gameSessionId = req.params.gameSessionId;
     const gameSession = find(gameSessions, ['id', gameSessionId]);
     try {
-        if(isUndefined(gameSession)) {
+        if (isUndefined(gameSession)) {
             return next("GameSession not found");
         }
 
@@ -126,7 +126,7 @@ export const getNextExercise = async (req: Request, res: Response, next: NextFun
         const gameSessionId = req.params.gameSessionId;
         const gameSession = find(gameSessions, ['id', gameSessionId]);
 
-        if(isUndefined(gameSession)) {
+        if (isUndefined(gameSession)) {
             return next("GameSession not found");
         }
 
