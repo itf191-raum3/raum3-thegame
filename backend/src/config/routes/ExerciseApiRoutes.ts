@@ -56,7 +56,7 @@ export const updateExercise = async (req: Request, res: Response, next: NextFunc
     try {
         const exercise = await exerciseService.getExerciseById(<string>req.params.id);
         const updatedExercise = {
-            id: <string>req.query.id,
+            id: <string>req.params.id,
             label: req.body.label,
             difficulty: req.body.difficulty,
             correctAnswers: req.body.correctAnswers,
@@ -141,7 +141,7 @@ export const getNextExercise = async (req: Request, res: Response, next: NextFun
 
 export const exerciseApi: Array<ApiRoute> = [
     {
-        path: "/exercise/:label",
+        path: "/exercise/:label/create",
         method: "POST",
         handler: createExercise
     },
@@ -151,12 +151,12 @@ export const exerciseApi: Array<ApiRoute> = [
         handler: readExercise
     },
     {
-        path: "/exercise/:id",
-        method: "PUT",
+        path: "/exercise/:id/update",
+        method: "POST",
         handler: updateExercise
     },
     {
-        path: "/exercise/:id",
+        path: "/exercise/:id/delete",
         method: "DELETE",
         handler: deleteExercise
     },

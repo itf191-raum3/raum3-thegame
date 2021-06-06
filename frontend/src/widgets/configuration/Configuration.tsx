@@ -398,7 +398,7 @@ export function Configuration() {
 }
 
 export function fetchGetSubject(subjectId: string): Promise<ISubject> {
-  return fetch('api/subjects/' + subjectId, { method: 'GET' })
+  return fetch(`api/subjects/${subjectId}`, { method: 'GET' })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -413,7 +413,7 @@ export function fetchGetSubject(subjectId: string): Promise<ISubject> {
 }
 
 export function fetchDeleteExercise(exerciseId: string) {
-  return fetch('api/exercise/' + exerciseId, { method: 'DELETE' })
+  return fetch(`api/exercise/${exerciseId}/delete`, { method: 'DELETE' })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -426,11 +426,7 @@ export function fetchDeleteExercise(exerciseId: string) {
 }
 
 export function fetchUpdateExercise(exerciseId: string, exercise: any) {
-  return fetch('api/exercise/' + exerciseId, {
-    method: 'PUT',
-    body: JSON.stringify(exercise),
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-  })
+  return fetch(`api/exercise/${exerciseId}/update`, { method: 'POST', body: JSON.stringify(exercise), headers : {'Content-Type': 'application/json', 'Accept': 'application/json'}})
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -443,11 +439,7 @@ export function fetchUpdateExercise(exerciseId: string, exercise: any) {
 }
 
 export function fetchCreateExercise(exerciseId: string, exerciseType: any, newExercise: any) {
-  return fetch('api/exercise/' + exerciseId + '?exerciseType=' + exerciseType, {
-    method: 'POST',
-    body: JSON.stringify(newExercise),
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-  })
+  return fetch(`api/exercise/${exerciseId}/create?exerciseType=${exerciseType}`, {method: 'POST', body: JSON.stringify(newExercise), headers : {'Content-Type': 'application/json', 'Accept': 'application/json'}})
     .then((response) => {
       console.dir(response);
       if (response.ok) {

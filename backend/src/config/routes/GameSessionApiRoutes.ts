@@ -8,7 +8,7 @@ const gameSessionService = new GameSessionService();
 
 export const createGameSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const subject = await subjectService.getSubjectById(<string>req.query.subject);
+        const subject = await subjectService.getSubjectByLabel(<string>req.params.subjectLabel);
         const gameSession = await gameSessionService.createGameSession(subject);
         gameSessions.push(gameSession);
         res.send({
@@ -19,9 +19,9 @@ export const createGameSession = async (req: Request, res: Response, next: NextF
     }
 }
 
-export const exerciseApi: Array<ApiRoute> = [
+export const gameSessionApi: Array<ApiRoute> = [
     {
-        path: "/session/create",
+        path: "/session/create/:subjectLabel",
         method: "GET",
         handler: createGameSession
     }
