@@ -15,7 +15,7 @@ function App() {
   const [appState, setAppState] = useState<AppStateEnum>(AppStateEnum.WELCOMEPAGE);
 
   const demoSubject: ISubject = {
-    IExercises: [],
+    exercises: [],
     id: '0',
     label: 'dldldl',
   };
