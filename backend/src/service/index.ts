@@ -1,7 +1,10 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
-import {Exercise} from "@/entities/Exercise";
-import {ExerciseService} from "@/service/ExerciseService";
+import {Server} from "@/service/Server";
+
+const server = new Server();
 
 createConnection().then(async connection => {
 });
+
+server.start();

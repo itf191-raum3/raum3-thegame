@@ -4,7 +4,7 @@ import {Subject} from "@/entities/Subject";
 
 @Entity()
 @TableInheritance({column: {type: "varchar", name: "type"}})
-export class Exercise implements IExercise {
+export abstract class Exercise implements IExercise {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 

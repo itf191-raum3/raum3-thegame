@@ -8,5 +8,5 @@ interface ApiRoute {
 
 interface PageRoute {
   path: string,
-  handler: (req: Request, res: Response, next: NextFunction) => any
+  page: string
 }
