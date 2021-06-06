@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { ExerciseService } from "@/service/ExerciseService";
 import { v4 as uuid } from "uuid";
 import { Subject } from "@/entities/Subject";
+import { each } from "lodash";
 
 const exerciseService = new ExerciseService();
 
@@ -59,6 +60,24 @@ export const deleteExercise = async (req: Request, res: Response, next: NextFunc
   }
   return res.sendStatus(200);
 };
+
+export const checkExerciseAnswers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const exercise = await exerciseService.getExerciseById(<string>req.query.id);
+    const isCorrect: Array<Boolean> = [];
+
+    each(req.body.answers, (answer, index: number) => {
+      isCorrect.push(answer === exercise.correctAnswers[index]);
+    })
+
+    res.send({
+      answers: exercise.correctAnswers,
+      isCorrect
+    })
+  } catch (err) {
+    return next(err);
+  }
+}
 
 export const exerciseApi : Array<ApiRoute> = [
   {
