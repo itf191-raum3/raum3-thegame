@@ -1,4 +1,4 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Subject} from "@/entities/Subject";
 import {Exercise} from "@/entities/Exercise";
 
@@ -7,7 +7,8 @@ export class GameSession {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column()
+    @OneToOne(() => Subject)
+    @JoinColumn()
     currentSubject: Subject;
 
     @Column({default: 1})
