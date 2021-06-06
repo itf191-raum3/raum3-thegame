@@ -18,6 +18,10 @@ export class GameSessionService implements IGameSessionService {
         return gameSession;
     }
 
+    async listGameSessions(): Promise<Array<GameSession>> {
+        return await getManager().find<GameSession>(GameSession);
+    }
+
     async getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined> {
         const randomDifficulty = Math.random() * (gameSession.maxDifficulty - 1) + 1;
         const possibleExercises = gameSession.currentSubject.exercises.filter(exercise => !gameSession.answered.includes(exercise) && exercise.difficulty <= randomDifficulty);
@@ -27,6 +31,8 @@ export class GameSessionService implements IGameSessionService {
         }
         return sample(possibleExercises);
     }
-}
 
-export const gameSessions = new Array<GameSession>();
+    async getGameSessionById(id: string): Promise<GameSession> {
+       return await getManager().findOneOrFail(GameSession, {where: {id: id}, relations: ["currentSubject", "currentSubject.exercises"]})
+    }
+}

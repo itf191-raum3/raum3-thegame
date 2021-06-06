@@ -26,7 +26,7 @@ export class ExerciseService implements IExerciseService {
     }
 
     async getSubjectExercisesByLabel(subjectLabel: string): Promise<Array<Exercise>> {
-        return await getManager().find(Exercise, {where: {subject: {label: subjectLabel}}});
+        return await getManager().find(Exercise, {where: {subject: {label: subjectLabel}}, relations: ["subject"]});
     }
 
     async getExerciseById(id: string): Promise<Exercise> {

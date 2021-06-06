@@ -6,4 +6,8 @@ export interface IGameSessionService {
     createGameSession(subject: Subject): Promise<GameSession>;
 
     getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined>;
+
+    listGameSessions(): Promise<Array<GameSession>>;
+
+    getGameSessionById(id: string): Promise<GameSession>;
 }

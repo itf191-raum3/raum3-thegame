@@ -4,7 +4,7 @@ import {ExerciseService} from "@/service/ExerciseService";
 import {v4 as uuid} from "uuid";
 import {each, find, isUndefined} from "lodash";
 import {SubjectService} from "@/service/SubjectService";
-import {gameSessions, GameSessionService} from "@/service/GameSessionService";
+import {GameSessionService} from "@/service/GameSessionService";
 
 const exerciseService = new ExerciseService();
 const subjectService = new SubjectService();
@@ -94,33 +94,6 @@ export const deleteExercise = async (req: Request, res: Response, next: NextFunc
     return res.sendStatus(200);
 };
 
-export const checkExerciseAnswers = async (req: Request, res: Response, next: NextFunction) => {
-    const gameSessionId = req.params.gameSessionId;
-    const gameSession = find(gameSessions, ['id', gameSessionId]);
-    try {
-        if (isUndefined(gameSession)) {
-            return next("GameSession not found");
-        }
-
-        const exercise = await exerciseService.getExerciseById(<string>req.params.id);
-        const isCorrect: Array<Boolean> = [];
-
-        each(req.body.answers, (answer, index: number) => {
-            isCorrect.push(answer === exercise.correctAnswers[index]);
-        });
-
-        gameSession.answered.push(exercise);
-        gameSession.score += exercise.difficulty * 360;
-
-        return res.send({
-            answers: exercise.correctAnswers,
-            isCorrect
-        })
-    } catch (err) {
-        return next(err);
-    }
-}
-
 export const exerciseApi: Array<ApiRoute> = [
     {
         path: "/exercise/:label/create",
@@ -141,10 +114,5 @@ export const exerciseApi: Array<ApiRoute> = [
         path: "/exercise/:id/delete",
         method: "DELETE",
         handler: deleteExercise
-    },
-    {
-        path: "/exercise/:gameSessionId/answers",
-        method: "POST",
-        handler: checkExerciseAnswers
     }
 ]

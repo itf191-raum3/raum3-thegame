@@ -1,17 +1,18 @@
 import {ApiRoute} from "../../../types/common"
 import {NextFunction, Request, Response} from "express";
 import {SubjectService} from "@/service/SubjectService";
-import {gameSessions, GameSessionService} from "@/service/GameSessionService";
-import {find, isUndefined} from "lodash";
+import {GameSessionService} from "@/service/GameSessionService";
+import {each, find, isUndefined} from "lodash";
+import {ExerciseService} from "@/service/ExerciseService";
 
 const subjectService = new SubjectService();
 const gameSessionService = new GameSessionService();
+const exerciseService = new ExerciseService();
 
 export const createGameSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const subject = await subjectService.getSubjectByLabel(<string>req.params.subjectLabel);
         const gameSession = await gameSessionService.createGameSession(subject);
-        gameSessions.push(gameSession);
         res.send(gameSession.id)
     } catch (err) {
         next(err);
@@ -22,13 +23,9 @@ export const createGameSession = async (req: Request, res: Response, next: NextF
 export const getNextExercise = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const gameSessionId = req.params.gameSessionId;
-        const gameSession = find(gameSessions, ['id', gameSessionId]);
-
-        if (isUndefined(gameSession)) {
-            return next("GameSession not found");
-        }
-
+        const gameSession = await gameSessionService.getGameSessionById(gameSessionId);
         const exercise = await gameSessionService.getRandomExercise(gameSession);
+
         return res.send(exercise)
     } catch (err) {
         return next(err);
@@ -38,17 +35,38 @@ export const getNextExercise = async (req: Request, res: Response, next: NextFun
 export const getGameSessionScore = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const gameSessionId = req.params.gameSessionId;
-        const gameSession = find(gameSessions, ['id', gameSessionId]);
+        const gameSession = await gameSessionService.getGameSessionById(gameSessionId);
 
-        if (isUndefined(gameSession)) {
-            return next("GameSession not found");
-        }
-
-        return res.send(gameSession.score)
+        return res.status(200).send(gameSession.score.toString())
     } catch (err) {
         return next(err);
     }
 }
+
+
+export const checkExerciseAnswers = async (req: Request, res: Response, next: NextFunction) => {
+    const gameSessionId = req.params.gameSessionId;
+    const gameSession = await gameSessionService.getGameSessionById(gameSessionId);
+    try {
+        const exercise = await exerciseService.getExerciseById(<string>req.params.exerciseId);
+        const isCorrect: Array<Boolean> = [];
+
+        each(req.body.answers, (answer, index: number) => {
+            isCorrect.push(answer === exercise.correctAnswers[index]);
+        });
+
+        gameSession.answered.push(exercise);
+        gameSession.score += exercise.difficulty * 360;
+
+        return res.send({
+            answers: exercise.correctAnswers,
+            isCorrect
+        })
+    } catch (err) {
+        return next(err);
+    }
+}
+
 
 export const gameSessionApi: Array<ApiRoute> = [
     {
@@ -65,5 +83,10 @@ export const gameSessionApi: Array<ApiRoute> = [
         path: "/session/:gameSessionId/score",
         method: "GET",
         handler: getGameSessionScore
+    },
+    {
+        path: "/session/:gameSessionId/checkAnswers/:exerciseId",
+        method: "POST",
+        handler: checkExerciseAnswers
     }
 ]

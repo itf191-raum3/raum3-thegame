@@ -17,5 +17,5 @@ export class GameSession {
     @Column({default: 0})
     score: number;
 
-    answered: Array<Exercise>;
+    answered: Array<Exercise> = new Array<Exercise>();
 }
