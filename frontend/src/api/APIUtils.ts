@@ -1,4 +1,3 @@
-import { ICloze } from '../../../common/src/entities/ICloze';
 import { IExercise } from '../../../common/src/entities/IExercise';
 
 export type CheckResponse = {
@@ -11,10 +10,13 @@ function isCheckResponse(obj: any): obj is CheckResponse {
 }
 
 // TODO check routes
-export function checkCloze(clozeExercise: ICloze, sessionId: string): Promise<CheckResponse> {
-  return fetch(`/api/exercise/${sessionId}/${clozeExercise.id}`, {
+export function checkExercise(exercise: IExercise, sessionId: string): Promise<CheckResponse> {
+  return fetch(`/api/exercise/${sessionId}/${exercise.id}`, {
     method: 'POST',
-    body: JSON.stringify({ answers: clozeExercise.correctAnswers }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ answers: exercise.correctAnswers }),
   })
     .then((response) => {
       if (response.ok) {
@@ -49,7 +51,7 @@ export async function fetchExercise(sessionId: string): Promise<IExercise> {
 }
 
 export function initializeGameSession(subjectId: string): Promise<string> {
-  return fetch('/api/session/create', { method: 'GET', body: JSON.stringify({ subject: subjectId }) })
+  return fetch(`/api/session/create/${subjectId}`, { method: 'GET' })
     .then((response) => {
       if (response.ok) {
         return response.json();

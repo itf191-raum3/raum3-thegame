@@ -1,11 +1,9 @@
 import { IChoice } from '../../../../common/src/entities/IChoice';
-import React, { useState } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { Button } from '@material-ui/core';
+import { useCallback, useState } from 'react';
+import { Button, Checkbox, FormControlLabel, FormGroup, Radio } from '@material-ui/core';
+import { CheckResponse } from 'api/APIUtils';
+import { negativeFeedback, positiveFeedback } from 'widgets/common/Feedback';
+import './ChoiceWidget.css';
 
 function SubmitButton(props: { label: string; onclick: () => void }) {
   return (
@@ -17,88 +15,114 @@ function SubmitButton(props: { label: string; onclick: () => void }) {
   );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  })
-);
-
 export function ChoiceWidget(props: ChoiceWidgetProps) {
-  const { check, exercise } = props;
-  const [correctAnswers, setCorrectAnswers] = useState<string[] | undefined>(undefined);
-  const classes = useStyles();
-  const state = React.useState('');
-  var content = !correctAnswers ? (
-    <div>
-      {props.exercise.correctAnswers.map((data) => {
-        if (data === ' ') {
-          return (
-            <FormControl className={classes.formControl}>
-              <InputLabel id="choiceBoxLabel">Auswahl</InputLabel>
-              <Select labelId="choiceBoxLabel" value={state}>
-                {props.exercise.possibleAnswers.map((dataset, index) => {
-                  return (
-                    <MenuItem key={index} value={dataset}>
-                      {dataset}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          );
+  const { check, exercise, finish } = props;
+  const [correctAnswers, setCorrectAnswers] = useState<CheckResponse | undefined>(undefined);
+  const [answers, setAnswers] = useState<boolean[]>(exercise.possibleAnswers.map((p) => false));
+
+  const onChange = useCallback(
+    (newAnswers) => {
+      exercise.correctAnswers = exercise.possibleAnswers.flatMap((a, index2) => {
+        if (newAnswers[index2]) {
+          return [a];
         } else {
-          return <p>{data}</p>;
+          return [];
         }
-      })}
-      <div>
-        <Button variant="contained" color="primary">
-          Überprüfen
-        </Button>
-      </div>
+      });
+      console.log(newAnswers);
+      console.log(exercise);
+      setAnswers([...newAnswers]);
+    },
+    [exercise]
+  );
+
+  const content = !correctAnswers ? (
+    <div>
+      <div style={{ marginBottom: '30px', fontSize: '2em' }}>{exercise.label}</div>
+      <FormGroup>
+        {exercise.possibleAnswers.map((answer, index) => {
+          console.log(answers);
+          return (
+            <FormControlLabel
+              key={answer}
+              control={
+                exercise.isMultipleChoice ? (
+                  <Checkbox
+                    checked={answers[index]}
+                    onChange={() => {
+                      answers[index] = !answers[index];
+                      onChange(answers);
+                    }}
+                  />
+                ) : (
+                  <Radio
+                    checked={answers[index]}
+                    value={answer}
+                    onChange={() => {
+                      const newAnswers = exercise.possibleAnswers.map((p) => false);
+                      newAnswers[index] = !answers[index];
+                      onChange(newAnswers);
+                    }}
+                  />
+                )
+              }
+              label={answer}
+            />
+          );
+        })}
+      </FormGroup>
+      <SubmitButton
+        label={'Überprüfen'}
+        onclick={() => {
+          check(exercise)
+            .then(setCorrectAnswers)
+            .catch((e) => {
+              setCorrectAnswers({ answers: ['Error'], isCorrect: [false] });
+              console.log(e);
+            });
+        }}
+      />
     </div>
   ) : (
     <div>
-      {props.exercise.correctAnswers.map((data) => {
-        if (data === ' ') {
+      <div style={{ marginBottom: '50px', fontSize: '2em' }}>
+        {correctAnswers.isCorrect.every((c) => c)
+          ? positiveFeedback[Math.floor(Math.random() * positiveFeedback.length)]
+          : negativeFeedback[Math.floor(Math.random() * negativeFeedback.length)]}
+      </div>
+      <div style={{ marginBottom: '30px', fontSize: '2em' }}>{exercise.label}</div>
+      <FormGroup>
+        {correctAnswers.answers.map((answer, index) => {
           return (
-            <FormControl className={classes.formControl}>
-              <InputLabel id="choiceBoxLabel">Auswahl</InputLabel>
-              <Select labelId="choiceBoxLabel">
-                console.log(data);
-                {props.exercise.correctAnswers.map((dataset, index) => {
-                  if (dataset !== '') {
-                    return (
-                      <MenuItem key={index} value={dataset}>
-                        {dataset}
-                      </MenuItem>
-                    );
-                  } else {
-                    return '';
-                  }
-                })}
-              </Select>
-            </FormControl>
+            <FormControlLabel
+              style={{ color: 'white' }}
+              key={answer}
+              control={
+                exercise.isMultipleChoice ? (
+                  <Checkbox
+                    classes={{ disabled: 'DisabledText' }}
+                    checked={correctAnswers.isCorrect[index]}
+                    disabled={true}
+                  />
+                ) : (
+                  <Radio
+                    classes={{ disabled: 'DisabledText' }}
+                    checked={correctAnswers.isCorrect[index]}
+                    disabled={true}
+                  />
+                )
+              }
+              disabled={false}
+              label={answer}
+            />
           );
-        } else {
-          return <p>{data}</p>;
-        }
-      })}
+        })}
+      </FormGroup>
       <div>
         <SubmitButton
-          label={'Überprüfen'}
+          label={'Nächste Aufgabe'}
           onclick={() => {
-            check(exercise)
-              .then(setCorrectAnswers)
-              .catch((e) => {
-                setCorrectAnswers([]);
-                console.log(e);
-              });
+            finish();
           }}
         />
       </div>
@@ -109,6 +133,6 @@ export function ChoiceWidget(props: ChoiceWidgetProps) {
 
 export type ChoiceWidgetProps = {
   exercise: IChoice;
-  check: (exercise: IChoice) => Promise<string[]>;
+  check: (exercise: IChoice) => Promise<CheckResponse>;
   finish: () => void;
 };

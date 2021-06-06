@@ -1,4 +1,8 @@
 .dropDownBox {
-    color: white !important;
-    border-bottom: white !important;
-  }
+  color: white !important;
+  border-bottom: white !important;
+}
+
+.DisabledText {
+  color: 'white';
+}
