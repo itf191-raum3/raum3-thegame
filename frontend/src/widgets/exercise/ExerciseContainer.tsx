@@ -5,7 +5,7 @@ import { ClozeWidget } from 'widgets/cloze/ClozeWidget';
 import { IExercise } from '../../../../common/src/entities/IExercise';
 import { isIChoice, isICloze } from './ExerciseTypeGuards';
 
-const subjectId = '';
+const subjectId = 'AE';
 
 export function ExerciseContainer() {
   const [currentExercise, setCurrentExercise] = useState<IExercise | undefined>(undefined);

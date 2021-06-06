@@ -33,7 +33,7 @@ export function checkCloze(clozeExercise: ICloze): Promise<CheckResponse> {
 }
 
 export function fetchExercise(subjectId: string): Promise<IExercise> {
-  return fetch('/subject/exercise/?id=' + subjectId, { method: 'GET' })
+  return fetch('/subject/exercise?id=' + subjectId, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
     .then((response) => {
       if (response.ok) {
         return response.json();
