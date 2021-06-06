@@ -14,7 +14,7 @@ app.use("/api/", new ApiRouter(exerciseApi).router);
 app.use("/api/", new ApiRouter(subjectApi).router);
 
 app.use("/", new PageRouter(pages).router);
-app.use("/", express.static(resolve(__dirname, "../public/build")));
+app.use("/", express.static(resolve(__dirname, "./public/build")));
 
 app.get("/manage/health", (req: Request, res: Response) => {
     res.status(200).send({message: "Hello World!"});

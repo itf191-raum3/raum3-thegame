@@ -28,3 +28,5 @@ export class GameSessionService implements IGameSessionService {
         return sample(possibleExercises);
     }
 }
+
+export const gameSessions = new Array<GameSession>();
