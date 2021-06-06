@@ -54,7 +54,7 @@ export function Configuration() {
                 type="number"
                 min="0"
                 placeholder="Schwierigkeit"
-                defaultValue=""
+                defaultValue={workingExercise.difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
@@ -68,7 +68,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Aufgabenstellung"
-                defaultValue=""
+                defaultValue={workingExercise.label}
                 onChange={(e) => setLabel(e.target.value)}
               />
             </td>
@@ -76,7 +76,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Richtige Antworten"
-                defaultValue=""
+                defaultValue={workingExercise.correctAnswers}
                 onChange={(e) => setCorrect(e.target.value)}
               />
             </td>
@@ -84,7 +84,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue=""
+                defaultValue={workingExercise.possibleAnswers}
                 onChange={(e) => setPossible(e.target.value)}
               />
             </td>
@@ -107,6 +107,11 @@ export function Configuration() {
     const exercise = getExerciseInList(idStr);
     const { difficulty, label, correctAnswers, possibleAnswers } = exercise;
 
+    setDifficulty(difficulty+"")
+    setLabel(label)
+    setCorrect(correctAnswers.join("; "))
+    setPossible(possibleAnswers.join("; "))
+
     var exerciseType = 'Unbekannt';
     if ('isDropdown' in exercise) {
       exerciseType = 'Lückentext';
@@ -122,18 +127,18 @@ export function Configuration() {
         <tbody>
           <tr className="information">
             <td>
-              <input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" defaultValue={difficulty} />
+              <input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" defaultValue={workingExercise.difficulty} />
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
-              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={label} />
+              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={workingExercise.label} />
             </td>
             <td>
               <input
                 type="text"
                 id="correctAnswers"
                 placeholder="Richtige Antworten"
-                defaultValue={correctAnswers.join('; ')}
+                defaultValue={workingExercise.correctAnswers}
               />
             </td>
             <td>
@@ -141,7 +146,7 @@ export function Configuration() {
                 type="text"
                 id="allChoices"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue={possibleAnswers.join('; ')}
+                defaultValue={workingExercise.possibleAnswers}
               />
             </td>
             <td>
@@ -396,7 +401,7 @@ export function fetchDeleteExercise(exerciseId: string) {
     .then((response) => {
       console.dir(response);
       if (response.ok) {
-        return response.json();
+        return true;
       } else {
         return Promise.reject(response.status + ' ' + response.statusText);
       }
@@ -409,7 +414,7 @@ export function fetchUpdateExercise(exerciseId: string, exercise: any) {
     .then((response) => {
       console.dir(response);
       if (response.ok) {
-        return response.json();
+        return true;
       } else {
         return Promise.reject(response.status + ' ' + response.statusText);
       }
@@ -422,7 +427,7 @@ export function fetchCreateExercise(exerciseId: string, exerciseType: any, newEx
     .then((response) => {
       console.dir(response);
       if (response.ok) {
-        return response.json();
+        return true;
       } else {
         return Promise.reject(response.status + ' ' + response.statusText);
       }
