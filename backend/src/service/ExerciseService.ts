@@ -23,4 +23,8 @@ export class ExerciseService implements IExerciseService {
         return await getManager().findOneOrFail(Exercise, {where: {id: id}});
     }
 
+    async getSubjectExercisesByDifficulty(subjectLabel: string, difficulty: number): Promise<Array<Exercise>> {
+        return await getManager().find(Exercise, {where: {subject: {label: subjectLabel}, difficulty: difficulty}});
+    }
+
 }
