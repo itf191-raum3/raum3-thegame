@@ -1,5 +1,6 @@
-import { checkCloze, fetchExercise } from 'api/APIUtils';
+import { checkExercise, fetchExercise } from 'api/APIUtils';
 import { useCallback, useEffect, useState } from 'react';
+import { ChoiceWidget } from 'widgets/choice/ChoiceWidget';
 import { ClozeWidget } from 'widgets/cloze/ClozeWidget';
 import { Loading } from 'widgets/common/Loading';
 import { getSessionId } from 'widgets/sessionContext/SessionContext';
@@ -10,7 +11,7 @@ const subjectId = 'AE';
 
 export function ExerciseContainer() {
   const [currentExercise, setCurrentExercise] = useState<IExercise | undefined>(undefined);
-  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
+  const [sessionId, setSessionId] = useState<string | undefined>('undefined');
 
   const getNewExercise = useCallback(() => {
     setCurrentExercise(undefined);
@@ -40,10 +41,12 @@ export function ExerciseContainer() {
     content = <Loading />;
   } else if (isICloze(currentExercise)) {
     content = (
-      <ClozeWidget exercise={currentExercise} check={(e) => checkCloze(e, sessionId)} finish={getNewExercise} />
+      <ClozeWidget exercise={currentExercise} check={(e) => checkExercise(e, sessionId)} finish={getNewExercise} />
     );
   } else if (isIChoice(currentExercise)) {
-    // choice;
+    content = (
+      <ChoiceWidget exercise={currentExercise} check={(e) => checkExercise(e, sessionId)} finish={getNewExercise} />
+    );
   }
 
   return <>{content}</>;
