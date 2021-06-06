@@ -242,6 +242,12 @@ export function Configuration() {
         possibleAnswer.trim();
       });
 
+      correctAnswersList.forEach(correctAnswer => {
+        if(arrayContains(possibleAnswersList, correctAnswers) === false){
+          possibleAnswersList.push(correctAnswer)
+        }
+      });
+
       var newExercise = {
         label: label,
         difficulty: difficulty,
@@ -284,6 +290,12 @@ export function Configuration() {
         possibleAnswer.trim();
       });
 
+      correctAnswersList.forEach(correctAnswer => {
+        if(arrayContains(possibleAnswersList, correctAnswers) === false){
+          possibleAnswersList.push(correctAnswer)
+        }
+      });
+
       var newExercise = {
         label: label,
         difficulty: difficulty,
@@ -291,7 +303,7 @@ export function Configuration() {
         possibleAnswers: possibleAnswersList,
       };
 
-      fetchUpdateExercise(id, newExercise);
+      fetchUpdateExercise(id, newExercise)
 
       setWorkingTable(loadCreateTable());
       loadSubject(subject);
@@ -436,3 +448,15 @@ export function fetchCreateExercise(exerciseId: string, exerciseType: any, newEx
     })
     .then((json) => {});
 }
+
+function arrayContains(array: string[], searchElement: string) : boolean{
+  var contains = false;
+
+  array.forEach(element => {
+    if(element === searchElement)
+      contains = true
+  });
+
+  return contains
+}
+
