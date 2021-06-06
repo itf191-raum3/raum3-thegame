@@ -1,4 +1,4 @@
-import { checkExercise, fetchExercise } from 'api/APIUtils';
+import { checkExercise, fetchCurrentScore, fetchExercise } from 'api/APIUtils';
 import { useCallback, useEffect, useState } from 'react';
 import { ChoiceWidget } from 'widgets/choice/ChoiceWidget';
 import { ClozeWidget } from 'widgets/cloze/ClozeWidget';
@@ -12,15 +12,17 @@ const subjectId = 'AE';
 export function ExerciseContainer() {
   const [currentExercise, setCurrentExercise] = useState<IExercise | undefined>(undefined);
   const [sessionId, setSessionId] = useState<string | undefined>(undefined);
+  const [score, setScore] = useState<number>(0);
 
   const getNewExercise = useCallback(() => {
     setCurrentExercise(undefined);
     if (sessionId) {
       fetchExercise(sessionId)
         .then(setCurrentExercise)
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((e) => console.log(e));
+      fetchCurrentScore(sessionId)
+        .then(setScore)
+        .catch((e) => console.log(e));
     }
   }, [sessionId]);
 
@@ -49,5 +51,20 @@ export function ExerciseContainer() {
     );
   }
 
-  return <>{content}</>;
+  return (
+    <>
+      <div
+        style={{
+          position: 'absolute',
+          top: '30px',
+          fontFamily: 'fantasy',
+          fontSize: '2.5em',
+          color: 'red',
+        }}
+      >
+        <i>Dein derzeitiger Score: {score}</i>
+      </div>
+      {content}
+    </>
+  );
 }
