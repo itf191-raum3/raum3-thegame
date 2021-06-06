@@ -1,7 +1,7 @@
 import {ApiRoute} from "../../../types/common"
 import {NextFunction, Request, Response} from "express";
 import {SubjectService} from "@/service/SubjectService";
-import { gameSessions, GameSessionService } from "@/service/GameSessionService";
+import {gameSessions, GameSessionService} from "@/service/GameSessionService";
 
 const subjectService = new SubjectService();
 const gameSessionService = new GameSessionService();
