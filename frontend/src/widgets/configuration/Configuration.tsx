@@ -377,7 +377,7 @@ export function Configuration() {
 }
 
 export function fetchGetSubject(subjectId: string): Promise<ISubject> {
-  return fetch('api/subject/exercises/' + subjectId, { method: 'GET' })
+  return fetch('api/subjects/' + subjectId, { method: 'GET' })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
