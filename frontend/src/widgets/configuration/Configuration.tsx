@@ -126,13 +126,7 @@ export function Configuration() {
         <tbody>
           <tr className="information">
             <td>
-              <input
-                type="number"
-                min="0"
-                id="difficulty"
-                placeholder="Schwierigkeit"
-                defaultValue={difficulty}
-              />
+              <input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" defaultValue={difficulty} />
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
@@ -143,7 +137,7 @@ export function Configuration() {
                 type="text"
                 id="correctAnswers"
                 placeholder="Richtige Antworten"
-                defaultValue={correctAnswers.join("; ")}
+                defaultValue={correctAnswers.join('; ')}
               />
             </td>
             <td>
@@ -151,7 +145,7 @@ export function Configuration() {
                 type="text"
                 id="allChoices"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue={possibleAnswers.join("; ")}
+                defaultValue={possibleAnswers.join('; ')}
               />
             </td>
             <td>
