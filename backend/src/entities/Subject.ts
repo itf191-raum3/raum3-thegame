@@ -1,7 +1,8 @@
 import {ISubject} from "@common/entities/ISubject";
 import {Exercise} from "@/entities/Exercise";
-import {Column, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
+@Entity()
 export class Subject implements ISubject {
     @PrimaryGeneratedColumn("uuid")
     id: string;
