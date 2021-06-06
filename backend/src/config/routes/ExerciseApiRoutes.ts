@@ -12,7 +12,7 @@ const gameSessionService = new GameSessionService();
 
 export const createExercise = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const subject = await subjectService.getSubjectById(<string>req.query.id);
+        const subject = await subjectService.getSubjectById(<string>req.params.id);
 
         const exercise = {
             id: uuid(),
@@ -45,7 +45,7 @@ export const createExercise = async (req: Request, res: Response, next: NextFunc
 
 export const readExercise = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const exercise = await exerciseService.getExerciseById(<string>req.query.id);
+        const exercise = await exerciseService.getExerciseById(<string>req.params.id);
         return res.send(exercise);
     } catch (err) {
         return next(err);
@@ -54,7 +54,7 @@ export const readExercise = async (req: Request, res: Response, next: NextFuncti
 
 export const updateExercise = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const exercise = await exerciseService.getExerciseById(<string>req.query.id);
+        const exercise = await exerciseService.getExerciseById(<string>req.params.id);
         const updatedExercise = {
             id: <string>req.query.id,
             label: req.body.string,
@@ -87,7 +87,7 @@ export const updateExercise = async (req: Request, res: Response, next: NextFunc
 
 export const deleteExercise = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await exerciseService.deleteExercise(<string>req.query.id);
+        await exerciseService.deleteExercise(<string>req.params.id);
     } catch (err) {
         return next(err);
     }
@@ -102,7 +102,7 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
             return next("GameSession not found");
         }
 
-        const exercise = await exerciseService.getExerciseById(<string>req.query.id);
+        const exercise = await exerciseService.getExerciseById(<string>req.params.id);
         const isCorrect: Array<Boolean> = [];
 
         each(req.body.answers, (answer, index: number) => {
@@ -141,22 +141,22 @@ export const getNextExercise = async (req: Request, res: Response, next: NextFun
 
 export const exerciseApi: Array<ApiRoute> = [
     {
-        path: "/exercise",
+        path: "/exercise/:id",
         method: "POST",
         handler: createExercise
     },
     {
-        path: "/exercise",
+        path: "/exercise/:id",
         method: "GET",
         handler: readExercise
     },
     {
-        path: "/exercise",
+        path: "/exercise/:id",
         method: "PUT",
         handler: updateExercise
     },
     {
-        path: "/exercise",
+        path: "/exercise/:id",
         method: "DELETE",
         handler: deleteExercise
     },

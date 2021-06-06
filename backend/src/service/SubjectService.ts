@@ -8,12 +8,16 @@ export class SubjectService implements ISubjectService {
         await getManager().insert(Subject, subject);
     }
 
-    async deleteSubject(id: string): Promise<void> {
-        await getManager().delete<Exercise>(Exercise, await this.getSubjectById(id)); // this sucks
+    async deleteSubject(label: string): Promise<void> {
+        await getManager().delete<Exercise>(Exercise, await this.getSubjectByLabel(label)); // this sucks
     }
 
     async getSubjectById(id: string): Promise<Subject> {
-        return await getManager().findOneOrFail<Subject>(Subject, {where: {id: id}});
+        return await getManager().findOneOrFail<Subject>(Subject, {id: id}, {relations: ["exercises"]});
+    }
+
+    async getSubjectByLabel(label: string): Promise<Subject> {
+        return await getManager().findOneOrFail<Subject>(Subject, {label: label}, {relations: ["exercises"]});
     }
 
     async updateSubject(subject: Subject): Promise<void> {
