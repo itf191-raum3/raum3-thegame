@@ -19,24 +19,21 @@ export function Configuration() {
 
   return (
     <div className="Configuration">
-      <header className="Config-GUI"></header>
-      <body>
-        <div id="menu">
-          <ul>
-            <li>
-              <button className="navBtn" onClick={() => loadSubject('AE')}>
-                Anwendungsentwicklung{' '}
-              </button>
-            </li>
-          </ul>
-        </div>
-        <div>
-          {workingTable}
-          <br />
-          <br />
-        </div>
-        <div>{renderShowingTabel()}</div>
-      </body>
+      <div id="menu">
+        <ul>
+          <li>
+            <button className="navBtn" onClick={() => loadSubject('AE')}>
+              Anwendungsentwicklung
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div>
+        {workingTable}
+        <br />
+        <br />
+      </div>
+      <div>{renderShowingTabel()}</div>
     </div>
   );
 
@@ -317,7 +314,7 @@ export function Configuration() {
         possibleAnswers: possibleAnswersList,
       };
 
-      fetchUpdateExercise(id, newExercise);
+      fetchUpdateExercise(id, exerciseType, newExercise);
 
       setWorkingTable(loadCreateTable());
       loadSubject(subject);
@@ -435,8 +432,8 @@ export function fetchDeleteExercise(exerciseId: string) {
     .then((json) => {});
 }
 
-export function fetchUpdateExercise(exerciseId: string, exercise: any) {
-  return fetch(`api/exercise/${exerciseId}/update`, {
+export function fetchUpdateExercise(exerciseId: string, exerciseType: any, exercise: any) {
+  return fetch(`api/exercise/${exerciseId}/update?exerciseType=${exerciseType}`, {
     method: 'POST',
     body: JSON.stringify(exercise),
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
