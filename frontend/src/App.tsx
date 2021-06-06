@@ -26,6 +26,7 @@ function App() {
 
       if (!sessionId) {
         sessionId = await initializeGameSession();
+        localStorage.setItem(GameSessionId, sessionId);
       }
 
       const sessionManager = new SessionManager(sessionId);

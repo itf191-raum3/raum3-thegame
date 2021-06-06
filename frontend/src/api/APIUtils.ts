@@ -10,9 +10,9 @@ function isCheckResponse(obj: any): obj is CheckResponse {
   return 'answers' in obj && 'isCorrect' in obj;
 }
 
-export function checkCloze(clozeExercise: ICloze): Promise<CheckResponse> {
+export function checkCloze(clozeExercise: ICloze, sessionId: string): Promise<CheckResponse> {
   // TODO use correct route
-  return fetch('/' + clozeExercise.id, {
+  return fetch(`/id=${clozeExercise.id}&sessionId=${sessionId}`, {
     method: 'GET',
     body: JSON.stringify({ answers: clozeExercise.correctAnswers }),
   })
@@ -32,8 +32,11 @@ export function checkCloze(clozeExercise: ICloze): Promise<CheckResponse> {
     });
 }
 
-export function fetchExercise(subjectId: string): Promise<IExercise> {
-  return fetch('/subject/exercise?id=' + subjectId, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
+export async function fetchExercise(subjectId: string, sessionId: string): Promise<IExercise> {
+  return fetch(`/subject/exercise?id=${subjectId}&sessionId=${sessionId}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
     .then((response) => {
       if (response.ok) {
         return response.json();
