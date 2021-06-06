@@ -418,7 +418,7 @@ export function fetchUpdateExercise(exerciseId: string, exercise: any) {
 }
 
 export function fetchCreateExercise(exerciseId: string, exerciseType: any, newExercise: any) {
-  return fetch('api/exercise/' + exerciseId + '&exerciseType=' + exerciseType, {
+  return fetch('api/exercise/' + exerciseId + '?exerciseType=' + exerciseType, {
     method: 'POST',
     body: JSON.stringify(newExercise),
   })
