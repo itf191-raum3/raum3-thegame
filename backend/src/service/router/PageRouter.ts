@@ -9,9 +9,11 @@ export class PageRouter {
 
   constructor(routes: Array<PageRoute>) {
     this.routes = routes;
-    logger.info("Initializing routes...");
+    logger.info("Initializing pages...");
     forEach(this.routes, (route) => {
-      this._router.get(route.path, route.handler);
+      this._router.get(route.path, (req, res, next) => {
+        res.sendFile(route.page);
+      });
       logger.info("Initialized page", route.path);
     });
   }
