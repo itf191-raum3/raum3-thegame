@@ -21,7 +21,7 @@ export class GameSessionService implements IGameSessionService {
     async getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined> {
         const randomDifficulty = Math.random() * (gameSession.maxDifficulty - 1) + 1;
         const possibleExercises = gameSession.currentSubject.exercises.filter(exercise => !gameSession.answered.includes(exercise) && exercise.difficulty <= randomDifficulty);
-        if(gameSession.answered.length >= 10) {
+        if (gameSession.answered.length >= 10) {
             gameSession.answered = Array<Exercise>();
             gameSession.maxDifficulty++;
         }
