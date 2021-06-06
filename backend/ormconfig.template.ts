@@ -16,6 +16,3 @@ export = {
     "./src/migrations/**/*.ts"
   ]
 }
-
-
-
