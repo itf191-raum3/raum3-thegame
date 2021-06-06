@@ -3,6 +3,7 @@ import {Exercise} from "@/entities/Exercise";
 import {Cloze} from "@/entities/Cloze";
 import {Choice} from "@/entities/Choice";
 import {IExerciseService} from "@common/services/IExerciseService";
+import {Subject} from "@/entities/Subject";
 
 export class ExerciseService implements IExerciseService {
     async createCloze(cloze: Cloze): Promise<void> {
@@ -32,9 +33,4 @@ export class ExerciseService implements IExerciseService {
     async getExerciseById(id: string): Promise<Exercise> {
         return await getManager().findOneOrFail(Exercise, {where: {id: id}});
     }
-
-    async getSubjectExercisesByDifficulty(subjectLabel: string, difficulty: number): Promise<Array<Exercise>> {
-        return await getManager().find(Exercise, {where: {subject: {label: subjectLabel}, difficulty: difficulty}});
-    }
-
 }
