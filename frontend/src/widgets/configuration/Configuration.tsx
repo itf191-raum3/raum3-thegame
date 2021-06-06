@@ -4,8 +4,8 @@ import editIcon from './edit_icon.png'
 import acceptIcon from './accept_icon.png'
 import addIcon from './add_icon.png'
 
-import { IExercise } from '../../../../common/src/entities/IExercise';
-import { useState } from 'react';
+import { IExercise } from '../../../../common/src/entities/IExercise'
+import { useState } from 'react'
 
 
 const columnNames = ["Schwierigkeit", "Aufgabentype", "Aufgabe", "Richtige Antworten", "Antwortmöglichkeiten", "", ""]
@@ -47,8 +47,8 @@ export function Configuration() {
           <tr className="information">
             <td><input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" defaultValue=""/></td>
             <td><select id="exersiceType">
-              <option value="choice">Auswahlaufgabe</option>
-              <option value="cloze">Lückentext</option>
+              <option value="IChoice">Auswahlaufgabe</option>
+              <option value="ICloze">Lückentext</option>
             </select>
             </td>
             <td><input type="text" id="label" placeholder="Aufgabenstellung" defaultValue=""/></td>
@@ -193,14 +193,13 @@ export function Configuration() {
     });
 
     var newExercise = {
-        label: label,
-        difficulty: difficulty,
-        correctAnswers: correctAnswers,
-        possibleAnswers: possibleAnswers,
-      }
+      label: label,
+      difficulty: difficulty,
+      correctAnswers: correctAnswers,
+      possibleAnswers: possibleAnswers
+    }
 
-      fetchCreateExercise(subject, exerciseType ,label, difficulty,
-        correctAnswers, possibleAnswers)
+    fetchCreateExercise(subject, newExercise)
 
     loadSubject(subject)
 
@@ -218,7 +217,6 @@ export function Configuration() {
   }
 
   function cancelEditing(){
-    setWorkingTable(<table>{generateHeader()}</table>)
     setWorkingTable(loadCreateTable())
   }
 
@@ -251,8 +249,14 @@ export function Configuration() {
       possibleAnswer.trim();
     });
 
-    fetchUpdateExercise(subject, label, difficulty,
-      correctAnswers, possibleAnswers)
+    var newExercise = {
+      label: label,
+      difficulty: difficulty,
+      correctAnswers: correctAnswers,
+      possibleAnswers: possibleAnswers
+    }
+
+    fetchUpdateExercise(subject, newExercise)
 
 
     setWorkingTable(loadCreateTable())
@@ -304,9 +308,8 @@ export function fetchDeleteExercise(exerciseId: string) {
   });
 }
 
-export function fetchUpdateExercise(exerciseId: string, label: string, difficulty: number,
-  correctAnswers: string[], possibleAnswers: string[]) {
-  return fetch('/exercise/?id=' + exerciseId, { method: 'PUT' }).then((response) => {
+export function fetchUpdateExercise(exerciseId: string, exercise:any) {
+  return fetch('/exercise/?id=' + exerciseId, { method: 'PUT', body:JSON.stringify(exercise)}).then((response) => {
     console.dir(response);
     if (response.ok) {
       return response.json();
@@ -318,9 +321,8 @@ export function fetchUpdateExercise(exerciseId: string, label: string, difficult
   });
 }
 
-export function fetchCreateExercise(subjectId: string, exerciseType: string ,label: string, difficulty: number,
-  correctAnswers: string[], possibleAnswers: string[]) {
-  return fetch('/exercise/?id=' + subjectId, { method: 'POST' }).then((response) => {
+export function fetchCreateExercise(subjectId: string, newExercise:any) {
+  return fetch('/exercise/?id=' + subjectId, { method: 'POST', body:JSON.stringify(newExercise)}).then((response) => {
     console.dir(response);
     if (response.ok) {
       return response.json();

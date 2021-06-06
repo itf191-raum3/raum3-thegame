@@ -36,12 +36,12 @@ ul {
   margin: 0;
   cursor: pointer;
   padding: 14px 16px;
-  float: left;
+  float: center;
 }
 
 .navBtn {
   background-color: #141248;
-  float: left;
+  float: center;
   border: none;
   outline: none;
   cursor: pointer;
