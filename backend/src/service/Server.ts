@@ -1,9 +1,9 @@
-const app = require("./app");
+import {app} from "@/service/App"
 
 export class Server {
     start() {
-        app.listen(5678, () => {
-            console.log("Example app listening on port 5678!");
+        app.listen(80, () => {
+            console.log("App listening on port 80");
         });
     }
 }
