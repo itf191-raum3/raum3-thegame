@@ -1,7 +1,6 @@
 import {IExercise} from "../entities/IExercise";
 import {IChoice} from "../entities/IChoice";
 import {ICloze} from "../entities/ICloze";
-import {Subject} from "../../../backend/src/entities/Subject";
 
 export interface IExerciseService {
     createCloze(cloze: ICloze): Promise<void>;
@@ -17,6 +16,4 @@ export interface IExerciseService {
     getSubjectExercisesByLabel(subjectLabel: string): Promise<Array<IExercise>>;
 
     getExerciseById(id: string): Promise<IExercise>;
-
-    getSubjectExercisesByDifficulty(subject: Subject, difficulty: number): Promise<Array<IExercise>>;
 }
