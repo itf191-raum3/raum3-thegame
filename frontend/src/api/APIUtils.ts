@@ -50,17 +50,20 @@ export async function fetchExercise(sessionId: string): Promise<IExercise> {
     });
 }
 
-// export  function fetchCurrentScore(sessionId: string): Promise<number> {
-//   return fetch(`api/session/${sessionId}`, {method: 'GET'}).then(response => {
-//     if(response.ok) {
-//       return response.json();
-//     } else {
-//       throw new Error(response.status + ' ' + response.statusText);
-//     }
-//   }).then(json => {
-
-//   });
-// }
+export function fetchCurrentScore(sessionId: string): Promise<number> {
+  return fetch(`api/session/${sessionId}`, { method: 'GET' })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error(response.status + ' ' + response.statusText);
+      }
+    })
+    .then((json) => {
+      console.log(json);
+      throw new Error('Demo');
+    });
+}
 
 export function initializeGameSession(subjectId: string): Promise<string> {
   return fetch(`/api/session/${subjectId}/create/`, { method: 'GET' })
