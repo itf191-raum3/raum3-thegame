@@ -443,11 +443,7 @@ export function fetchUpdateExercise(exerciseId: string, exercise: any) {
   })
     .then((response) => {
       console.dir(response);
-      if (response.ok) {
-        return true;
-      } else {
-        return false;
-      }
+      return response.ok;
     })
     .then((json) => {});
 }
@@ -460,11 +456,7 @@ export function fetchCreateExercise(exerciseId: string, exerciseType: any, newEx
   })
     .then((response) => {
       console.dir(response);
-      if (response.ok) {
-        return true;
-      } else {
-        return false;
-      }
+      return response.ok;
     })
     .then((json) => {});
 }

@@ -30,7 +30,8 @@
   },
   "scripts": {
     "build": "ttsc",
-    "test": "jest"
+    "test": "jest",
+    "pack": "cp -R node_modules dist/backend/node_modules && cp run.sh dist/run.sh"
   },
   "dependencies": {
     "@zerollup/ts-transform-paths": "^1.7.18",

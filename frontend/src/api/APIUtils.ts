@@ -11,7 +11,7 @@ function isCheckResponse(obj: any): obj is CheckResponse {
 
 // TODO check routes
 export function checkExercise(exercise: IExercise, sessionId: string): Promise<CheckResponse> {
-  return fetch(`/api/exercise/${sessionId}/${exercise.id}`, {
+  return fetch(`/api/exercise/${sessionId}/answers/${exercise.id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export function checkExercise(exercise: IExercise, sessionId: string): Promise<C
 }
 
 export async function fetchExercise(sessionId: string): Promise<IExercise> {
-  return fetch(`/api/exercise/${sessionId}/next`, {
+  return fetch(`/api/session/${sessionId}/next`, {
     method: 'GET',
   })
     .then((response) => {
@@ -50,8 +50,23 @@ export async function fetchExercise(sessionId: string): Promise<IExercise> {
     });
 }
 
+export function fetchCurrentScore(sessionId: string): Promise<number> {
+  return fetch(`api/session/${sessionId}`, { method: 'GET' })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error(response.status + ' ' + response.statusText);
+      }
+    })
+    .then((json) => {
+      console.log(json);
+      throw new Error('Demo');
+    });
+}
+
 export function initializeGameSession(subjectId: string): Promise<string> {
-  return fetch(`/api/session/create/${subjectId}`, { method: 'GET' })
+  return fetch(`/api/session/${subjectId}/create/`, { method: 'GET' })
     .then((response) => {
       if (response.ok) {
         return response.json();

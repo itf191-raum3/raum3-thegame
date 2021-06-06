@@ -11,7 +11,7 @@ const subjectId = 'AE';
 
 export function ExerciseContainer() {
   const [currentExercise, setCurrentExercise] = useState<IExercise | undefined>(undefined);
-  const [sessionId, setSessionId] = useState<string | undefined>('undefined');
+  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
 
   const getNewExercise = useCallback(() => {
     setCurrentExercise(undefined);
