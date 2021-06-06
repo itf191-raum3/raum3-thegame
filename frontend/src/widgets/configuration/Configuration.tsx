@@ -8,18 +8,34 @@ import { IExercise } from '../../../../common/src/entities/IExercise';
 import { useState } from 'react';
 
 
-//fetch API()
-
-// Aufgaben[] getallexcersise (subject)
-// statusCode deleteExcesise (ID)
-// statusCode update (Aufgabe)
-// UUID create (Aufgabe) 
 const columnNames = ["Schwierigkeit", "Aufgabentype", "Aufgabe", "Richtige Antworten", "Antwortmöglichkeiten", "", ""]
 
 export function Configuration() {
   var subject = ""
   const [allExercises, setallExercises] = useState<IExercise[]>(Array<IExercise>())
   const [workingTable, setWorkingTable] = useState<JSX.Element>()
+
+  return (
+    <div className="Configuration">
+      <header className="Config-GUI">
+        
+      </header>
+      <body>
+        <div id="menu">
+          <ul>
+            <li><button className="navBtn" onClick={() => loadSubject("AE")}>Anwendungsentwicklung </button></li>
+          </ul>
+        </div>
+        <div >
+          {workingTable}
+          <br /><br />
+        </div>
+        <div>
+          {renderShowingTabel()}
+        </div>
+      </body>
+    </div>
+  );
 
   function loadCreateTable(){
     var createTabel = 
@@ -51,12 +67,11 @@ export function Configuration() {
     const exercise = getExerciseInList(idStr)
     const {difficulty, label, correctAnswers, possibleAnswers} = exercise
     
-    var selectCloze = false
-    var selectChoice = false
-    if('isDropdown' in exercise)
-      selectCloze = true
-    else if('isMultipleChoice' in exercise)
-      selectChoice = true
+    var exerciseType = "Unbekannt"
+      if('isDropdown' in exercise)
+        exerciseType = "Lückentext"
+      else if('isMultipleChoice' in exercise)
+        exerciseType = "Auswahlaufgabe"
 
     var editTabel = 
       <table id="editTabel">
@@ -66,10 +81,7 @@ export function Configuration() {
         <tbody>
           <tr className="information">
             <td><input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" value ={difficulty}/></td>
-            <td><select id="exersiceType">
-                <option value="choice" selected={selectChoice}>Auswahlaufgabe</option>
-                <option value="cloze" selected={selectCloze}>Lückentext</option>
-              </select></td>
+            <td>{exerciseType}</td>
             <td><input type="text" id="label" placeholder="Aufgabenstellung" value ={label}/></td>
             <td><input type="text" id="correctAnswers" placeholder="Richtige Antworten" value ={correctAnswers.join("; ")}/></td>
             <td><input type="text" id="allChoices" placeholder="Antwortmöglichkeiten" value ={possibleAnswers.join("; ")}/></td>
@@ -80,24 +92,6 @@ export function Configuration() {
       </table>
     
     setWorkingTable(editTabel)
-  }
-
-  function getExerciseInList(exerciseID: string): IExercise{
-    var index = getIndexByExerciseID(exerciseID)
-    return allExercises[index]
-  }
-
-  function getIndexByExerciseID(IdStr: string){
-    var index = 0
-
-    for (var exerciseIndex = 0; exerciseIndex < allExercises.length; exerciseIndex++) {
-      var exercise = allExercises[exerciseIndex]
-      if(exercise.id === IdStr){
-        index = exerciseIndex
-      }
-    }
-
-    return index
   }
 
   function renderShowingTabel(){
@@ -158,28 +152,40 @@ export function Configuration() {
      
      fetchGetAllExercise(subject).then(exercise => {
       setallExercises(exercise)
-     }).catch(errorMsg => {
-       console.error("Error")
+     }).catch(_errorMsg => {
+       
+       console.error(_errorMsg)
      })
 
     setWorkingTable(loadCreateTable())
   }
 
   function addDataSet(){
-    var difficulty = document.getElementById("difficulty")?.nodeValue
-    var exersiceType = document.getElementById("exersiceType")?.nodeValue
+    var difficultyStr = document.getElementById("difficulty")?.nodeValue
+    var exerciseType = document.getElementById("exersiceType")?.nodeValue
     var label = document.getElementById("label")?.nodeValue
     var correctAnswers = document.getElementById("correctAnswers")?.nodeValue?.split(";")
     var possibleAnswers = document.getElementById("possibleAnswers")?.nodeValue?.split(";")
 
-    if(correctAnswers == undefined)
+    if (difficultyStr===undefined || difficultyStr===null)
+      difficultyStr = "0"
+
+    var difficulty : number =+ difficultyStr
+
+    if(exerciseType===undefined || exerciseType===null)
+      exerciseType= ""
+
+    if(label===undefined|| label===null)
+      label= ""
+
+    if(correctAnswers === undefined)
      correctAnswers = []
     
     correctAnswers.forEach(correctAnswer => {
       correctAnswer.trim();
     });
 
-    if(possibleAnswers == undefined)
+    if(possibleAnswers === undefined)
     possibleAnswers = []
     
     possibleAnswers.forEach(possibleAnswer => {
@@ -193,29 +199,22 @@ export function Configuration() {
         possibleAnswers: possibleAnswers,
       }
 
-    //TODO: Insert in database
+      fetchCreateExercise(subject, exerciseType ,label, difficulty,
+        correctAnswers, possibleAnswers)
 
     loadSubject(subject)
 
     setWorkingTable(loadCreateTable())
   }
 
-  function editDataSet(id: string):any{
+  function editDataSet(id: string){
     loadEditTable(id)
   }
 
-  function deleteDataSet(id: string) : any{
-    var deleteIndex = getIndexByExerciseID(id)
+  function deleteDataSet(id: string){
+    fetchDeleteExercise(id)
 
-    //TODO: Delete element in database
-    var tempList = new Array<IExercise>()
-    for(var exerciseIndex = 0; exerciseIndex<allExercises.length; exerciseIndex++){
-      if(exerciseIndex !== deleteIndex){
-        tempList.push(allExercises[exerciseIndex])
-      }
-    }
-
-    setallExercises(tempList)
+    loadSubject(subject)
   }
 
   function cancelEditing(){
@@ -224,35 +223,59 @@ export function Configuration() {
   }
 
   function changeData(){
-    //TODO: get new values
-    //TODO: update Database
+    var difficultyStr = document.getElementById("difficulty")?.nodeValue
+    var label = document.getElementById("label")?.nodeValue
+    var correctAnswers = document.getElementById("correctAnswers")?.nodeValue?.split(";")
+    var possibleAnswers = document.getElementById("possibleAnswers")?.nodeValue?.split(";")
+
+    if (difficultyStr===undefined || difficultyStr===null)
+    difficultyStr = "0"
+
+    var difficulty : number =+ difficultyStr
+
+
+    if(label===undefined|| label===null)
+      label= ""
+
+    if(correctAnswers === undefined)
+      correctAnswers = []
+    
+    correctAnswers.forEach(correctAnswer => {
+      correctAnswer.trim();
+    });
+
+    if(possibleAnswers === undefined)
+      possibleAnswers = []
+    
+    possibleAnswers.forEach(possibleAnswer => {
+      possibleAnswer.trim();
+    });
+
+    fetchUpdateExercise(subject, label, difficulty,
+      correctAnswers, possibleAnswers)
 
 
     setWorkingTable(loadCreateTable())
     loadSubject(subject)
   }
 
-  return (
-    <div className="Configuration">
-      <header className="Config-GUI">
-        
-      </header>
-      <body>
-        <div id="menu">
-          <ul>
-            <li><button className="navBtn" onClick={() => loadSubject("AE")}>Anwendungsentwicklung </button></li>
-          </ul>
-        </div>
-        <div >
-          {workingTable}
-          <br /><br />
-        </div>
-        <div>
-          {renderShowingTabel()}
-        </div>
-      </body>
-    </div>
-  );
+  function getExerciseInList(exerciseID: string): IExercise{
+    var index = getIndexByExerciseID(exerciseID)
+    return allExercises[index]
+  }
+
+  function getIndexByExerciseID(IdStr: string){
+    var index = 0
+
+    for (var exerciseIndex = 0; exerciseIndex < allExercises.length; exerciseIndex++) {
+      var exercise = allExercises[exerciseIndex]
+      if(exercise.id === IdStr){
+        index = exerciseIndex
+      }
+    }
+
+    return index
+  }
 }
 
 export function fetchGetAllExercise(subjectId: string): Promise<IExercise[]> {
@@ -281,7 +304,8 @@ export function fetchDeleteExercise(exerciseId: string) {
   });
 }
 
-export function fetchUpdateExercise(exerciseId: string) {
+export function fetchUpdateExercise(exerciseId: string, label: string, difficulty: number,
+  correctAnswers: string[], possibleAnswers: string[]) {
   return fetch('/exercise/?id=' + exerciseId, { method: 'PUT' }).then((response) => {
     console.dir(response);
     if (response.ok) {
@@ -294,8 +318,9 @@ export function fetchUpdateExercise(exerciseId: string) {
   });
 }
 
-export function fetchCreateExercise(subjectId: string) {
-  return fetch('/subject/exercises/?id=' + subjectId, { method: 'GET' }).then((response) => {
+export function fetchCreateExercise(subjectId: string, exerciseType: string ,label: string, difficulty: number,
+  correctAnswers: string[], possibleAnswers: string[]) {
+  return fetch('/exercise/?id=' + subjectId, { method: 'POST' }).then((response) => {
     console.dir(response);
     if (response.ok) {
       return response.json();
