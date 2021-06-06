@@ -132,18 +132,26 @@ export function Configuration() {
                 id="difficulty"
                 placeholder="Schwierigkeit"
                 defaultValue={difficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
-              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={label} />
+              <input
+                type="text"
+                id="label"
+                placeholder="Aufgabenstellung"
+                defaultValue={label}
+                onChange={(e) => setLabel(e.target.value)}
+              />
             </td>
             <td>
               <input
                 type="text"
                 id="correctAnswers"
                 placeholder="Richtige Antworten"
-                defaultValue={correctAnswers.join("; ")}
+                defaultValue={correctAnswers.join('; ')}
+                onChange={(e) => setCorrect(e.target.value)}
               />
             </td>
             <td>
@@ -151,7 +159,8 @@ export function Configuration() {
                 type="text"
                 id="allChoices"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue={possibleAnswers.join("; ")}
+                defaultValue={possibleAnswers.join('; ')}
+                onChange={(e) => setPossible(e.target.value)}
               />
             </td>
             <td>
@@ -203,8 +212,8 @@ export function Configuration() {
           <td>{difficulty}</td>
           <td>{exerciseType}</td>
           <td>{label}</td>
-          <td>{correctAnswers.join('\n')}</td>
-          <td>{possibleAnswers.join('\n')}</td>
+          <td>{correctAnswers.join(' | ')}</td>
+          <td>{possibleAnswers.join(' | ')}</td>
           <td>
             <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => deleteDataSet(id)} />
           </td>
@@ -261,8 +270,9 @@ export function Configuration() {
 
       fetchCreateExercise(subject, exerciseType, newExercise);
 
-      loadSubject(subject);
       setWorkingTable(loadCreateTable());
+
+      loadSubject(subject);
     }
   }
 
@@ -308,9 +318,9 @@ export function Configuration() {
       };
 
       fetchUpdateExercise(id, newExercise);
-      
-      loadSubject(subject);
+
       setWorkingTable(loadCreateTable());
+      loadSubject(subject);
     }
   }
 
