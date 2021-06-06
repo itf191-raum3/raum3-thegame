@@ -376,7 +376,7 @@ export function Configuration() {
 }
 
 export function fetchGetAllExercise(subjectId: string): Promise<IExercise[]> {
-  return fetch('api/subject/exercises/?id=' + subjectId, { method: 'GET' })
+  return fetch('api/subject/exercises/' + subjectId, { method: 'GET' })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -391,7 +391,7 @@ export function fetchGetAllExercise(subjectId: string): Promise<IExercise[]> {
 }
 
 export function fetchDeleteExercise(exerciseId: string) {
-  return fetch('api/exercise/?id=' + exerciseId, { method: 'DELETE' })
+  return fetch('api/exercise/' + exerciseId, { method: 'DELETE' })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -404,7 +404,7 @@ export function fetchDeleteExercise(exerciseId: string) {
 }
 
 export function fetchUpdateExercise(exerciseId: string, exercise: any) {
-  return fetch('api/exercise/?id=' + exerciseId, { method: 'PUT', body: JSON.stringify(exercise) })
+  return fetch('api/exercise/' + exerciseId, { method: 'PUT', body: JSON.stringify(exercise) })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -417,7 +417,7 @@ export function fetchUpdateExercise(exerciseId: string, exercise: any) {
 }
 
 export function fetchCreateExercise(exerciseId: string, exerciseType: any, newExercise: any) {
-  return fetch('api/exercise/?id=' + exerciseId + '&exerciseType=' + exerciseType, {
+  return fetch('api/exercise/' + exerciseId + '&exerciseType=' + exerciseType, {
     method: 'POST',
     body: JSON.stringify(newExercise),
   })
