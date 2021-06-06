@@ -54,17 +54,13 @@ export function fetchCurrentScore(sessionId: string): Promise<number> {
   return fetch(`api/session/${sessionId}/score`, { method: 'GET' })
     .then((response) => {
       if (response.ok) {
-        return response.json();
+        return response.text();
       } else {
         throw new Error(response.status + ' ' + response.statusText);
       }
     })
-    .then((json) => {
-      if (typeof json === 'number') {
-        return json;
-      } else {
-        throw new Error('GameSession could not be started: Invalid type');
-      }
+    .then((score) => {
+      return +score;
     });
 }
 
@@ -72,16 +68,12 @@ export function initializeGameSession(subjectId: string): Promise<string> {
   return fetch(`/api/session/${subjectId}/create/`, { method: 'POST' })
     .then((response) => {
       if (response.ok) {
-        return response.json();
+        return response.text();
       } else {
         throw new Error(response.status + ' ' + response.statusText);
       }
     })
-    .then((json) => {
-      if (typeof json === 'string') {
-        return json;
-      } else {
-        throw new Error('GameSession could not be started: Invalid type');
-      }
+    .then((id) => {
+      return id;
     });
 }
