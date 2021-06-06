@@ -45,3 +45,21 @@ export function fetchExercise(subjectId: string): Promise<IExercise> {
       return json as IExercise;
     });
 }
+
+export function initializeGameSession(): Promise<string> {
+  return fetch('initialize', { method: 'GET' })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error(response.status + ' ' + response.statusText);
+      }
+    })
+    .then((json) => {
+      if (typeof json.id === 'string') {
+        return json.id;
+      } else {
+        throw new Error('GameSession could not be started: Invalid type');
+      }
+    });
+}

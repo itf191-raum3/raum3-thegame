@@ -1,7 +1,7 @@
-import { CircularProgress } from '@material-ui/core';
 import { checkCloze, fetchExercise } from 'api/APIUtils';
 import { useCallback, useEffect, useState } from 'react';
 import { ClozeWidget } from 'widgets/cloze/ClozeWidget';
+import { Loading } from 'widgets/common/Loading';
 import { IExercise } from '../../../../common/src/entities/IExercise';
 import { isIChoice, isICloze } from './ExerciseTypeGuards';
 
@@ -25,7 +25,7 @@ export function ExerciseContainer() {
 
   let content = <></>;
   if (!currentExercise) {
-    content = <CircularProgress color="primary" style={{ height: '10vmin', width: '10vmin' }} />;
+    content = <Loading />;
   } else if (isICloze(currentExercise)) {
     content = <ClozeWidget exercise={currentExercise} check={checkCloze} finish={getNewExercise} />;
   } else if (isIChoice(currentExercise)) {
