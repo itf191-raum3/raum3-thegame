@@ -1,15 +1,13 @@
-import React from 'react';
+import { initializeGameSession } from 'api/APIUtils';
 
-export class SessionManager {
-  readonly sessionId: string;
+export async function getSessionId(subjectId: string) {
+  const localStorageName = 'GameSessionId_' + subjectId;
+  let sessionId = localStorage.getItem(localStorageName);
 
-  constructor(sessionId: string) {
-    this.sessionId = sessionId;
+  if (!sessionId) {
+    sessionId = await initializeGameSession(subjectId);
+    localStorage.setItem(localStorageName, sessionId);
   }
+
+  return sessionId;
 }
-
-const SessionContext = React.createContext<SessionManager | undefined>(undefined);
-
-const GameSessionId = 'GameSessionId';
-
-export { SessionContext, GameSessionId };

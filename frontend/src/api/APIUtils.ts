@@ -10,10 +10,10 @@ function isCheckResponse(obj: any): obj is CheckResponse {
   return 'answers' in obj && 'isCorrect' in obj;
 }
 
+// TODO check routes
 export function checkCloze(clozeExercise: ICloze, sessionId: string): Promise<CheckResponse> {
-  // TODO use correct route
-  return fetch(`/id=${clozeExercise.id}&sessionId=${sessionId}`, {
-    method: 'GET',
+  return fetch(`exercise/${sessionId}/?id=${clozeExercise.id}`, {
+    method: 'POST',
     body: JSON.stringify({ answers: clozeExercise.correctAnswers }),
   })
     .then((response) => {
@@ -32,10 +32,9 @@ export function checkCloze(clozeExercise: ICloze, sessionId: string): Promise<Ch
     });
 }
 
-export async function fetchExercise(subjectId: string, sessionId: string): Promise<IExercise> {
-  return fetch(`/subject/exercise?id=${subjectId}&sessionId=${sessionId}`, {
+export async function fetchExercise(sessionId: string): Promise<IExercise> {
+  return fetch(`/exercise/${sessionId}/next`, {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
   })
     .then((response) => {
       if (response.ok) {
@@ -49,8 +48,8 @@ export async function fetchExercise(subjectId: string, sessionId: string): Promi
     });
 }
 
-export function initializeGameSession(): Promise<string> {
-  return fetch('initialize', { method: 'GET' })
+export function initializeGameSession(subjectId: string): Promise<string> {
+  return fetch('session/create', { method: 'GET', body: JSON.stringify({ subject: subjectId }) })
     .then((response) => {
       if (response.ok) {
         return response.json();
