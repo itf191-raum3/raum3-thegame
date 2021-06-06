@@ -12,7 +12,7 @@ function isCheckResponse(obj: any): obj is CheckResponse {
 
 // TODO check routes
 export function checkCloze(clozeExercise: ICloze, sessionId: string): Promise<CheckResponse> {
-  return fetch(`/api/exercise/${sessionId}/?id=${clozeExercise.id}`, {
+  return fetch(`/api/exercise/${sessionId}/${clozeExercise.id}`, {
     method: 'POST',
     body: JSON.stringify({ answers: clozeExercise.correctAnswers }),
   })
