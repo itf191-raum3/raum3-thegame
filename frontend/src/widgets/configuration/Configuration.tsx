@@ -6,6 +6,7 @@ import addIcon from './add_icon.png';
 
 import { IExercise } from '../../../../common/src/entities/IExercise';
 import { useState } from 'react';
+import { ISubject } from '../../../../common/src/entities/ISubject';
 
 const columnNames = ['Schwierigkeit', 'Aufgabentype', 'Aufgabe', 'Richtige Antworten', 'Antwortmöglichkeiten', '', ''];
 
@@ -53,7 +54,7 @@ export function Configuration() {
                 type="number"
                 min="0"
                 placeholder="Schwierigkeit"
-                defaultValue=""
+                defaultValue={workingExercise.difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
@@ -67,7 +68,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Aufgabenstellung"
-                defaultValue=""
+                defaultValue={workingExercise.label}
                 onChange={(e) => setLabel(e.target.value)}
               />
             </td>
@@ -75,7 +76,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Richtige Antworten"
-                defaultValue=""
+                defaultValue={workingExercise.correctAnswers}
                 onChange={(e) => setCorrect(e.target.value)}
               />
             </td>
@@ -83,7 +84,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue=""
+                defaultValue={workingExercise.possibleAnswers}
                 onChange={(e) => setPossible(e.target.value)}
               />
             </td>
@@ -106,6 +107,11 @@ export function Configuration() {
     const exercise = getExerciseInList(idStr);
     const { difficulty, label, correctAnswers, possibleAnswers } = exercise;
 
+    setDifficulty(difficulty+"")
+    setLabel(label)
+    setCorrect(correctAnswers.join("; "))
+    setPossible(possibleAnswers.join("; "))
+
     var exerciseType = 'Unbekannt';
     if ('isDropdown' in exercise) {
       exerciseType = 'Lückentext';
@@ -121,18 +127,18 @@ export function Configuration() {
         <tbody>
           <tr className="information">
             <td>
-              <input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" defaultValue={difficulty} />
+              <input type="number" min="0" id="difficulty" placeholder="Schwierigkeit" defaultValue={workingExercise.difficulty} />
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
-              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={label} />
+              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={workingExercise.label} />
             </td>
             <td>
               <input
                 type="text"
                 id="correctAnswers"
                 placeholder="Richtige Antworten"
-                defaultValue={correctAnswers.join('; ')}
+                defaultValue={workingExercise.correctAnswers}
               />
             </td>
             <td>
@@ -140,7 +146,7 @@ export function Configuration() {
                 type="text"
                 id="allChoices"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue={possibleAnswers.join('; ')}
+                defaultValue={workingExercise.possibleAnswers}
               />
             </td>
             <td>
@@ -210,9 +216,9 @@ export function Configuration() {
   function loadSubject(subjectID: string) {
     subject = subjectID;
 
-    fetchGetAllExercise(subject)
-      .then((exercise) => {
-        setallExercises(exercise);
+    fetchGetSubject(subject)
+      .then((subjectObj) => {
+        setallExercises(subjectObj.exercises);
       })
       .catch((_errorMsg) => {
         console.error(_errorMsg);
@@ -375,8 +381,8 @@ export function Configuration() {
   }
 }
 
-export function fetchGetAllExercise(subjectId: string): Promise<IExercise[]> {
-  return fetch('api/subject/exercises/' + subjectId, { method: 'GET' })
+export function fetchGetSubject(subjectId: string): Promise<ISubject> {
+  return fetch('api/subjects/' + subjectId, { method: 'GET' })
     .then((response) => {
       console.dir(response);
       if (response.ok) {
@@ -386,7 +392,7 @@ export function fetchGetAllExercise(subjectId: string): Promise<IExercise[]> {
       }
     })
     .then((json) => {
-      return json as IExercise[];
+      return json as ISubject;
     });
 }
 
@@ -395,7 +401,7 @@ export function fetchDeleteExercise(exerciseId: string) {
     .then((response) => {
       console.dir(response);
       if (response.ok) {
-        return response.json();
+        return true;
       } else {
         return Promise.reject(response.status + ' ' + response.statusText);
       }
@@ -404,11 +410,11 @@ export function fetchDeleteExercise(exerciseId: string) {
 }
 
 export function fetchUpdateExercise(exerciseId: string, exercise: any) {
-  return fetch('api/exercise/' + exerciseId, { method: 'PUT', body: JSON.stringify(exercise) })
+  return fetch('api/exercise/' + exerciseId, { method: 'PUT', body: JSON.stringify(exercise), headers : {'Content-Type': 'application/json', 'Accept': 'application/json'}})
     .then((response) => {
       console.dir(response);
       if (response.ok) {
-        return response.json();
+        return true;
       } else {
         return Promise.reject(response.status + ' ' + response.statusText);
       }
@@ -417,14 +423,11 @@ export function fetchUpdateExercise(exerciseId: string, exercise: any) {
 }
 
 export function fetchCreateExercise(exerciseId: string, exerciseType: any, newExercise: any) {
-  return fetch('api/exercise/' + exerciseId + '&exerciseType=' + exerciseType, {
-    method: 'POST',
-    body: JSON.stringify(newExercise),
-  })
+  return fetch('api/exercise/' + exerciseId + '?exerciseType=' + exerciseType, {method: 'POST', body: JSON.stringify(newExercise), headers : {'Content-Type': 'application/json', 'Accept': 'application/json'}})
     .then((response) => {
       console.dir(response);
       if (response.ok) {
-        return response.json();
+        return true;
       } else {
         return Promise.reject(response.status + ' ' + response.statusText);
       }

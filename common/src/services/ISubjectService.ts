@@ -5,6 +5,8 @@ export interface ISubjectService {
 
     getSubjectById(id: string): Promise<ISubject>;
 
+    getSubjectByLabel(label: string): Promise<ISubject>;
+
     deleteSubject(id: string): Promise<void>;
 
     updateSubject(subject: ISubject): Promise<void>;

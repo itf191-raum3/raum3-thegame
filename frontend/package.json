@@ -6,7 +6,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "build_and_copy": "yarn build && cp -R ./build/ ../backend/src/public"
+    "build_and_copy": "yarn build && rm -rf ../backend/src/public/build && cp -R ./build/ ../backend/src/public"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.4",
