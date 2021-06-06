@@ -131,19 +131,19 @@ export function Configuration() {
                 min="0"
                 id="difficulty"
                 placeholder="Schwierigkeit"
-                defaultValue={workingExercise.difficulty}
+                defaultValue={difficulty}
               />
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
-              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={workingExercise.label} />
+              <input type="text" id="label" placeholder="Aufgabenstellung" defaultValue={label} />
             </td>
             <td>
               <input
                 type="text"
                 id="correctAnswers"
                 placeholder="Richtige Antworten"
-                defaultValue={workingExercise.correctAnswers}
+                defaultValue={correctAnswers.join("; ")}
               />
             </td>
             <td>
@@ -151,7 +151,7 @@ export function Configuration() {
                 type="text"
                 id="allChoices"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue={workingExercise.possibleAnswers}
+                defaultValue={possibleAnswers.join("; ")}
               />
             </td>
             <td>
@@ -308,9 +308,9 @@ export function Configuration() {
       };
 
       fetchUpdateExercise(id, newExercise);
-
-      setWorkingTable(loadCreateTable());
+      
       loadSubject(subject);
+      setWorkingTable(loadCreateTable());
     }
   }
 
