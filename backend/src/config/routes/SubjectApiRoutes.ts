@@ -18,7 +18,7 @@ export const getAllSubjects = async (req: Request, res: Response, next: NextFunc
 
 export const getExercisesForSubject = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const subject = await subjectService.getSubjectById(<string>req.params.label);
+        const subject = await subjectService.getSubjectByLabel(req.params.label);
         return res.send({
             exercises: subject.exercises
         });
@@ -29,7 +29,7 @@ export const getExercisesForSubject = async (req: Request, res: Response, next: 
 
 export const getRandomExerciseForSubject = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const subject = await subjectService.getSubjectById(<string>req.params.id);
+        const subject = await subjectService.getSubjectByLabel(req.params.label);
         const exercise = sample(subject.exercises);
         if (!isUndefined(exercise)) {
             const redactedAnswers: Array<string> = [];
@@ -58,7 +58,7 @@ export const subjectApi: Array<ApiRoute> = [
         handler: getExercisesForSubject
     },
     {
-        path: "/subject/exercise/:id*",
+        path: "/subject/exercise/:label*",
         method: "GET",
         handler: getRandomExerciseForSubject
     },
