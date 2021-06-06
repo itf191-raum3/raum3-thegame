@@ -66,7 +66,7 @@ export function fetchCurrentScore(sessionId: string): Promise<number> {
 }
 
 export function initializeGameSession(subjectId: string): Promise<string> {
-  return fetch(`/api/session/${subjectId}/create/`, { method: 'GET' })
+  return fetch(`/api/session/${subjectId}/create/`, { method: 'POST' })
     .then((response) => {
       if (response.ok) {
         return response.json();
