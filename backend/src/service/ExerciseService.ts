@@ -31,6 +31,6 @@ export class ExerciseService implements IExerciseService {
     }
 
     async getExerciseById(id: string): Promise<Exercise> {
-        return await getManager().findOneOrFail(Exercise, {where: {id: id}});
+        return await getManager().findOneOrFail(Exercise, {id: id}, {relations: ["subject"]});
     }
 }
