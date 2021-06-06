@@ -7,7 +7,6 @@ const server = new Server();
 
 createConnection().then(connection => {
     logger.info("Database connected");
-    logger.silly(connection);
 });
 
 server.start();
