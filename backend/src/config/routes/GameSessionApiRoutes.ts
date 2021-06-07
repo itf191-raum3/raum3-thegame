@@ -2,8 +2,9 @@ import {ApiRoute} from "../../../types/common"
 import {NextFunction, Request, Response} from "express";
 import {SubjectService} from "@/service/SubjectService";
 import {GameSessionService} from "@/service/GameSessionService";
-import {each, find, isUndefined} from "lodash";
+import {each} from "lodash";
 import {ExerciseService} from "@/service/ExerciseService";
+import {Exercise} from "@/entities/Exercise";
 
 const subjectService = new SubjectService();
 const gameSessionService = new GameSessionService();
@@ -55,9 +56,24 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
             isCorrect.push(answer === exercise.correctAnswers[index]);
         });
 
-        gameSession.answered.push(exercise);
-        gameSession.score += exercise.difficulty * 360;
-        await gameSessionService.saveGameSessions(gameSession);
+
+        if (isCorrect) {
+            gameSession.answered.push(exercise);
+            gameSession.score += exercise.difficulty * 360;
+
+            if (gameSession.answered.length >= 3) { //TODO CHANGE BACK TO 10!
+                console.log("DOOOOOONEE");
+                console.log("DOOOOOONEE");
+                console.log("DOOOOOONEE");
+                console.log("DOOOOOONEE");
+                console.log("DOOOOOONEE");
+                console.log("DOOOOOONEE");
+                gameSession.answered = Array<Exercise>();
+                gameSession.maxDifficulty++;
+            }
+
+            await gameSessionService.saveGameSessions(gameSession);
+        }
         return res.send({
             answers: exercise.correctAnswers,
             isCorrect
