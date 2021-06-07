@@ -52,7 +52,7 @@ export function WelcomePage(props: WelcomePageProps) {
       </Slide>
       <WelcomePageButton
         dir="right"
-        label="Ich will etwas lernen!"
+        label="Ich will etwas lAErnen!"
         switchState={() => switchState(AppStateEnum.EXERCISES)}
         visible={visible}
       />
