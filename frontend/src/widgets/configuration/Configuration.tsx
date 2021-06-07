@@ -4,479 +4,476 @@ import editIcon from './edit_icon.png';
 import acceptIcon from './accept_icon.png';
 import addIcon from './add_icon.png';
 
-import {IExercise} from '../../../../common/src/entities/IExercise';
-import {useState} from 'react';
-import {ISubject} from '../../../../common/src/entities/ISubject';
+import { IExercise } from '../../../../common/src/entities/IExercise';
+import { useState } from 'react';
+import { ISubject } from '../../../../common/src/entities/ISubject';
 
 export function Configuration() {
-    var workingExercise = clearExercise();
+  var workingExercise = clearExercise();
 
-    var subject = 'AE';
-    const [allExercises, setAllExercises] = useState<IExercise[]>(Array<IExercise>());
-    const [workingTable, setWorkingTable] = useState<JSX.Element>();
+  var subject = 'AE';
+  const [allExercises, setAllExercises] = useState<IExercise[]>(Array<IExercise>());
+  const [workingTable, setWorkingTable] = useState<JSX.Element>();
+
+  return (
+    <div className="Configuration">
+      <div id="menu">
+        <ul>
+          <li>
+            <button className="navBtn" onClick={() => loadSubject('AE')}>
+              Anwendungsentwicklung
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div>
+        {workingTable}
+        <br />
+        <br />
+      </div>
+      <div>{renderShowingTable()}</div>
+    </div>
+  );
+
+  function loadCreateTable() {
+    workingExercise = clearExercise();
+    setType('IChoice');
 
     return (
-        <div className="Configuration">
-            <div id="menu">
-                <ul>
-                    <li>
-                        <button className="navBtn" onClick={() => loadSubject('AE')}>
-                            Anwendungsentwicklung
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                {workingTable}
-                <br/>
-                <br/>
-            </div>
-            <div>{renderShowingTable()}</div>
-        </div>
+      <table id="createTabel">
+        <thead>
+          <th>Schwierigkeit</th>
+          <th>Aufgabentype</th>
+          <th>Aufgabe</th>
+          <th>Richtige Antworten</th>
+          <th>Antwortmöglichkeiten</th>
+          <th></th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr className="information">
+            <td>
+              <input
+                type="number"
+                min="0"
+                placeholder="Schwierigkeit"
+                defaultValue={workingExercise.difficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
+              />
+            </td>
+            <td>
+              <select onChange={(e) => setType(e.target.value)}>
+                <option value="IChoice">Auswahlaufgabe</option>
+                <option value="ICloze">Lückentext</option>
+              </select>
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Aufgabenstellung"
+                defaultValue={workingExercise.label}
+                onChange={(e) => setLabel(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Richtige Antworten"
+                defaultValue={workingExercise.correctAnswers}
+                onChange={(e) => setCorrect(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Antwortmöglichkeiten"
+                defaultValue={workingExercise.possibleAnswers}
+                onChange={(e) => setPossible(e.target.value)}
+              />
+            </td>
+            <td>
+              <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()} />
+            </td>
+            <td>
+              <img src={addIcon} alt="Bearbeiten" className="bntLogo" onClick={() => addDataSet()} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+
+  function loadEditTable(idStr: string) {
+    workingExercise = clearExercise();
+    const exercise = getExerciseInList(idStr);
+    const { difficulty, label, correctAnswers, possibleAnswers } = exercise;
+
+    workingExercise.id = idStr;
+    setDifficulty(difficulty + '');
+    setLabel(label);
+    setCorrect(correctAnswers.join('; '));
+    setPossible(possibleAnswers.join('; '));
+
+    var exerciseType = 'Unbekannt';
+    if ('isDropdown' in exercise) {
+      exerciseType = 'Lückentext';
+      setType('ICloze');
+    } else if ('isMultipleChoice' in exercise) {
+      exerciseType = 'Auswahlaufgabe';
+      setType('IChoice');
+    }
+
+    var editTabel = (
+      <table id="editTabel">
+        <thead>
+          <th>Schwierigkeit</th>
+          <th>Aufgabentype</th>
+          <th>Aufgabe</th>
+          <th>Richtige Antworten</th>
+          <th>Antwortmöglichkeiten</th>
+          <th></th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr className="information">
+            <td>
+              <input
+                type="number"
+                min="0"
+                id="difficulty"
+                placeholder="Schwierigkeit"
+                defaultValue={difficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
+              />
+            </td>
+            <td id="exersiceType">{exerciseType}</td>
+            <td>
+              <input
+                type="text"
+                id="label"
+                placeholder="Aufgabenstellung"
+                defaultValue={label}
+                onChange={(e) => setLabel(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                id="correctAnswers"
+                placeholder="Richtige Antworten"
+                defaultValue={correctAnswers.join('; ')}
+                onChange={(e) => setCorrect(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                id="allChoices"
+                placeholder="Antwortmöglichkeiten"
+                defaultValue={possibleAnswers.join('; ')}
+                onChange={(e) => setPossible(e.target.value)}
+              />
+            </td>
+            <td>
+              <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()} />
+            </td>
+            <td>
+              <img src={acceptIcon} alt="Bearbeiten" className="bntLogo" onClick={() => changeData()} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     );
 
-    function loadCreateTable() {
-        workingExercise = clearExercise();
-        setType('IChoice');
+    setWorkingTable(editTabel);
+  }
 
-        return (
-            <table id="createTabel">
-                <thead>
-                <th>Schwierigkeit</th>
-                <th>Aufgabentype</th>
-                <th>Aufgabe</th>
-                <th>Richtige Antworten</th>
-                <th>Antwortmöglichkeiten</th>
-                <th></th>
-                <th></th>
-                </thead>
-                <tbody>
-                <tr className="information">
-                    <td>
-                        <input
-                            type="number"
-                            min="0"
-                            placeholder="Schwierigkeit"
-                            defaultValue={workingExercise.difficulty}
-                            onChange={(e) => setDifficulty(e.target.value)}
-                        />
-                    </td>
-                    <td>
-                        <select onChange={(e) => setType(e.target.value)}>
-                            <option value="IChoice">Auswahlaufgabe</option>
-                            <option value="ICloze">Lückentext</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input
-                            type="text"
-                            placeholder="Aufgabenstellung"
-                            defaultValue={workingExercise.label}
-                            onChange={(e) => setLabel(e.target.value)}
-                        />
-                    </td>
-                    <td>
-                        <input
-                            type="text"
-                            placeholder="Richtige Antworten"
-                            defaultValue={workingExercise.correctAnswers}
-                            onChange={(e) => setCorrect(e.target.value)}
-                        />
-                    </td>
-                    <td>
-                        <input
-                            type="text"
-                            placeholder="Antwortmöglichkeiten"
-                            defaultValue={workingExercise.possibleAnswers}
-                            onChange={(e) => setPossible(e.target.value)}
-                        />
-                    </td>
-                    <td>
-                        <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()}/>
-                    </td>
-                    <td>
-                        <img src={addIcon} alt="Bearbeiten" className="bntLogo" onClick={() => addDataSet()}/>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        );
-    }
+  function renderShowingTable() {
+    return (
+      <table id="showingTable">
+        <thead>
+          <th>Schwierigkeit</th>
+          <th>Aufgabentype</th>
+          <th>Aufgabe</th>
+          <th>Richtige Antworten</th>
+          <th>Antwortmöglichkeiten</th>
+          <th></th>
+          <th></th>
+        </thead>
+        <tbody>{generateBody()}</tbody>
+      </table>
+    );
+  }
 
-    function loadEditTable(idStr: string) {
-        workingExercise = clearExercise();
-        const exercise = getExerciseInList(idStr);
-        const {difficulty, label, correctAnswers, possibleAnswers} = exercise;
+  function generateBody() {
+    var dataRows: JSX.Element[] = [];
 
-        workingExercise.id = idStr;
-        setDifficulty(difficulty + '');
-        setLabel(label);
-        setCorrect(correctAnswers.join('; '));
-        setPossible(possibleAnswers.join('; '));
+    allExercises.forEach((exercise) => {
+      const { id, difficulty, label, correctAnswers, possibleAnswers } = exercise;
+      var exerciseType = 'Unbekannt';
+      if ('isDropdown' in exercise) exerciseType = 'Lückentext';
+      else if ('isMultipleChoice' in exercise) exerciseType = 'Auswahlaufgabe';
 
-        var exerciseType = 'Unbekannt';
-        if ('isDropdown' in exercise) {
-            exerciseType = 'Lückentext';
-            setType('ICloze');
-        } else if ('isMultipleChoice' in exercise) {
-            exerciseType = 'Auswahlaufgabe';
-            setType('IChoice');
+      dataRows.push(
+        <tr id={id}>
+          <td>{difficulty}</td>
+          <td>{exerciseType}</td>
+          <td>{label}</td>
+          <td>{correctAnswers.join(' | ')}</td>
+          <td>{possibleAnswers.join(' | ')}</td>
+          <td>
+            <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => deleteDataSet(id)} />
+          </td>
+          <td>
+            <img src={editIcon} alt="Bearbeiten" className="bntLogo" onClick={() => editDataSet(id)} />
+          </td>
+        </tr>
+      );
+    });
+
+    return dataRows;
+  }
+
+  function loadSubject(subjectID: string) {
+    subject = subjectID;
+
+    fetchGetSubject(subject)
+      .then((subjectObj) => {
+        setAllExercises(subjectObj.exercises);
+      })
+      .catch((_errorMsg) => {
+        console.error(_errorMsg);
+      });
+
+    setWorkingTable(loadCreateTable());
+  }
+
+  function addDataSet() {
+    const { label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
+
+    if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
+      var correctAnswersList = correctAnswers.split(';');
+      correctAnswersList.forEach((correctAnswer) => {
+        correctAnswer.trim();
+      });
+
+      var possibleAnswersList = possibleAnswers.split(';');
+      possibleAnswersList.forEach((possibleAnswer) => {
+        possibleAnswer.trim();
+      });
+
+      correctAnswersList.forEach((correctAnswer) => {
+        if (arrayContains(possibleAnswersList, correctAnswers) === false) {
+          possibleAnswersList.push(correctAnswer);
         }
+      });
 
-        var editTabel = (
-            <table id="editTabel">
-                <thead>
-                <th>Schwierigkeit</th>
-                <th>Aufgabentype</th>
-                <th>Aufgabe</th>
-                <th>Richtige Antworten</th>
-                <th>Antwortmöglichkeiten</th>
-                <th></th>
-                <th></th>
-                </thead>
-                <tbody>
-                <tr className="information">
-                    <td>
-                        <input
-                            type="number"
-                            min="0"
-                            id="difficulty"
-                            placeholder="Schwierigkeit"
-                            defaultValue={difficulty}
-                            onChange={(e) => setDifficulty(e.target.value)}
-                        />
-                    </td>
-                    <td id="exersiceType">{exerciseType}</td>
-                    <td>
-                        <input
-                            type="text"
-                            id="label"
-                            placeholder="Aufgabenstellung"
-                            defaultValue={label}
-                            onChange={(e) => setLabel(e.target.value)}
-                        />
-                    </td>
-                    <td>
-                        <input
-                            type="text"
-                            id="correctAnswers"
-                            placeholder="Richtige Antworten"
-                            defaultValue={correctAnswers.join('; ')}
-                            onChange={(e) => setCorrect(e.target.value)}
-                        />
-                    </td>
-                    <td>
-                        <input
-                            type="text"
-                            id="allChoices"
-                            placeholder="Antwortmöglichkeiten"
-                            defaultValue={possibleAnswers.join('; ')}
-                            onChange={(e) => setPossible(e.target.value)}
-                        />
-                    </td>
-                    <td>
-                        <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()}/>
-                    </td>
-                    <td>
-                        <img src={acceptIcon} alt="Bearbeiten" className="bntLogo" onClick={() => changeData()}/>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        );
+      var newExercise = {
+        label: label,
+        difficulty: difficulty,
+        correctAnswers: correctAnswersList,
+        possibleAnswers: possibleAnswersList,
+      };
 
-        setWorkingTable(editTabel);
+      fetchCreateExercise(subject, exerciseType, newExercise);
+
+      setWorkingTable(loadCreateTable());
+
+      loadSubject(subject);
     }
+  }
 
-    function renderShowingTable() {
-        return (
-            <table id="showingTable">
-                <thead>
-                <th>Schwierigkeit</th>
-                <th>Aufgabentype</th>
-                <th>Aufgabe</th>
-                <th>Richtige Antworten</th>
-                <th>Antwortmöglichkeiten</th>
-                <th></th>
-                <th></th>
-                </thead>
-                <tbody>{generateBody()}</tbody>
-            </table>
-        );
-    }
+  function editDataSet(id: string) {
+    loadEditTable(id);
+  }
 
-    function generateBody() {
-        var dataRows: JSX.Element[] = [];
+  function deleteDataSet(id: string) {
+    fetchDeleteExercise(id);
 
-        allExercises.forEach((exercise) => {
-            const {id, difficulty, label, correctAnswers, possibleAnswers} = exercise;
-            var exerciseType = 'Unbekannt';
-            if ('isDropdown' in exercise) exerciseType = 'Lückentext';
-            else if ('isMultipleChoice' in exercise) exerciseType = 'Auswahlaufgabe';
+    loadSubject(subject);
+  }
 
-            dataRows.push(
-                <tr id={id}>
-                    <td>{difficulty}</td>
-                    <td>{exerciseType}</td>
-                    <td>{label}</td>
-                    <td>{correctAnswers.join(' | ')}</td>
-                    <td>{possibleAnswers.join(' | ')}</td>
-                    <td>
-                        <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => deleteDataSet(id)}/>
-                    </td>
-                    <td>
-                        <img src={editIcon} alt="Bearbeiten" className="bntLogo" onClick={() => editDataSet(id)}/>
-                    </td>
-                </tr>
-            );
-        });
+  function cancelEditing() {
+    setWorkingTable(loadCreateTable());
+  }
 
-        return dataRows;
-    }
+  function changeData() {
+    const { id, label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
 
-    function loadSubject(subjectID: string) {
-        subject = subjectID;
+    if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
+      var correctAnswersList = correctAnswers.split(';');
+      correctAnswersList.forEach((correctAnswer) => {
+        correctAnswer.trim();
+      });
 
-        fetchGetSubject(subject)
-            .then((subjectObj) => {
-                setAllExercises(subjectObj.exercises);
-            })
-            .catch((_errorMsg) => {
-                console.error(_errorMsg);
-            });
+      var possibleAnswersList = possibleAnswers.split(';');
+      possibleAnswersList.forEach((possibleAnswer) => {
+        possibleAnswer.trim();
+      });
 
-        setWorkingTable(loadCreateTable());
-    }
-
-    function addDataSet() {
-        const {label, difficulty, correctAnswers, possibleAnswers, exerciseType} = workingExercise;
-
-        if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
-            var correctAnswersList = correctAnswers.split(';');
-            correctAnswersList.forEach((correctAnswer) => {
-                correctAnswer.trim();
-            });
-
-            var possibleAnswersList = possibleAnswers.split(';');
-            possibleAnswersList.forEach((possibleAnswer) => {
-                possibleAnswer.trim();
-            });
-
-            correctAnswersList.forEach((correctAnswer) => {
-                if (arrayContains(possibleAnswersList, correctAnswers) === false) {
-                    possibleAnswersList.push(correctAnswer);
-                }
-            });
-
-            var newExercise = {
-                label: label,
-                difficulty: difficulty,
-                correctAnswers: correctAnswersList,
-                possibleAnswers: possibleAnswersList,
-            };
-
-            fetchCreateExercise(subject, exerciseType, newExercise);
-
-            setWorkingTable(loadCreateTable());
-
-            loadSubject(subject);
+      correctAnswersList.forEach((correctAnswer) => {
+        if (arrayContains(possibleAnswersList, correctAnswers) === false) {
+          possibleAnswersList.push(correctAnswer);
         }
+      });
+
+      var newExercise = {
+        label: label,
+        difficulty: difficulty,
+        correctAnswers: correctAnswersList,
+        possibleAnswers: possibleAnswersList,
+      };
+
+      fetchUpdateExercise(id, exerciseType, newExercise);
+
+      setWorkingTable(loadCreateTable());
+      loadSubject(subject);
+    }
+  }
+
+  function areDataValid(
+    label: any,
+    difficultyStr: any,
+    correctAnswers: any,
+    possibleAnswers: any,
+    exerciseType: any
+  ): boolean {
+    var areValid = false;
+    var invalidFields = [];
+
+    if (difficultyStr === undefined || difficultyStr === null || difficultyStr === '')
+      invalidFields.push('Schwierigkeit');
+
+    if (label === undefined || label === null || label === '') invalidFields.push('Aufgabenstellung');
+
+    if (correctAnswers === undefined || correctAnswers === null || correctAnswers === '')
+      invalidFields.push('Richtige Antworten');
+
+    if (
+      (possibleAnswers === undefined || possibleAnswers === null || possibleAnswers === '') &&
+      exerciseType === 'IChoice'
+    )
+      invalidFields.push('Antwortmöglichkeiten');
+
+    if (invalidFields.length > 0) {
+      alert('In folgende Felder fehlen Eingaben: ' + invalidFields.join('; '));
+    } else {
+      areValid = true;
     }
 
-    function editDataSet(id: string) {
-        loadEditTable(id);
+    return areValid;
+  }
+
+  function clearExercise() {
+    return {
+      id: '',
+      label: '',
+      difficulty: '',
+      correctAnswers: '',
+      possibleAnswers: '',
+      exerciseType: '',
+    };
+  }
+
+  function getExerciseInList(exerciseID: string): IExercise {
+    var index = getIndexByExerciseID(exerciseID);
+    return allExercises[index];
+  }
+
+  function getIndexByExerciseID(IdStr: string) {
+    var index = 0;
+
+    for (var exerciseIndex = 0; exerciseIndex < allExercises.length; exerciseIndex++) {
+      var exercise = allExercises[exerciseIndex];
+      if (exercise.id === IdStr) {
+        index = exerciseIndex;
+      }
     }
 
-    function deleteDataSet(id: string) {
-        fetchDeleteExercise(id);
+    return index;
+  }
 
-        loadSubject(subject);
-    }
+  function setLabel(labelInput: string) {
+    workingExercise.label = labelInput;
+  }
 
-    function cancelEditing() {
-        setWorkingTable(loadCreateTable());
-    }
+  function setDifficulty(difficultyInput: string) {
+    workingExercise.difficulty = difficultyInput;
+  }
 
-    function changeData() {
-        const {id, label, difficulty, correctAnswers, possibleAnswers, exerciseType} = workingExercise;
+  function setCorrect(correctInput: string) {
+    workingExercise.correctAnswers = correctInput;
+  }
 
-        if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
-            var correctAnswersList = correctAnswers.split(';');
-            correctAnswersList.forEach((correctAnswer) => {
-                correctAnswer.trim();
-            });
+  function setPossible(possibleInput: string) {
+    workingExercise.possibleAnswers = possibleInput;
+  }
 
-            var possibleAnswersList = possibleAnswers.split(';');
-            possibleAnswersList.forEach((possibleAnswer) => {
-                possibleAnswer.trim();
-            });
-
-            correctAnswersList.forEach((correctAnswer) => {
-                if (arrayContains(possibleAnswersList, correctAnswers) === false) {
-                    possibleAnswersList.push(correctAnswer);
-                }
-            });
-
-            var newExercise = {
-                label: label,
-                difficulty: difficulty,
-                correctAnswers: correctAnswersList,
-                possibleAnswers: possibleAnswersList,
-            };
-
-            fetchUpdateExercise(id, exerciseType, newExercise);
-
-            setWorkingTable(loadCreateTable());
-            loadSubject(subject);
-        }
-    }
-
-    function areDataValid(
-        label: any,
-        difficultyStr: any,
-        correctAnswers: any,
-        possibleAnswers: any,
-        exerciseType: any
-    ): boolean {
-        var areValid = false;
-        var invalidFields = [];
-
-        if (difficultyStr === undefined || difficultyStr === null || difficultyStr === '')
-            invalidFields.push('Schwierigkeit');
-
-        if (label === undefined || label === null || label === '') invalidFields.push('Aufgabenstellung');
-
-        if (correctAnswers === undefined || correctAnswers === null || correctAnswers === '')
-            invalidFields.push('Richtige Antworten');
-
-        if (
-            (possibleAnswers === undefined || possibleAnswers === null || possibleAnswers === '') &&
-            exerciseType === 'IChoice'
-        )
-            invalidFields.push('Antwortmöglichkeiten');
-
-        if (invalidFields.length > 0) {
-            alert('In folgende Felder fehlen Eingaben: ' + invalidFields.join('; '));
-        } else {
-            areValid = true;
-        }
-
-        return areValid;
-    }
-
-    function clearExercise() {
-        return {
-            id: '',
-            label: '',
-            difficulty: '',
-            correctAnswers: '',
-            possibleAnswers: '',
-            exerciseType: '',
-        };
-    }
-
-    function getExerciseInList(exerciseID: string): IExercise {
-        var index = getIndexByExerciseID(exerciseID);
-        return allExercises[index];
-    }
-
-    function getIndexByExerciseID(IdStr: string) {
-        var index = 0;
-
-        for (var exerciseIndex = 0; exerciseIndex < allExercises.length; exerciseIndex++) {
-            var exercise = allExercises[exerciseIndex];
-            if (exercise.id === IdStr) {
-                index = exerciseIndex;
-            }
-        }
-
-        return index;
-    }
-
-    function setLabel(labelInput: string) {
-        workingExercise.label = labelInput;
-    }
-
-    function setDifficulty(difficultyInput: string) {
-        workingExercise.difficulty = difficultyInput;
-    }
-
-    function setCorrect(correctInput: string) {
-        workingExercise.correctAnswers = correctInput;
-    }
-
-    function setPossible(possibleInput: string) {
-        workingExercise.possibleAnswers = possibleInput;
-    }
-
-    function setType(typeInput: string) {
-        workingExercise.exerciseType = typeInput;
-    }
+  function setType(typeInput: string) {
+    workingExercise.exerciseType = typeInput;
+  }
 }
 
 export function fetchGetSubject(subjectId: string): Promise<ISubject> {
-    return fetch(`api/subjects/${subjectId}`, {method: 'GET'})
-        .then((response) => {
-            console.dir(response);
-            if (response.ok) {
-                return response.json();
-            } else {
-                return Promise.reject(response.status + ' ' + response.statusText);
-            }
-        })
-        .then((json) => {
-            return json as ISubject;
-        });
+  return fetch(`api/subjects/${subjectId}`, { method: 'GET' })
+    .then((response) => {
+      console.dir(response);
+      if (response.ok) {
+        return response.json();
+      } else {
+        return Promise.reject(response.status + ' ' + response.statusText);
+      }
+    })
+    .then((json) => {
+      return json as ISubject;
+    });
 }
 
 export function fetchDeleteExercise(exerciseId: string) {
-    return fetch(`api/exercise/${exerciseId}/delete`, {method: 'DELETE'})
-        .then((response) => {
-            console.dir(response);
-            if (response.ok) {
-                return true;
-            } else {
-                return Promise.reject(response.status + ' ' + response.statusText);
-            }
-        })
-        .then((json) => {
-        });
+  return fetch(`api/exercise/${exerciseId}/delete`, { method: 'DELETE' })
+    .then((response) => {
+      console.dir(response);
+      if (response.ok) {
+        return true;
+      } else {
+        return Promise.reject(response.status + ' ' + response.statusText);
+      }
+    })
+    .then((json) => {});
 }
 
 export function fetchUpdateExercise(exerciseId: string, exerciseType: any, exercise: any) {
-    return fetch(`api/exercise/${exerciseId}/update?exerciseType=${exerciseType}`, {
-        method: 'POST',
-        body: JSON.stringify(exercise),
-        headers: {'Content-Type': 'application/json', Accept: 'application/json'},
+  return fetch(`api/exercise/${exerciseId}/update?exerciseType=${exerciseType}`, {
+    method: 'POST',
+    body: JSON.stringify(exercise),
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+  })
+    .then((response) => {
+      console.dir(response);
+      return response.ok;
     })
-        .then((response) => {
-            console.dir(response);
-            return response.ok;
-        })
-        .then((json) => {
-        });
+    .then((json) => {});
 }
 
 export function fetchCreateExercise(exerciseId: string, exerciseType: any, newExercise: any) {
-    return fetch(`api/exercise/${exerciseId}/create?exerciseType=${exerciseType}`, {
-        method: 'POST',
-        body: JSON.stringify(newExercise),
-        headers: {'Content-Type': 'application/json', Accept: 'application/json'},
+  return fetch(`api/exercise/${exerciseId}/create?exerciseType=${exerciseType}`, {
+    method: 'POST',
+    body: JSON.stringify(newExercise),
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+  })
+    .then((response) => {
+      console.dir(response);
+      return response.ok;
     })
-        .then((response) => {
-            console.dir(response);
-            return response.ok;
-        })
-        .then((json) => {
-        });
+    .then((json) => {});
 }
 
 function arrayContains(array: string[], searchElement: string): boolean {
-    var contains = false;
+  var contains = false;
 
-    array.forEach((element) => {
-        if (element === searchElement) contains = true;
-    });
+  array.forEach((element) => {
+    if (element === searchElement) contains = true;
+  });
 
-    return contains;
+  return contains;
 }
