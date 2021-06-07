@@ -30,6 +30,7 @@ export function PasswordWrapper(props: PasswordWrapperProps) {
       Password:
       <div style={{ marginTop: '20px', marginBottom: '20px' }}>
         <TextField
+          type="password"
           variant="outlined"
           color="primary"
           className={classes.root}

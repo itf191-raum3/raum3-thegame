@@ -78,7 +78,7 @@ export function initializeGameSession(subjectId: string): Promise<string> {
 }
 
 export function checkPassword(password: string): Promise<boolean> {
-  return fetch('api/auth', {
+  return fetch('/auth', {
     method: 'POST',
     body: JSON.stringify({ password }),
     headers: {
