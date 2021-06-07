@@ -10,4 +10,6 @@ export interface IGameSessionService {
     listGameSessions(): Promise<Array<GameSession>>;
 
     getGameSessionById(id: string): Promise<GameSession>;
+
+    saveGameSessions(gameSession: GameSession): Promise<void>;
 }

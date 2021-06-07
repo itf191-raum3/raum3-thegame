@@ -57,7 +57,7 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
 
         gameSession.answered.push(exercise);
         gameSession.score += exercise.difficulty * 360;
-
+        await gameSessionService.saveGameSessions(gameSession);
         return res.send({
             answers: exercise.correctAnswers,
             isCorrect

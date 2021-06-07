@@ -24,15 +24,24 @@ export class GameSessionService implements IGameSessionService {
 
     async getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined> {
         const randomDifficulty = Math.random() * (gameSession.maxDifficulty - 1) + 1;
+        console.log(randomDifficulty)
         const possibleExercises = gameSession.currentSubject.exercises.filter(exercise => !gameSession.answered.includes(exercise) && exercise.difficulty <= randomDifficulty);
+        console.log("gameSession.currentSubject.exercises", gameSession.currentSubject.exercises);
+        console.log("possibleExercises", possibleExercises);
         if (gameSession.answered.length >= 10) {
             gameSession.answered = Array<Exercise>();
             gameSession.maxDifficulty++;
         }
+
+
         return sample(possibleExercises);
     }
 
     async getGameSessionById(id: string): Promise<GameSession> {
        return await getManager().findOneOrFail(GameSession, {where: {id: id}, relations: ["currentSubject", "currentSubject.exercises"]})
+    }
+
+    async saveGameSessions(gameSession: GameSession): Promise<void> {
+        await getManager().save(gameSession);
     }
 }
