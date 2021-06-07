@@ -7,6 +7,96 @@ export class SeedExercise1622994244231 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         const subject = await getManager().findOneOrFail(Subject, {where: {label: "AE"}});
         await getManager().insert(Choice, {
+            difficulty: 1,
+            label: "Welches SQL-Schlüsselwort listet die Eigenschaften eines Datensatzes auf?",
+            correctAnswers: ['SELECT'],
+            possibleAnswers: ['SELECT', 'UPDATE', 'ALTER', 'DELETE'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 1,
+            label: "Welches SQL-Schlüsselwort löscht einen Datensatz?",
+            correctAnswers: ['DELETE'],
+            possibleAnswers: ['CREATE', 'UPDATE', 'ALTER', 'DELETE'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 2,
+            label: "Welches SQL-Schlüsselwort verändert die Datensätze einer Tabelle?",
+            correctAnswers: ['UPDATE'],
+            possibleAnswers: ['CREATE', 'UPDATE', 'ALTER', 'DELETE'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 2,
+            label: "Welches SQL-Schlüsselwort verändert die Spalten einer Tabelle?",
+            correctAnswers: ['ALTER'],
+            possibleAnswers: ['CREATE', 'UPDATE', 'ALTER', 'DELETE'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 2,
+            label: "Welcher Aufruf der Methode method(int i, float f) ist NICHT korrekt?",
+            correctAnswers: ['CREATE'],
+            possibleAnswers: ['method(1.3, 2)', 'method(1, 2.1)', 'method(1, 3)'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 2,
+            label: "Welche Art von Softwaretests ist die kleinste?",
+            correctAnswers: ['Unittests'],
+            possibleAnswers: ['Szenariotests', 'Unittests', 'Integrationstests'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 1,
+            label: "Welche Sichtbarkeit ist für die eigene und erbende Klassen erreichbar?",
+            correctAnswers: ['protected'],
+            possibleAnswers: ['public', 'protected', 'private'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 1,
+            label: "Welche Sichtbarkeit ist nur für die eigene Klasse erreichbar?",
+            correctAnswers: ['private'],
+            possibleAnswers: ['public', 'protected', 'private'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 1,
+            label: "Welche Sichtbarkeit ist für alle Klassen erreichbar?",
+            correctAnswers: ['public'],
+            possibleAnswers: ['public', 'protected', 'private'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
+            difficulty: 3,
+            label: "Welcher Raum ist der beste?",
+            correctAnswers: ['Raum 3'],
+            possibleAnswers: ['Raum 1', 'Raum 2', 'Raum 3', 'Raum 4', 'Raum 5', 'Raum 6'],
+            subject: subject,
+            isMultipleChoice: false
+        });
+
+        await getManager().insert(Choice, {
             difficulty: 2,
             label: "Wählen Sie alle richtigen Aussagen zu Konstruktoren aus - nicht nur diejenigen, welche Konstruktoren von normalen Methoden unterscheiden:",
             correctAnswers: [
