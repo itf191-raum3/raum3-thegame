@@ -45,7 +45,7 @@ export class SeedExercise1622994244231 implements MigrationInterface {
         await getManager().insert(Choice, {
             difficulty: 2,
             label: "Welcher Aufruf der Methode method(int i, float f) ist NICHT korrekt?",
-            correctAnswers: ['CREATE'],
+            correctAnswers: ['method(1.3, 2)'],
             possibleAnswers: ['method(1.3, 2)', 'method(1, 2.1)', 'method(1, 3)'],
             subject: subject,
             isMultipleChoice: false
