@@ -7,6 +7,7 @@ import addIcon from './add_icon.png';
 import { IExercise } from '../../../../common/src/entities/IExercise';
 import { useState } from 'react';
 import { ISubject } from '../../../../common/src/entities/ISubject';
+import { Tooltip } from '@material-ui/core';
 
 export function Configuration() {
   var workingExercise = clearExercise();
@@ -44,8 +45,8 @@ export function Configuration() {
         <thead>
           <th>Schwierigkeit</th>
           <th>Aufgabentype</th>
-          <th>Aufgabe</th>
-          <th>Richtige Antworten</th>
+            <th>Aufgabe</th>
+            <th>Richtige Antworten</th>
           <th>Antwortmöglichkeiten</th>
           <th></th>
           <th></th>
@@ -53,13 +54,13 @@ export function Configuration() {
         <tbody>
           <tr className="information">
             <td>
-              <input
-                type="number"
-                min="0"
-                placeholder="Schwierigkeit"
-                defaultValue={workingExercise.difficulty}
-                onChange={(e) => setDifficulty(e.target.value)}
-              />
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="Schwierigkeit"
+                  defaultValue={workingExercise.difficulty}
+                  onChange={(e) => setDifficulty(e.target.value)}
+                />
             </td>
             <td>
               <select onChange={(e) => setType(e.target.value)}>
@@ -68,28 +69,34 @@ export function Configuration() {
               </select>
             </td>
             <td>
+            <Tooltip title="Eingabefelder für den Lückentext werden mit _ gekennzeichnet">
               <input
                 type="text"
                 placeholder="Aufgabenstellung"
                 defaultValue={workingExercise.label}
                 onChange={(e) => setLabel(e.target.value)}
               />
+              </Tooltip>
             </td>
             <td>
+            <Tooltip title="Mehrere Antworten werden mit ; getrennt">
               <input
                 type="text"
                 placeholder="Richtige Antworten"
                 defaultValue={workingExercise.correctAnswers}
                 onChange={(e) => setCorrect(e.target.value)}
               />
+              </Tooltip>
             </td>
             <td>
+            <Tooltip title="Mehrere Antworten werden mit ; getrennt">
               <input
                 type="text"
                 placeholder="Antwortmöglichkeiten"
                 defaultValue={workingExercise.possibleAnswers}
                 onChange={(e) => setPossible(e.target.value)}
               />
+            </Tooltip>
             </td>
             <td>
               <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()} />
