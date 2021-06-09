@@ -1,38 +1,27 @@
-import { checkExercise, fetchCurrentScore, fetchExercise } from 'api/APIUtils';
-import { useCallback, useEffect, useState } from 'react';
+import { checkExercise, fetchCurrentStats, fetchExercise, SessionStats } from 'api/APIUtils';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { ChoiceWidget } from 'widgets/choice/ChoiceWidget';
 import { ClozeWidget } from 'widgets/cloze/ClozeWidget';
 import { Loading } from 'widgets/common/Loading';
-import { getSessionId } from 'widgets/sessionContext/SessionContext';
+import { SessionContext } from 'widgets/sessionContext/SessionContext';
 import { IExercise } from '../../../../common/src/entities/IExercise';
 import { isIChoice, isICloze } from './ExerciseTypeGuards';
 
-const subjectId = 'AE';
-
 export function ExerciseContainer() {
   const [currentExercise, setCurrentExercise] = useState<IExercise | undefined>(undefined);
-  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
-  const [score, setScore] = useState<number>(0);
+  const [stats, setStats] = useState<SessionStats | undefined>(undefined);
+
+  const sessionManager = useContext(SessionContext);
+  const sessionId = sessionManager?.sessionId;
 
   const getNewExercise = useCallback(() => {
     setCurrentExercise(undefined);
+
     if (sessionId) {
-      fetchExercise(sessionId)
-        .then(setCurrentExercise)
-        .catch((e) => console.log(e));
-      fetchCurrentScore(sessionId)
-        .then(setScore)
-        .catch((e) => console.log(e));
+      fetchExercise(sessionId).then(setCurrentExercise).catch(console.log);
+      fetchCurrentStats(sessionId).then(setStats).catch(console.log);
     }
   }, [sessionId]);
-
-  useEffect(() => {
-    getSessionId(subjectId)
-      .then(setSessionId)
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
 
   useEffect(() => {
     getNewExercise();
@@ -51,19 +40,25 @@ export function ExerciseContainer() {
     );
   }
 
+  let statContent = stats ? (
+    <div
+      style={{
+        marginTop: '30px',
+        fontFamily: 'fantasy',
+        fontSize: '2.5em',
+        color: 'red',
+      }}
+    >
+      <i>Dein derzeitiger Score: {stats?.score}</i>
+      <i>Die derzeitige Schwierigkeit: {stats?.maxDifficulty}</i>
+    </div>
+  ) : (
+    <></>
+  );
+
   return (
     <>
-      <div
-        style={{
-          position: 'absolute',
-          top: '30px',
-          fontFamily: 'fantasy',
-          fontSize: '2.5em',
-          color: 'red',
-        }}
-      >
-        <i>Dein derzeitiger Score: {score}</i>
-      </div>
+      {statContent}
       {content}
     </>
   );
