@@ -68,13 +68,13 @@ export const updateExercise = async (req: Request, res: Response, next: NextFunc
             case "IChoice":
                 await exerciseService.updateChoice({
                     ...updatedExercise,
-                    isMultipleChoice: req.body.isMultipleChoice
+                    isMultipleChoice: updatedExercise.correctAnswers.length > 1
                 });
                 break;
             case "ICloze":
                 await exerciseService.updateCloze({
                     ...updatedExercise,
-                    isDropDown: req.body.isDropDown
+                    isDropDown: updatedExercise.possibleAnswers.length > 0
                 });
                 break;
         }
