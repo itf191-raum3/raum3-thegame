@@ -60,7 +60,6 @@ export function Configuration() {
                 min="0"
                 id="difficulty"
                 placeholder="Schwierigkeit"
-                defaultValue={workingExercise.difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
@@ -74,8 +73,8 @@ export function Configuration() {
               <Tooltip title="Eingabefelder für den Lückentext werden mit _ gekennzeichnet">
                 <input
                   type="text"
+                  id="label"
                   placeholder="Aufgabenstellung"
-                  defaultValue={workingExercise.label}
                   onChange={(e) => setLabel(e.target.value)}
                 />
               </Tooltip>
@@ -84,8 +83,8 @@ export function Configuration() {
               <Tooltip title="Mehrere Antworten werden mit ; getrennt">
                 <input
                   type="text"
+                  id="correctAnswers"
                   placeholder="Richtige Antworten"
-                  defaultValue={workingExercise.correctAnswers}
                   onChange={(e) => setCorrect(e.target.value)}
                 />
               </Tooltip>
@@ -94,8 +93,8 @@ export function Configuration() {
               <Tooltip title="Mehrere Antworten werden mit ; getrennt">
                 <input
                   type="text"
+                  id="allChoices"
                   placeholder="Antwortmöglichkeiten"
-                  defaultValue={workingExercise.possibleAnswers}
                   onChange={(e) => setPossible(e.target.value)}
                 />
               </Tooltip>
@@ -158,23 +157,34 @@ export function Configuration() {
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
-              <input type="text" id="label" placeholder="Aufgabenstellung" onChange={(e) => setLabel(e.target.value)} />
+              <Tooltip title="Eingabefelder für den Lückentext werden mit _ gekennzeichnet">
+                <input
+                  type="text"
+                  id="label"
+                  placeholder="Aufgabenstellung"
+                  onChange={(e) => setLabel(e.target.value)}
+                />
+              </Tooltip>
             </td>
             <td>
-              <input
-                type="text"
-                id="correctAnswers"
-                placeholder="Richtige Antworten"
-                onChange={(e) => setCorrect(e.target.value)}
-              />
+              <Tooltip title="Mehrere Antworten werden mit ; getrennt">
+                <input
+                  type="text"
+                  id="correctAnswers"
+                  placeholder="Richtige Antworten"
+                  onChange={(e) => setCorrect(e.target.value)}
+                />
+              </Tooltip>
             </td>
             <td>
-              <input
-                type="text"
-                id="allChoices"
-                placeholder="Antwortmöglichkeiten"
-                onChange={(e) => setPossible(e.target.value)}
-              />
+              <Tooltip title="Mehrere Antworten werden mit ; getrennt">
+                <input
+                  type="text"
+                  id="allChoices"
+                  placeholder="Antwortmöglichkeiten"
+                  onChange={(e) => setPossible(e.target.value)}
+                />
+              </Tooltip>
             </td>
             <td>
               <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()} />
