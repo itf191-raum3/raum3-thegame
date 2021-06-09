@@ -2,7 +2,7 @@ import {ApiRoute} from "../../../types/common"
 import {NextFunction, Request, Response} from "express";
 import {SubjectService} from "@/service/SubjectService";
 import {GameSessionService} from "@/service/GameSessionService";
-import {each} from "lodash";
+import {each, every} from "lodash";
 import {ExerciseService} from "@/service/ExerciseService";
 import {Exercise} from "@/entities/Exercise";
 
@@ -57,17 +57,11 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
         });
 
 
-        if (isCorrect) {
+        if (every(isCorrect)) {
             gameSession.answered.push(exercise);
             gameSession.score += exercise.difficulty * 360;
 
-            if (gameSession.answered.length >= 3) { //TODO CHANGE BACK TO 10!
-                console.log("DOOOOOONEE");
-                console.log("DOOOOOONEE");
-                console.log("DOOOOOONEE");
-                console.log("DOOOOOONEE");
-                console.log("DOOOOOONEE");
-                console.log("DOOOOOONEE");
+            if (gameSession.answered.length >= 5) { //TODO CHANGE BACK TO 10!
                 gameSession.answered = Array<Exercise>();
                 gameSession.maxDifficulty++;
             }
