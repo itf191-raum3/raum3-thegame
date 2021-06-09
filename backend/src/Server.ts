@@ -5,9 +5,9 @@ import * as http from "http";
 
 export class Server {
     start() {
-        const privateKey = readFileSync('/etc/letsencrypt/live/raum3.gamingclubgermany.net/privkey.pem', 'utf8');
-        const certificate = readFileSync('/etc/letsencrypt/live/raum3.gamingclubgermany.net/cert.pem', 'utf8');
-        const ca = readFileSync('/etc/letsencrypt/live/raum3.gamingclubgermany.net/chain.pem', 'utf8');
+        const privateKey = readFileSync('/home/raum3/certs/privkey.pem', 'utf8');
+        const certificate = readFileSync('/home/raum3/certs/cert.pem', 'utf8');
+        const ca = readFileSync('/home/raum3/certs/chain.pem', 'utf8');
 
         const credentials = {
             key: privateKey,
