@@ -19,11 +19,9 @@ export class SessionManager {
   async initializeGameSession(subjectId: string) {
     const localStorageName = SessionManager.GAMESESSION_STORAGE_ID + subjectId;
 
-    if (!this._sessionId) {
-      this._sessionId = await initializeGameSession(this._userName, subjectId);
-      localStorage.setItem(localStorageName, this._sessionId);
-      localStorage.setItem(SessionManager.USERNAME_STORAGE_ID, this._userName);
-    }
+    this._sessionId = await initializeGameSession(this._userName, subjectId);
+    localStorage.setItem(localStorageName, this._sessionId);
+    localStorage.setItem(SessionManager.USERNAME_STORAGE_ID, this._userName);
   }
 }
 
