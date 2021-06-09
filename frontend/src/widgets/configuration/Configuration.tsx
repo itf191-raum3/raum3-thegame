@@ -26,7 +26,7 @@ export function Configuration() {
           </li>
         </ul>
       </div>
-      <div>
+      <div id="workingArea">
         {workingTable}
         <br />
         <br />
@@ -37,6 +37,7 @@ export function Configuration() {
 
   function loadCreateTable() {
     workingExercise = clearExercise();
+    resetInputs();
     setType('IChoice');
 
     return (
@@ -56,6 +57,7 @@ export function Configuration() {
               <input
                 type="number"
                 min="0"
+                id="difficulty"
                 placeholder="Schwierigkeit"
                 defaultValue={workingExercise.difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
@@ -71,6 +73,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Aufgabenstellung"
+                id="label"
                 defaultValue={workingExercise.label}
                 onChange={(e) => setLabel(e.target.value)}
               />
@@ -79,6 +82,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Richtige Antworten"
+                id="correctAnswers"
                 defaultValue={workingExercise.correctAnswers}
                 onChange={(e) => setCorrect(e.target.value)}
               />
@@ -87,6 +91,7 @@ export function Configuration() {
               <input
                 type="text"
                 placeholder="Antwortmöglichkeiten"
+                id="allChoices"
                 defaultValue={workingExercise.possibleAnswers}
                 onChange={(e) => setPossible(e.target.value)}
               />
@@ -113,6 +118,8 @@ export function Configuration() {
     setLabel(label);
     setCorrect(correctAnswers.join('; '));
     setPossible(possibleAnswers.join('; '));
+
+    resetInputs();
 
     var exerciseType = 'Unbekannt';
     if ('isDropdown' in exercise) {
@@ -142,26 +149,18 @@ export function Configuration() {
                 min="0"
                 id="difficulty"
                 placeholder="Schwierigkeit"
-                defaultValue={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
-              <input
-                type="text"
-                id="label"
-                placeholder="Aufgabenstellung"
-                defaultValue={label}
-                onChange={(e) => setLabel(e.target.value)}
-              />
+              <input type="text" id="label" placeholder="Aufgabenstellung" onChange={(e) => setLabel(e.target.value)} />
             </td>
             <td>
               <input
                 type="text"
                 id="correctAnswers"
                 placeholder="Richtige Antworten"
-                defaultValue={correctAnswers.join('; ')}
                 onChange={(e) => setCorrect(e.target.value)}
               />
             </td>
@@ -170,7 +169,6 @@ export function Configuration() {
                 type="text"
                 id="allChoices"
                 placeholder="Antwortmöglichkeiten"
-                defaultValue={possibleAnswers.join('; ')}
                 onChange={(e) => setPossible(e.target.value)}
               />
             </td>
@@ -178,7 +176,7 @@ export function Configuration() {
               <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()} />
             </td>
             <td>
-              <img src={acceptIcon} alt="Bearbeiten" className="bntLogo" onClick={() => changeData()} />
+              <img src={acceptIcon} alt="Übernehmen" className="bntLogo" onClick={() => changeData()} />
             </td>
           </tr>
         </tbody>
@@ -186,6 +184,20 @@ export function Configuration() {
     );
 
     setWorkingTable(editTabel);
+  }
+
+  function resetInputs() {
+    var allChoices = document.getElementById('allChoices') as HTMLInputElement;
+    if (allChoices !== null) allChoices.defaultValue = workingExercise.possibleAnswers;
+
+    var correct = document.getElementById('correctAnswers') as HTMLInputElement;
+    if (correct !== null) correct.defaultValue = workingExercise.correctAnswers;
+
+    var label = document.getElementById('label') as HTMLInputElement;
+    if (label !== null) label.defaultValue = workingExercise.label;
+
+    var difficulty = document.getElementById('difficulty') as HTMLInputElement;
+    if (difficulty !== null) difficulty.defaultValue = workingExercise.difficulty;
   }
 
   function renderShowingTable() {
