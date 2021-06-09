@@ -1,6 +1,5 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import {Subject} from "@/entities/Subject";
-import {Exercise} from "@/entities/Exercise";
 
 @Entity()
 export class GameSession {
@@ -20,5 +19,6 @@ export class GameSession {
     @Column({default: 0})
     score: number;
 
-    answered: Array<Exercise> = new Array<Exercise>();
+    @Column({ type: "json" })
+    answered: Array<string>;
 }

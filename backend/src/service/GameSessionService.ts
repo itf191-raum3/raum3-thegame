@@ -2,7 +2,7 @@ import {GameSession} from "@/entities/GameSession";
 import {Subject} from "@/entities/Subject";
 import {getManager} from "typeorm";
 import {Exercise} from "@/entities/Exercise";
-import {sample} from "lodash";
+import {isEmpty, sample} from "lodash";
 import {IGameSessionService} from "@common/services/IGameSessionService";
 
 export class GameSessionService implements IGameSessionService {
@@ -10,7 +10,8 @@ export class GameSessionService implements IGameSessionService {
         let gameSession;
         await getManager().insert(GameSession, {
             username: username,
-            currentSubject: subject
+            currentSubject: subject,
+            answered: []
         }).then(result => {
             gameSession = result.generatedMaps[0];
             console.log("gameSession", gameSession);
@@ -25,7 +26,13 @@ export class GameSessionService implements IGameSessionService {
 
     async getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined> {
         const randomDifficulty = Math.random() * (gameSession.maxDifficulty - 1) + 1;
-        const possibleExercises = gameSession.currentSubject.exercises.filter(exercise => !gameSession.answered.includes(exercise) && exercise.difficulty <= randomDifficulty);
+        let possibleExercises = gameSession.currentSubject.exercises.filter(exercise => !gameSession.answered.includes(exercise.id) && exercise.difficulty <= randomDifficulty);
+        if (isEmpty(possibleExercises)) {
+            gameSession.answered = [];
+            gameSession.maxDifficulty++;
+            await this.saveGameSessions(gameSession);
+            possibleExercises = gameSession.currentSubject.exercises.filter(exercise => !gameSession.answered.includes(exercise.id) && exercise.difficulty <= randomDifficulty);
+        }
         return sample(possibleExercises);
     }
 
