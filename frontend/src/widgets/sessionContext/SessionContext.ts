@@ -9,6 +9,7 @@ export class SessionManager {
 
   constructor(userName: string, sessionId?: string) {
     this._userName = userName;
+    this._sessionId = sessionId;
   }
 
   get sessionId() {

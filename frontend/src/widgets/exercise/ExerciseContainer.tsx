@@ -43,13 +43,15 @@ export function ExerciseContainer() {
   let statContent = stats ? (
     <div
       style={{
-        marginTop: '30px',
+        position: 'absolute',
+        top: '30px',
         fontFamily: 'fantasy',
         fontSize: '2.5em',
         color: 'red',
       }}
     >
       <i>Dein derzeitiger Score: {stats?.score}</i>
+      <br></br>
       <i>Die derzeitige Schwierigkeit: {stats?.maxDifficulty}</i>
     </div>
   ) : (
