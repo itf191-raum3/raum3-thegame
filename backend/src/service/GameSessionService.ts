@@ -6,11 +6,12 @@ import {isEmpty, sample} from "lodash";
 import {IGameSessionService} from "@common/services/IGameSessionService";
 
 export class GameSessionService implements IGameSessionService {
-    async createGameSession(subject: Subject): Promise<GameSession> {
+    async createGameSession(subject: Subject, username: string): Promise<GameSession> {
         let gameSession;
         await getManager().insert(GameSession, {
             currentSubject: subject,
-            answered: []
+            answered: [],
+            username
         }).then(result => {
             gameSession = result.generatedMaps[0];
             console.log("gameSession", gameSession);

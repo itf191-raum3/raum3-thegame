@@ -12,7 +12,7 @@ const exerciseService = new ExerciseService();
 export const createGameSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const subject = await subjectService.getSubjectByLabel(<string>req.params.subjectLabel);
-        const gameSession = await gameSessionService.createGameSession(subject);
+        const gameSession = await gameSessionService.createGameSession(subject, req.body.username);
         res.send(gameSession.id)
     } catch (err) {
         next(err);
@@ -38,12 +38,15 @@ export const getNextExercise = async (req: Request, res: Response, next: NextFun
     }
 }
 
-export const getGameSessionScore = async (req: Request, res: Response, next: NextFunction) => {
+export const getGameSessionStats = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const gameSessionId = req.params.gameSessionId;
         const gameSession = await gameSessionService.getGameSessionById(gameSessionId);
 
-        return res.status(200).send(gameSession.score.toString())
+        return res.status(200).send({
+            score: gameSession.score,
+            maxDifficulty: gameSession.maxDifficulty
+        })
     } catch (err) {
         return next(err);
     }
@@ -96,9 +99,9 @@ export const gameSessionApi: Array<ApiRoute> = [
         handler: getNextExercise
     },
     {
-        path: "/session/:gameSessionId/score",
+        path: "/session/:gameSessionId/stats",
         method: "GET",
-        handler: getGameSessionScore
+        handler: getGameSessionStats
     },
     {
         path: "/session/:gameSessionId/checkAnswers/:exerciseId",
