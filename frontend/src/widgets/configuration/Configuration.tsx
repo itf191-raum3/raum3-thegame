@@ -21,27 +21,7 @@ export function Configuration() {
   const [editCorrect, setEditCorrect] = useState<string>('');
   const [editPossible, setEditPossible] = useState<string>('');
 
-  return (
-    <div className="Configuration">
-      <div id="menu">
-        <ul>
-          <li>
-            <button className="navBtn" onClick={() => loadSubject('AE')}>
-              Anwendungsentwicklung
-            </button>
-          </li>
-        </ul>
-      </div>
-      <div id="workingArea">
-        {workingTable}
-        <br />
-        <br />
-      </div>
-      <div>{renderShowingTable()}</div>
-    </div>
-  );
-
-  function loadCreateTable() {
+  const loadCreateTable = () => {
     var createTable = (
       <table id="createTabel">
         <thead>
@@ -65,7 +45,6 @@ export function Configuration() {
                 onChange={(e) => {
                   alert(e.target.value);
                   setEditDifficulty(e.target.value);
-                  alert(editDifficulty);
                 }}
               />
             </td>
@@ -85,7 +64,6 @@ export function Configuration() {
                   onChange={(e) => {
                     alert(e.target.value);
                     setEditLabel(e.target.value);
-                    alert(editLabel);
                   }}
                 />
               </Tooltip>
@@ -100,7 +78,6 @@ export function Configuration() {
                   onChange={(e) => {
                     alert(e.target.value);
                     setEditCorrect(e.target.value);
-                    alert(editCorrect);
                   }}
                 />
               </Tooltip>
@@ -115,7 +92,6 @@ export function Configuration() {
                   onChange={(e) => {
                     alert(e.target.value);
                     setEditPossible(e.target.value);
-                    alert(editPossible);
                   }}
                 />
               </Tooltip>
@@ -131,9 +107,9 @@ export function Configuration() {
       </table>
     );
     setWorkingTable(createTable);
-  }
+  };
 
-  function loadEditTable(idStr: string) {
+  const loadEditTable = (idStr: string) => {
     const exercise = getExerciseInList(idStr);
 
     workingExerciseID = idStr;
@@ -174,7 +150,6 @@ export function Configuration() {
                 onChange={(e) => {
                   alert(e.target.value);
                   setEditDifficulty(e.target.value);
-                  alert(editDifficulty);
                 }}
               />
             </td>
@@ -189,7 +164,6 @@ export function Configuration() {
                   onChange={(e) => {
                     alert(e.target.value);
                     setEditLabel(e.target.value);
-                    alert(editLabel);
                   }}
                 />
               </Tooltip>
@@ -204,7 +178,6 @@ export function Configuration() {
                   onChange={(e) => {
                     alert(e.target.value);
                     setEditCorrect(e.target.value);
-                    alert(editCorrect);
                   }}
                 />
               </Tooltip>
@@ -219,7 +192,6 @@ export function Configuration() {
                   onChange={(e) => {
                     alert(e.target.value);
                     setEditPossible(e.target.value);
-                    alert(editPossible);
                   }}
                 />
               </Tooltip>
@@ -236,9 +208,9 @@ export function Configuration() {
     );
 
     setWorkingTable(editTabel);
-  }
+  };
 
-  function renderShowingTable() {
+  const renderShowingTable = () => {
     return (
       <table id="showingTable">
         <thead>
@@ -253,9 +225,9 @@ export function Configuration() {
         <tbody>{generateBody()}</tbody>
       </table>
     );
-  }
+  };
 
-  function generateBody() {
+  const generateBody = () => {
     var dataRows: JSX.Element[] = [];
 
     allExercises.forEach((exercise) => {
@@ -282,9 +254,9 @@ export function Configuration() {
     });
 
     return dataRows;
-  }
+  };
 
-  function loadSubject(subjectID: string) {
+  const loadSubject = (subjectID: string) => {
     subject = subjectID;
 
     fetchGetSubject(subject)
@@ -297,9 +269,9 @@ export function Configuration() {
 
     clearInputs();
     loadCreateTable();
-  }
+  };
 
-  function addDataSet() {
+  const addDataSet = () => {
     if (areDataValid()) {
       var correctAnswersList = editCorrect.split(';');
       correctAnswersList.forEach((correctAnswer) => {
@@ -330,23 +302,23 @@ export function Configuration() {
       loadCreateTable();
       loadSubject(subject);
     }
-  }
+  };
 
-  function editDataSet(id: string) {
+  const editDataSet = (id: string) => {
     loadEditTable(id);
-  }
+  };
 
-  function deleteDataSet(id: string) {
+  const deleteDataSet = (id: string) => {
     fetchDeleteExercise(id);
     loadSubject(subject);
-  }
+  };
 
-  function cancelEditing() {
+  const cancelEditing = () => {
     clearInputs();
     loadCreateTable();
-  }
+  };
 
-  function changeData() {
+  const changeData = () => {
     var oldExercise = getExerciseInList(workingExerciseID);
     var newExercise = {
       label: oldExercise.label,
@@ -382,9 +354,9 @@ export function Configuration() {
       loadCreateTable();
       loadSubject(subject);
     }
-  }
+  };
 
-  function areDataValid(): boolean {
+  const areDataValid = () => {
     alert(editDifficulty + ' | ' + editType + ' | ' + ' | ' + editLabel + ' | ' + editCorrect + ' | ' + editPossible);
     var areValid = false;
     var invalidFields = [];
@@ -406,9 +378,9 @@ export function Configuration() {
     }
 
     return areValid;
-  }
+  };
 
-  function clearInputs() {
+  const clearInputs = () => {
     var inputList = document.getElementById('workingArea')?.getElementsByTagName('input');
     if (inputList !== undefined) {
       for (const inputField of inputList) {
@@ -421,14 +393,14 @@ export function Configuration() {
     setEditLabel('');
     setEditCorrect('');
     setEditPossible('');
-  }
+  };
 
-  function getExerciseInList(exerciseID: string): IExercise {
+  const getExerciseInList = (exerciseID: string) => {
     var index = getIndexByExerciseID(exerciseID);
     return allExercises[index];
-  }
+  };
 
-  function getIndexByExerciseID(IdStr: string) {
+  const getIndexByExerciseID = (IdStr: string) => {
     var index = 0;
 
     for (var exerciseIndex = 0; exerciseIndex < allExercises.length; exerciseIndex++) {
@@ -439,7 +411,27 @@ export function Configuration() {
     }
 
     return index;
-  }
+  };
+
+  return (
+    <div className="Configuration">
+      <div id="menu">
+        <ul>
+          <li>
+            <button className="navBtn" onClick={() => loadSubject('AE')}>
+              Anwendungsentwicklung
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div id="workingArea">
+        {workingTable}
+        <br />
+        <br />
+      </div>
+      <div>{renderShowingTable()}</div>
+    </div>
+  );
 }
 
 export function fetchGetSubject(subjectId: string): Promise<ISubject> {
