@@ -22,11 +22,7 @@ function App() {
   if (appState === AppStateEnum.WELCOMEPAGE) {
     content = <WelcomePage changeAppState={setAppState} />;
   } else if (appState === AppStateEnum.EDITOR) {
-    content = (
-      <PasswordWrapper>
-        <Configuration />
-      </PasswordWrapper>
-    );
+    content = <Configuration />;
   } else if (appState === AppStateEnum.EXERCISES) {
     content = <ExerciseContainer />;
   }

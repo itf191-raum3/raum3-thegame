@@ -2,7 +2,7 @@ import {ApiRoute} from "../../../types/common"
 import {NextFunction, Request, Response} from "express";
 import {SubjectService} from "@/service/SubjectService";
 import {GameSessionService} from "@/service/GameSessionService";
-import {each, every} from "lodash";
+import {each, every, isEmpty} from "lodash";
 import {ExerciseService} from "@/service/ExerciseService";
 import {Exercise} from "@/entities/Exercise";
 
@@ -57,7 +57,7 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
         });
 
 
-        if (every(isCorrect)) {
+        if (!isEmpty(isCorrect) && every(isCorrect)) {
             gameSession.answered.push(exercise);
             gameSession.score += exercise.difficulty * 360;
 
