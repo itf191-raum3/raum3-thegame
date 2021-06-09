@@ -7,6 +7,9 @@ export class GameSession {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
+    @Column()
+    username: string;
+
     @ManyToOne(() => Subject)
     @JoinColumn()
     currentSubject: Subject;

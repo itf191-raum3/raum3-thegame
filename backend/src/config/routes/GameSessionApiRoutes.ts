@@ -13,7 +13,8 @@ const exerciseService = new ExerciseService();
 export const createGameSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const subject = await subjectService.getSubjectByLabel(<string>req.params.subjectLabel);
-        const gameSession = await gameSessionService.createGameSession(subject);
+        console.log("req.body.username", req.body.username);
+        const gameSession = await gameSessionService.createGameSession(<string>req.body.username, subject);
         res.send(gameSession.id)
     } catch (err) {
         next(err);
@@ -33,12 +34,34 @@ export const getNextExercise = async (req: Request, res: Response, next: NextFun
     }
 }
 
-export const getGameSessionScore = async (req: Request, res: Response, next: NextFunction) => {
+export const getGameSessionStats = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const gameSessionId = req.params.gameSessionId;
         const gameSession = await gameSessionService.getGameSessionById(gameSessionId);
 
-        return res.status(200).send(gameSession.score.toString())
+        return res.status(200).send({
+            score: gameSession.score,
+            maxDifficulty: gameSession.score
+        });
+    } catch (err) {
+        return next(err);
+    }
+}
+
+export const listGameSessionStats = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const gameSessions = await gameSessionService.listGameSessions();
+        // @ts-ignore
+        const sessionsTruncated = [];
+        each(gameSessions, e => {
+            sessionsTruncated.push({
+                username: e.username,
+                score: e.score,
+                maxDifficulty: e.maxDifficulty
+            })
+        });
+        // @ts-ignore
+        return res.status(200).send(sessionsTruncated)
     } catch (err) {
         return next(err);
     }
@@ -90,9 +113,14 @@ export const gameSessionApi: Array<ApiRoute> = [
         handler: getNextExercise
     },
     {
-        path: "/session/:gameSessionId/score",
+        path: "/session/:gameSessionId/stats",
         method: "GET",
-        handler: getGameSessionScore
+        handler: getGameSessionStats
+    },
+    {
+        path: "/session/stats",
+        method: "GET",
+        handler: listGameSessionStats
     },
     {
         path: "/session/:gameSessionId/checkAnswers/:exerciseId",

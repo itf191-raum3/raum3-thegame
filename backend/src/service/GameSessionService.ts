@@ -6,9 +6,10 @@ import {sample} from "lodash";
 import {IGameSessionService} from "@common/services/IGameSessionService";
 
 export class GameSessionService implements IGameSessionService {
-    async createGameSession(subject: Subject): Promise<GameSession> {
+    async createGameSession(username: string, subject: Subject): Promise<GameSession> {
         let gameSession;
         await getManager().insert(GameSession, {
+            username: username,
             currentSubject: subject
         }).then(result => {
             gameSession = result.generatedMaps[0];
@@ -19,7 +20,7 @@ export class GameSessionService implements IGameSessionService {
     }
 
     async listGameSessions(): Promise<Array<GameSession>> {
-        return await getManager().find<GameSession>(GameSession);
+        return await getManager().find(GameSession, {relations: ["currentSubject", "currentSubject.exercises"]})
     }
 
     async getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined> {
@@ -29,7 +30,7 @@ export class GameSessionService implements IGameSessionService {
     }
 
     async getGameSessionById(id: string): Promise<GameSession> {
-       return await getManager().findOneOrFail(GameSession, {where: {id: id}, relations: ["currentSubject", "currentSubject.exercises"]})
+        return await getManager().findOneOrFail(GameSession, {where: {id: id}, relations: ["currentSubject", "currentSubject.exercises"]})
     }
 
     async saveGameSessions(gameSession: GameSession): Promise<void> {
