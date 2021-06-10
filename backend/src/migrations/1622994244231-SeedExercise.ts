@@ -104,7 +104,8 @@ export class SeedExercise1622994244231 implements MigrationInterface {
                 'Der Name ist derselbe wie der Name der Klasse.',
                 'Er kann überladen werden.',
                 'Er wird für die Instanziierung benötigt',
-                'Er ist im Normalfall public.'
+                'Er ist im Normalfall public.',
+				'Er hat keinen Rückgabetyp.'
             ],
             possibleAnswers: [
                 'Bei jedem new wird er ausgeführt.',
