@@ -5,12 +5,19 @@ export type CheckResponse = {
   isCorrect: boolean[];
 };
 
+export type GameSessionStatsResponse = {
+  username: string;
+  score: number;
+  maxDifficulty: number;
+  answeredAmount: number;
+};
+
 function isCheckResponse(obj: any): obj is CheckResponse {
   return 'answers' in obj && 'isCorrect' in obj;
 }
 
 export function checkExercise(exercise: IExercise, sessionId: string): Promise<CheckResponse> {
-  return fetch(`/api/session/${sessionId}/checkAnswers/${exercise.id}`, {
+  return fetch(`/api/sessions/${sessionId}/checkAnswers/${exercise.id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -34,7 +41,7 @@ export function checkExercise(exercise: IExercise, sessionId: string): Promise<C
 }
 
 export async function fetchExercise(sessionId: string): Promise<IExercise> {
-  return fetch(`/api/session/${sessionId}/next`, {
+  return fetch(`/api/sessions/${sessionId}/next`, {
     method: 'GET',
   })
     .then((response) => {
@@ -52,7 +59,7 @@ export async function fetchExercise(sessionId: string): Promise<IExercise> {
 export type SessionStats = { score: number; maxDifficulty: number };
 
 export function fetchCurrentStats(sessionId: string): Promise<SessionStats> {
-  return fetch(`api/session/${sessionId}/stats`, { method: 'GET' })
+  return fetch(`api/sessions/${sessionId}/stats`, { method: 'GET' })
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -66,7 +73,7 @@ export function fetchCurrentStats(sessionId: string): Promise<SessionStats> {
 }
 
 export function initializeGameSession(username: string, subjectId: string): Promise<string> {
-  return fetch(`/api/session/${subjectId}/create/`, {
+  return fetch(`/api/sessions/${subjectId}/create/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -76,6 +83,26 @@ export function initializeGameSession(username: string, subjectId: string): Prom
     .then((response) => {
       if (response.ok) {
         return response.text();
+      } else {
+        throw new Error(response.status + ' ' + response.statusText);
+      }
+    })
+    .then((id) => {
+      return id;
+    });
+}
+
+export function getGameSessions(): Promise<Array<GameSessionStatsResponse>> {
+  return fetch(`/api/sessions/stats`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log(response)
+        return response.json();
       } else {
         throw new Error(response.status + ' ' + response.statusText);
       }

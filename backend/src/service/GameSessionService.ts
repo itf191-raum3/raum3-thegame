@@ -21,7 +21,7 @@ export class GameSessionService implements IGameSessionService {
     }
 
     async listGameSessions(): Promise<Array<GameSession>> {
-        return await getManager().find<GameSession>(GameSession);
+        return await getManager().find(GameSession, {relations: ["currentSubject", "currentSubject.exercises"]})
     }
 
     async getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined> {

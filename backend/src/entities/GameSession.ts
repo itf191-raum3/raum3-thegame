@@ -21,4 +21,7 @@ export class GameSession {
 
     @Column({ type: "json" })
     answered: Array<string>;
+
+    @Column({default: 0})
+    answeredAmount: number;
 }
