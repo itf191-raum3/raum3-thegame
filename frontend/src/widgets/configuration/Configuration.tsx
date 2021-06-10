@@ -265,23 +265,24 @@ export function Configuration() {
   }
 
   function addDataSet() {
-    const { label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
+    var correctAnswersList = formatInput(workingExercise.correctAnswers, true) as string[];
+    correctAnswersList = cleanArray(correctAnswersList) as string[];
+
+    var possibleAnswersList = formatInput(workingExercise.possibleAnswers, true) as string[];
+    possibleAnswersList = mergeArrayAInArrayB(correctAnswersList, possibleAnswersList);
+    possibleAnswersList = cleanArray(possibleAnswersList);
+
+    var newExercise = {
+      label: formatInput(workingExercise.label, false),
+      difficulty: workingExercise.difficulty,
+      correctAnswers: correctAnswersList,
+      possibleAnswers: possibleAnswersList,
+    };
+
+    const { label, difficulty, correctAnswers, possibleAnswers } = newExercise;
+    const { exerciseType } = workingExercise;
 
     if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
-      var correctAnswersList = formatInput(correctAnswers, true) as string[];
-      correctAnswersList = cleanDoubleEntriesInArray(correctAnswersList) as string[];
-
-      var possibleAnswersList = formatInput(possibleAnswers, true) as string[];
-      possibleAnswersList = mergeArrayAInArrayB(correctAnswersList, possibleAnswersList);
-      possibleAnswersList = cleanDoubleEntriesInArray(possibleAnswersList);
-
-      var newExercise = {
-        label: formatInput(label, false),
-        difficulty: difficulty,
-        correctAnswers: correctAnswersList,
-        possibleAnswers: possibleAnswersList,
-      };
-
       fetchCreateExercise(subject, exerciseType, newExercise);
 
       setWorkingTable(loadCreateTable());
@@ -305,23 +306,23 @@ export function Configuration() {
   }
 
   function changeData() {
-    const { id, label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
+    var correctAnswersList = formatInput(workingExercise.correctAnswers, true) as string[];
+    correctAnswersList = cleanArray(correctAnswersList) as string[];
+
+    var possibleAnswersList = formatInput(workingExercise.possibleAnswers, true) as string[];
+    possibleAnswersList = mergeArrayAInArrayB(correctAnswersList, possibleAnswersList);
+    possibleAnswersList = cleanArray(possibleAnswersList);
+
+    var newExercise = {
+      label: formatInput(workingExercise.label, false),
+      difficulty: workingExercise.difficulty,
+      correctAnswers: correctAnswersList,
+      possibleAnswers: possibleAnswersList,
+    };
+    const { label, difficulty, correctAnswers, possibleAnswers } = newExercise;
+    const { id, exerciseType } = workingExercise;
 
     if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
-      var correctAnswersList = formatInput(correctAnswers, true) as string[];
-      correctAnswersList = cleanDoubleEntriesInArray(correctAnswersList) as string[];
-
-      var possibleAnswersList = formatInput(possibleAnswers, true) as string[];
-      possibleAnswersList = mergeArrayAInArrayB(correctAnswersList, possibleAnswersList);
-      possibleAnswersList = cleanDoubleEntriesInArray(possibleAnswersList);
-
-      var newExercise = {
-        label: formatInput(label, false),
-        difficulty: difficulty,
-        correctAnswers: correctAnswersList,
-        possibleAnswers: possibleAnswersList,
-      };
-
       fetchUpdateExercise(id, exerciseType, newExercise);
 
       setWorkingTable(loadCreateTable());
@@ -344,11 +345,11 @@ export function Configuration() {
 
     if (label === undefined || label === null || label === '') invalidFields.push('Aufgabenstellung');
 
-    if (correctAnswers === undefined || correctAnswers === null || correctAnswers === '')
+    if (correctAnswers === undefined || correctAnswers === null || correctAnswers.join('') === '')
       invalidFields.push('Richtige Antworten');
 
     if (
-      (possibleAnswers === undefined || possibleAnswers === null || possibleAnswers === '') &&
+      (possibleAnswers === undefined || possibleAnswers === null || possibleAnswers.join('') === '') &&
       exerciseType === 'IChoice'
     )
       invalidFields.push('Antwortmöglichkeiten');
@@ -400,12 +401,12 @@ export function Configuration() {
     return allChoicesArray;
   }
 
-  function cleanDoubleEntriesInArray(array: any[]): any[] {
+  function cleanArray(array: any[]): any[] {
     var cleanArray: any[] = [];
 
     array.forEach((element) => {
       // eslint-disable-next-line eqeqeq
-      if (arrayContains(cleanArray, element) == false) cleanArray.push(element);
+      if (arrayContains(cleanArray, element) == false && element != '') cleanArray.push(element);
     });
 
     return cleanArray;
