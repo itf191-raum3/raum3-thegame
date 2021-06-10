@@ -259,24 +259,15 @@ export function Configuration() {
     const { label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
 
     if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
-      var correctAnswersList = correctAnswers.split(';');
-      correctAnswersList.forEach((correctAnswer) => {
-        correctAnswer.trim();
-      });
+      var correctAnswersList = formatInput(correctAnswers, true) as string[];
+      correctAnswersList = cleanDoubleEntriesInArray(correctAnswersList) as string[];
 
-      var possibleAnswersList = possibleAnswers.split(';');
-      possibleAnswersList.forEach((possibleAnswer) => {
-        possibleAnswer.trim();
-      });
-
-      correctAnswersList.forEach((correctAnswer) => {
-        if (arrayContains(possibleAnswersList, correctAnswers) === false) {
-          possibleAnswersList.push(correctAnswer);
-        }
-      });
+      var possibleAnswersList = formatInput(possibleAnswers, true) as string[];
+      possibleAnswersList = mergeArrayAInArrayB(correctAnswersList, possibleAnswersList);
+      possibleAnswersList = cleanDoubleEntriesInArray(possibleAnswersList);
 
       var newExercise = {
-        label: label,
+        label: formatInput(label, false),
         difficulty: difficulty,
         correctAnswers: correctAnswersList,
         possibleAnswers: possibleAnswersList,
@@ -308,24 +299,15 @@ export function Configuration() {
     const { id, label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
 
     if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
-      var correctAnswersList = correctAnswers.split(';');
-      correctAnswersList.forEach((correctAnswer) => {
-        correctAnswer.trim();
-      });
+      var correctAnswersList = formatInput(correctAnswers, true) as string[];
+      correctAnswersList = cleanDoubleEntriesInArray(correctAnswersList) as string[];
 
-      var possibleAnswersList = possibleAnswers.split(';');
-      possibleAnswersList.forEach((possibleAnswer) => {
-        possibleAnswer.trim();
-      });
-
-      correctAnswersList.forEach((correctAnswer) => {
-        if (arrayContains(possibleAnswersList, correctAnswers) === false) {
-          possibleAnswersList.push(correctAnswer);
-        }
-      });
+      var possibleAnswersList = formatInput(possibleAnswers, true) as string[];
+      possibleAnswersList = mergeArrayAInArrayB(correctAnswersList, possibleAnswersList);
+      possibleAnswersList = cleanDoubleEntriesInArray(possibleAnswersList);
 
       var newExercise = {
-        label: label,
+        label: formatInput(label, false),
         difficulty: difficulty,
         correctAnswers: correctAnswersList,
         possibleAnswers: possibleAnswersList,
@@ -380,6 +362,43 @@ export function Configuration() {
       possibleAnswers: '',
       exerciseType: '',
     };
+  }
+
+  function formatInput(input: string, doSplit: boolean): string | string[] {
+    var output;
+    input = input.replace(/\s+/g, ' ');
+
+    if (doSplit) {
+      output = [];
+      var inputArray = input.split(';');
+      inputArray.forEach((inputPart) => {
+        output.push(inputPart.trim());
+      });
+    } else {
+      output = input.trim();
+    }
+
+    return output;
+  }
+
+  function mergeArrayAInArrayB(correctAnswersArray: any[], allChoicesArray: any[]): any[] {
+    correctAnswersArray.forEach((correctAnswer) => {
+      if (arrayContains(allChoicesArray, correctAnswer) === false) {
+        allChoicesArray.push(correctAnswer);
+      }
+    });
+
+    return allChoicesArray;
+  }
+
+  function cleanDoubleEntriesInArray(array: any[]): any[] {
+    var cleanArray: any[] = [];
+
+    array.forEach((element) => {
+      if (arrayContains(cleanArray, element) == false) cleanArray.push(element);
+    });
+
+    return cleanArray;
   }
 
   function getExerciseInList(exerciseID: string): IExercise {
@@ -475,11 +494,11 @@ export function fetchCreateExercise(exerciseId: string, exerciseType: any, newEx
     .then((json) => {});
 }
 
-function arrayContains(array: string[], searchElement: string): boolean {
+function arrayContains(array: any[], searchElement: any): boolean {
   var contains = false;
 
   array.forEach((element) => {
-    if (element === searchElement) contains = true;
+    if (element == searchElement) contains = true;
   });
 
   return contains;
