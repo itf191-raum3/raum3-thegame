@@ -6,6 +6,7 @@ import { ExerciseContainer } from 'widgets/exercise/ExerciseContainer';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { IconButton } from '@material-ui/core';
 import { PasswordWrapper } from 'widgets/common/PasswordWrapper';
+import { UserLogin } from 'widgets/exercise/UserLogin';
 
 export enum AppStateEnum {
   WELCOMEPAGE,
@@ -28,7 +29,11 @@ function App() {
       </PasswordWrapper>
     );
   } else if (appState === AppStateEnum.EXERCISES) {
-    content = <ExerciseContainer />;
+    content = (
+      <UserLogin>
+        <ExerciseContainer />
+      </UserLogin>
+    );
   }
 
   if (appState !== AppStateEnum.WELCOMEPAGE) {

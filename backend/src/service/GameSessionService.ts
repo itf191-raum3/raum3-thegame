@@ -6,12 +6,12 @@ import {isEmpty, sample} from "lodash";
 import {IGameSessionService} from "@common/services/IGameSessionService";
 
 export class GameSessionService implements IGameSessionService {
-    async createGameSession(username: string, subject: Subject): Promise<GameSession> {
+    async createGameSession(subject: Subject, username: string): Promise<GameSession> {
         let gameSession;
         await getManager().insert(GameSession, {
-            username: username,
             currentSubject: subject,
-            answered: []
+            answered: [],
+            username
         }).then(result => {
             gameSession = result.generatedMaps[0];
             console.log("gameSession", gameSession);
@@ -21,7 +21,7 @@ export class GameSessionService implements IGameSessionService {
     }
 
     async listGameSessions(): Promise<Array<GameSession>> {
-        return await getManager().find(GameSession, {relations: ["currentSubject", "currentSubject.exercises"]})
+        return await getManager().find<GameSession>(GameSession);
     }
 
     async getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined> {
@@ -37,7 +37,7 @@ export class GameSessionService implements IGameSessionService {
     }
 
     async getGameSessionById(id: string): Promise<GameSession> {
-        return await getManager().findOneOrFail(GameSession, {where: {id: id}, relations: ["currentSubject", "currentSubject.exercises"]})
+       return await getManager().findOneOrFail(GameSession, {where: {id: id}, relations: ["currentSubject", "currentSubject.exercises"]})
     }
 
     async saveGameSessions(gameSession: GameSession): Promise<void> {

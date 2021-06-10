@@ -12,8 +12,7 @@ const exerciseService = new ExerciseService();
 export const createGameSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const subject = await subjectService.getSubjectByLabel(<string>req.params.subjectLabel);
-        console.log("req.body.username", req.body.username);
-        const gameSession = await gameSessionService.createGameSession(<string>req.body.username, subject);
+        const gameSession = await gameSessionService.createGameSession(subject, req.body.username);
         res.send(gameSession.id)
     } catch (err) {
         next(err);
@@ -46,27 +45,8 @@ export const getGameSessionStats = async (req: Request, res: Response, next: Nex
 
         return res.status(200).send({
             score: gameSession.score,
-            maxDifficulty: gameSession.score
-        });
-    } catch (err) {
-        return next(err);
-    }
-}
-
-export const listGameSessionStats = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const gameSessions = await gameSessionService.listGameSessions();
-        // @ts-ignore
-        const sessionsTruncated = [];
-        each(gameSessions, e => {
-            sessionsTruncated.push({
-                username: e.username,
-                score: e.score,
-                maxDifficulty: e.maxDifficulty
-            })
-        });
-        // @ts-ignore
-        return res.status(200).send(sessionsTruncated)
+            maxDifficulty: gameSession.maxDifficulty
+        })
     } catch (err) {
         return next(err);
     }
@@ -122,11 +102,6 @@ export const gameSessionApi: Array<ApiRoute> = [
         path: "/session/:gameSessionId/stats",
         method: "GET",
         handler: getGameSessionStats
-    },
-    {
-        path: "/session/stats",
-        method: "GET",
-        handler: listGameSessionStats
     },
     {
         path: "/session/:gameSessionId/checkAnswers/:exerciseId",

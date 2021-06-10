@@ -1,5 +1,5 @@
 import { Button } from '@material-ui/core';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ICloze } from '../../../../common/src/entities/ICloze';
 import { DropdownBlank } from './DropdownBlank';
 import { InputBlank } from './InputBlank';
@@ -17,10 +17,30 @@ function BottomButton(props: { label: string; onClick: () => void }) {
   );
 }
 
+function extractCloze(text: string) {
+  const splitText = text.split('_');
+
+  const cloze: string[] = [];
+
+  let first = true;
+  for (const split of splitText) {
+    if (first || split === '') {
+      first = false;
+      cloze.push(split);
+    } else {
+      cloze.push('', split);
+    }
+  }
+
+  return cloze;
+}
+
 export function ClozeWidget(props: ClozeWidgetProps) {
   const { check, finish, exercise } = props;
 
   const [correctAnswers, setCorrectAnswers] = useState<CheckResponse | undefined>(undefined);
+
+  const cloze = useMemo<string[]>(() => extractCloze(exercise.label), [exercise.label]);
 
   const useDropdown = exercise.possibleAnswers.length > 0;
 
@@ -34,7 +54,7 @@ export function ClozeWidget(props: ClozeWidgetProps) {
   const content = !correctAnswers ? (
     <>
       <div>
-        {exercise.correctAnswers.map((text, index) => {
+        {cloze.map((text, index) => {
           if (text) {
             return text;
           } else {
@@ -53,6 +73,10 @@ export function ClozeWidget(props: ClozeWidgetProps) {
       <BottomButton
         label={'Überprüfen'}
         onClick={() => {
+          exercise.correctAnswers = exercise.correctAnswers.flatMap((a) => {
+            return a || [];
+          });
+
           check(exercise)
             .then(setCorrectAnswers)
             .catch((e) => {

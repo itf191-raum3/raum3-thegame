@@ -49,22 +49,30 @@ export async function fetchExercise(sessionId: string): Promise<IExercise> {
     });
 }
 
-export function fetchCurrentScore(sessionId: string): Promise<number> {
-  return fetch(`api/session/${sessionId}/score`, { method: 'GET' })
+export type SessionStats = { score: number; maxDifficulty: number };
+
+export function fetchCurrentStats(sessionId: string): Promise<SessionStats> {
+  return fetch(`api/session/${sessionId}/stats`, { method: 'GET' })
     .then((response) => {
       if (response.ok) {
-        return response.text();
+        return response.json();
       } else {
         throw new Error(response.status + ' ' + response.statusText);
       }
     })
     .then((score) => {
-      return +score;
+      return score as SessionStats;
     });
 }
 
-export function initializeGameSession(subjectId: string): Promise<string> {
-  return fetch(`/api/session/${subjectId}/create/`, { method: 'POST' })
+export function initializeGameSession(username: string, subjectId: string): Promise<string> {
+  return fetch(`/api/session/${subjectId}/create/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username }),
+  })
     .then((response) => {
       if (response.ok) {
         return response.text();
