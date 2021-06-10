@@ -1,10 +1,8 @@
-import {Button, makeStyles, Paper, Slide, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
+import {Button, Paper, Slide, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
 import {AppStateEnum} from 'App';
 import React, {useEffect, useState} from 'react';
 import './WelcomePage.css';
 import {GameSessionStatsResponse, getGameSessions} from "../../api/APIUtils";
-import {Simulate} from "react-dom/test-utils";
-
 
 const slideInTimer = 700;
 
@@ -76,21 +74,20 @@ export function WelcomePage(props: WelcomePageProps) {
                 visible={visible}
             />
             <br/>
-            <TableContainer component={Paper}>
-                <Table>
+            <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+                <Table stickyHeader>
                     <TableHead>
                         <TableRow>
+                            <TableCell>#</TableCell>
                             <TableCell>Name</TableCell>
                             <TableCell>Punktzahl</TableCell>
                             <TableCell>Beantwortet</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {gameSessions.map((row) => (
+                        {gameSessions.sort((a, b) => a.score < b.score ? 1 : -1).map((row, i) => (
                             <TableRow key={row.username}>
-                                <TableCell component="th" scope="row">
-                                    {row.username}
-                                </TableCell>
+                                <TableCell>#{i + 1}</TableCell>
                                 <TableCell>{row.username}</TableCell>
                                 <TableCell>{row.score}</TableCell>
                                 <TableCell>{row.answeredAmount}</TableCell>
