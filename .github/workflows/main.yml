@@ -53,8 +53,6 @@ jobs:
         working-directory: ./frontend
       - run: yarn install --frozen-lockfile
         working-directory: ./backend
-      - name: Create Build Folder
-        run: mkdir -p src/public/build/static
       - name: Build Frontend and copy to Backend
         run: npm run build_and_copy --if-present
         working-directory: ./frontend
