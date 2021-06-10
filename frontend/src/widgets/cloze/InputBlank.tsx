@@ -7,7 +7,7 @@ const WhiteTextField = withStyles({
     '& .MuiInput-underline:before': {
       borderBottomColor: 'white',
     },
-    '& .MuiInput': {
+    '& .MuiInputBase-input': {
       color: 'white',
     },
   },

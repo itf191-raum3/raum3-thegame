@@ -10,19 +10,37 @@ import { ISubject } from '../../../../common/src/entities/ISubject';
 import { Tooltip } from '@material-ui/core';
 
 export function Configuration() {
-  var workingExerciseID = '';
+  var workingExercise = clearExercise();
 
   var subject = 'AE';
   const [allExercises, setAllExercises] = useState<IExercise[]>(Array<IExercise>());
   const [workingTable, setWorkingTable] = useState<JSX.Element>();
-  const [editDifficulty, setEditDifficulty] = useState<string>('');
-  const [editType, setEditType] = useState<string>('IChoice');
-  const [editLabel, setEditLabel] = useState<string>('');
-  const [editCorrect, setEditCorrect] = useState<string>('');
-  const [editPossible, setEditPossible] = useState<string>('');
 
-  const loadCreateTable = () => {
-    var createTable = (
+  return (
+    <div className="Configuration">
+      <div id="menu">
+        <ul>
+          <li>
+            <button className="navBtn" onClick={() => loadSubject('AE')}>
+              Anwendungsentwicklung
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div>
+        {workingTable}
+        <br />
+        <br />
+      </div>
+      <div>{renderShowingTable()}</div>
+    </div>
+  );
+
+  function loadCreateTable() {
+    workingExercise = clearExercise();
+    setType('IChoice');
+
+    return (
       <table id="createTabel">
         <thead>
           <th>Schwierigkeit</th>
@@ -39,17 +57,13 @@ export function Configuration() {
               <input
                 type="number"
                 min="0"
-                id="difficulty"
                 placeholder="Schwierigkeit"
-                defaultValue={editDifficulty}
-                onChange={(e) => {
-                  alert(e.target.value);
-                  setEditDifficulty(e.target.value);
-                }}
+                defaultValue={workingExercise.difficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
             <td>
-              <select onChange={(e) => setEditType(e.target.value)}>
+              <select onChange={(e) => setType(e.target.value)}>
                 <option value="IChoice">Auswahlaufgabe</option>
                 <option value="ICloze">Lückentext</option>
               </select>
@@ -58,13 +72,9 @@ export function Configuration() {
               <Tooltip title="Eingabefelder für den Lückentext werden mit _ gekennzeichnet">
                 <input
                   type="text"
-                  id="label"
                   placeholder="Aufgabenstellung"
-                  defaultValue={editLabel}
-                  onChange={(e) => {
-                    alert(e.target.value);
-                    setEditLabel(e.target.value);
-                  }}
+                  defaultValue={workingExercise.label}
+                  onChange={(e) => setLabel(e.target.value)}
                 />
               </Tooltip>
             </td>
@@ -72,13 +82,9 @@ export function Configuration() {
               <Tooltip title="Mehrere Antworten werden mit ; getrennt">
                 <input
                   type="text"
-                  id="correctAnswers"
                   placeholder="Richtige Antworten"
-                  defaultValue={editCorrect}
-                  onChange={(e) => {
-                    alert(e.target.value);
-                    setEditCorrect(e.target.value);
-                  }}
+                  defaultValue={workingExercise.correctAnswers}
+                  onChange={(e) => setCorrect(e.target.value)}
                 />
               </Tooltip>
             </td>
@@ -86,13 +92,9 @@ export function Configuration() {
               <Tooltip title="Mehrere Antworten werden mit ; getrennt">
                 <input
                   type="text"
-                  id="allChoices"
                   placeholder="Antwortmöglichkeiten"
-                  defaultValue={editPossible}
-                  onChange={(e) => {
-                    alert(e.target.value);
-                    setEditPossible(e.target.value);
-                  }}
+                  defaultValue={workingExercise.possibleAnswers}
+                  onChange={(e) => setPossible(e.target.value)}
                 />
               </Tooltip>
             </td>
@@ -106,25 +108,26 @@ export function Configuration() {
         </tbody>
       </table>
     );
-    setWorkingTable(createTable);
-  };
+  }
 
-  const loadEditTable = (idStr: string) => {
+  function loadEditTable(idStr: string) {
+    workingExercise = clearExercise();
     const exercise = getExerciseInList(idStr);
+    const { difficulty, label, correctAnswers, possibleAnswers } = exercise;
 
-    workingExerciseID = idStr;
-    setEditDifficulty(exercise.difficulty + '');
-    setEditLabel(exercise.label);
-    setEditCorrect(exercise.correctAnswers.join(';'));
-    setEditPossible(exercise.possibleAnswers.join(';'));
+    workingExercise.id = idStr;
+    setDifficulty(difficulty + '');
+    setLabel(label);
+    setCorrect(correctAnswers.join('; '));
+    setPossible(possibleAnswers.join('; '));
 
     var exerciseType = 'Unbekannt';
     if ('isDropdown' in exercise) {
       exerciseType = 'Lückentext';
-      setEditType('ICloze');
+      setType('ICloze');
     } else if ('isMultipleChoice' in exercise) {
       exerciseType = 'Auswahlaufgabe';
-      setEditType('IChoice');
+      setType('IChoice');
     }
 
     var editTabel = (
@@ -146,61 +149,43 @@ export function Configuration() {
                 min="0"
                 id="difficulty"
                 placeholder="Schwierigkeit"
-                defaultValue={editDifficulty}
-                onChange={(e) => {
-                  alert(e.target.value);
-                  setEditDifficulty(e.target.value);
-                }}
+                defaultValue={difficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
             <td id="exersiceType">{exerciseType}</td>
             <td>
-              <Tooltip title="Eingabefelder für den Lückentext werden mit _ gekennzeichnet">
-                <input
-                  type="text"
-                  id="label"
-                  placeholder="Aufgabenstellung"
-                  defaultValue={editLabel}
-                  onChange={(e) => {
-                    alert(e.target.value);
-                    setEditLabel(e.target.value);
-                  }}
-                />
-              </Tooltip>
+              <input
+                type="text"
+                id="label"
+                placeholder="Aufgabenstellung"
+                defaultValue={label}
+                onChange={(e) => setLabel(e.target.value)}
+              />
             </td>
             <td>
-              <Tooltip title="Mehrere Antworten werden mit ; getrennt">
-                <input
-                  type="text"
-                  id="correctAnswers"
-                  placeholder="Richtige Antworten"
-                  defaultValue={editCorrect}
-                  onChange={(e) => {
-                    alert(e.target.value);
-                    setEditCorrect(e.target.value);
-                  }}
-                />
-              </Tooltip>
+              <input
+                type="text"
+                id="correctAnswers"
+                placeholder="Richtige Antworten"
+                defaultValue={correctAnswers.join('; ')}
+                onChange={(e) => setCorrect(e.target.value)}
+              />
             </td>
             <td>
-              <Tooltip title="Mehrere Antworten werden mit ; getrennt">
-                <input
-                  type="text"
-                  id="allChoices"
-                  placeholder="Antwortmöglichkeiten"
-                  defaultValue={editPossible}
-                  onChange={(e) => {
-                    alert(e.target.value);
-                    setEditPossible(e.target.value);
-                  }}
-                />
-              </Tooltip>
+              <input
+                type="text"
+                id="allChoices"
+                placeholder="Antwortmöglichkeiten"
+                defaultValue={possibleAnswers.join('; ')}
+                onChange={(e) => setPossible(e.target.value)}
+              />
             </td>
             <td>
               <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()} />
             </td>
             <td>
-              <img src={acceptIcon} alt="Übernehmen" className="bntLogo" onClick={() => changeData()} />
+              <img src={acceptIcon} alt="Bearbeiten" className="bntLogo" onClick={() => changeData()} />
             </td>
           </tr>
         </tbody>
@@ -208,9 +193,9 @@ export function Configuration() {
     );
 
     setWorkingTable(editTabel);
-  };
+  }
 
-  const renderShowingTable = () => {
+  function renderShowingTable() {
     return (
       <table id="showingTable">
         <thead>
@@ -225,14 +210,14 @@ export function Configuration() {
         <tbody>{generateBody()}</tbody>
       </table>
     );
-  };
+  }
 
-  const generateBody = () => {
+  function generateBody() {
     var dataRows: JSX.Element[] = [];
 
     allExercises.forEach((exercise) => {
       const { id, difficulty, label, correctAnswers, possibleAnswers } = exercise;
-      var exerciseType = 'Lückentext';
+      var exerciseType = 'Unbekannt';
       if ('isDropdown' in exercise) exerciseType = 'Lückentext';
       else if ('isMultipleChoice' in exercise) exerciseType = 'Auswahlaufgabe';
 
@@ -254,9 +239,9 @@ export function Configuration() {
     });
 
     return dataRows;
-  };
+  }
 
-  const loadSubject = (subjectID: string) => {
+  function loadSubject(subjectID: string) {
     subject = subjectID;
 
     fetchGetSubject(subject)
@@ -267,108 +252,96 @@ export function Configuration() {
         console.error(_errorMsg);
       });
 
-    clearInputs();
-    loadCreateTable();
-  };
+    setWorkingTable(loadCreateTable());
+  }
 
-  const addDataSet = () => {
-    if (areDataValid()) {
-      var correctAnswersList = editCorrect.split(';');
-      correctAnswersList.forEach((correctAnswer) => {
-        correctAnswer.trim();
-      });
+  function addDataSet() {
+    const { label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
 
-      var possibleAnswersList = editPossible.split(';');
-      possibleAnswersList.forEach((possibleAnswer) => {
-        possibleAnswer.trim();
-      });
+    if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
+      var correctAnswersList = formatInput(correctAnswers, true) as string[];
+      correctAnswersList = cleanDoubleEntriesInArray(correctAnswersList) as string[];
 
-      correctAnswersList.forEach((correctAnswer) => {
-        if (arrayContains(possibleAnswersList, correctAnswer) === false) {
-          possibleAnswersList.push(correctAnswer);
-        }
-      });
+      var possibleAnswersList = formatInput(possibleAnswers, true) as string[];
+      possibleAnswersList = mergeArrayAInArrayB(correctAnswersList, possibleAnswersList);
+      possibleAnswersList = cleanDoubleEntriesInArray(possibleAnswersList);
 
       var newExercise = {
-        label: editLabel,
-        difficulty: editDifficulty,
+        label: formatInput(label, false),
+        difficulty: difficulty,
         correctAnswers: correctAnswersList,
         possibleAnswers: possibleAnswersList,
       };
 
-      fetchCreateExercise(subject, editType, newExercise);
+      fetchCreateExercise(subject, exerciseType, newExercise);
 
-      clearInputs();
-      loadCreateTable();
+      setWorkingTable(loadCreateTable());
+
       loadSubject(subject);
     }
-  };
+  }
 
-  const editDataSet = (id: string) => {
+  function editDataSet(id: string) {
     loadEditTable(id);
-  };
+  }
 
-  const deleteDataSet = (id: string) => {
+  function deleteDataSet(id: string) {
     fetchDeleteExercise(id);
+
     loadSubject(subject);
-  };
+  }
 
-  const cancelEditing = () => {
-    clearInputs();
-    loadCreateTable();
-  };
+  function cancelEditing() {
+    setWorkingTable(loadCreateTable());
+  }
 
-  const changeData = () => {
-    var oldExercise = getExerciseInList(workingExerciseID);
-    var newExercise = {
-      label: oldExercise.label,
-      difficulty: oldExercise.difficulty + '',
-      correctAnswers: oldExercise.correctAnswers,
-      possibleAnswers: oldExercise.possibleAnswers,
-    };
+  function changeData() {
+    const { id, label, difficulty, correctAnswers, possibleAnswers, exerciseType } = workingExercise;
 
-    if (areDataValid()) {
-      var correctAnswersList = editCorrect.split(';');
-      correctAnswersList.forEach((correctAnswer) => {
-        correctAnswer.trim();
-      });
+    if (areDataValid(label, difficulty, correctAnswers, possibleAnswers, exerciseType)) {
+      var correctAnswersList = formatInput(correctAnswers, true) as string[];
+      correctAnswersList = cleanDoubleEntriesInArray(correctAnswersList) as string[];
 
-      var possibleAnswersList = editPossible.split(';');
-      possibleAnswersList.forEach((possibleAnswer) => {
-        possibleAnswer.trim();
-      });
+      var possibleAnswersList = formatInput(possibleAnswers, true) as string[];
+      possibleAnswersList = mergeArrayAInArrayB(correctAnswersList, possibleAnswersList);
+      possibleAnswersList = cleanDoubleEntriesInArray(possibleAnswersList);
 
-      correctAnswersList.forEach((correctAnswer) => {
-        if (arrayContains(possibleAnswersList, correctAnswer) === false) {
-          possibleAnswersList.push(correctAnswer);
-        }
-      });
+      var newExercise = {
+        label: formatInput(label, false),
+        difficulty: difficulty,
+        correctAnswers: correctAnswersList,
+        possibleAnswers: possibleAnswersList,
+      };
 
-      newExercise.label = editLabel;
-      newExercise.difficulty = editDifficulty;
-      newExercise.correctAnswers = correctAnswersList;
-      newExercise.possibleAnswers = possibleAnswersList;
+      fetchUpdateExercise(id, exerciseType, newExercise);
 
-      fetchUpdateExercise(workingExerciseID, editType, newExercise);
-      clearInputs();
-      loadCreateTable();
+      setWorkingTable(loadCreateTable());
       loadSubject(subject);
     }
-  };
+  }
 
-  const areDataValid = () => {
-    alert(editDifficulty + ' | ' + editType + ' | ' + ' | ' + editLabel + ' | ' + editCorrect + ' | ' + editPossible);
+  function areDataValid(
+    label: any,
+    difficultyStr: any,
+    correctAnswers: any,
+    possibleAnswers: any,
+    exerciseType: any
+  ): boolean {
     var areValid = false;
     var invalidFields = [];
 
-    if (editDifficulty == undefined || editDifficulty == null || editDifficulty == '')
+    if (difficultyStr === undefined || difficultyStr === null || difficultyStr === '')
       invalidFields.push('Schwierigkeit');
 
-    if (editLabel == undefined || editLabel == null || editLabel == '') invalidFields.push('Aufgabenstellung');
+    if (label === undefined || label === null || label === '') invalidFields.push('Aufgabenstellung');
 
-    if (editCorrect == undefined || editCorrect == null || editCorrect == '') invalidFields.push('Richtige Antworten');
+    if (correctAnswers === undefined || correctAnswers === null || correctAnswers === '')
+      invalidFields.push('Richtige Antworten');
 
-    if ((editPossible == undefined || editPossible == null || editPossible == '') && editType == 'IChoice')
+    if (
+      (possibleAnswers === undefined || possibleAnswers === null || possibleAnswers === '') &&
+      exerciseType === 'IChoice'
+    )
       invalidFields.push('Antwortmöglichkeiten');
 
     if (invalidFields.length > 0) {
@@ -378,29 +351,62 @@ export function Configuration() {
     }
 
     return areValid;
-  };
+  }
 
-  const clearInputs = () => {
-    var inputList = document.getElementById('workingArea')?.getElementsByTagName('input');
-    if (inputList !== undefined) {
-      for (const inputField of inputList) {
-        inputField.value = '';
-        inputField.defaultValue = '';
-      }
+  function clearExercise() {
+    return {
+      id: '',
+      label: '',
+      difficulty: '',
+      correctAnswers: '',
+      possibleAnswers: '',
+      exerciseType: '',
+    };
+  }
+
+  function formatInput(input: string, doSplit: boolean): string | string[] {
+    var output;
+    input = input.replace(/\s+/g, ' ');
+
+    if (doSplit) {
+      output = [];
+      var inputArray = input.split(';');
+      inputArray.forEach((inputPart) => {
+        output.push(inputPart.trim());
+      });
+    } else {
+      output = input.trim();
     }
-    setEditDifficulty('');
-    //setEditType('IChoice');
-    setEditLabel('');
-    setEditCorrect('');
-    setEditPossible('');
-  };
 
-  const getExerciseInList = (exerciseID: string) => {
+    return output;
+  }
+
+  function mergeArrayAInArrayB(correctAnswersArray: any[], allChoicesArray: any[]): any[] {
+    correctAnswersArray.forEach((correctAnswer) => {
+      if (arrayContains(allChoicesArray, correctAnswer) === false) {
+        allChoicesArray.push(correctAnswer);
+      }
+    });
+
+    return allChoicesArray;
+  }
+
+  function cleanDoubleEntriesInArray(array: any[]): any[] {
+    var cleanArray: any[] = [];
+
+    array.forEach((element) => {
+      if (arrayContains(cleanArray, element) == false) cleanArray.push(element);
+    });
+
+    return cleanArray;
+  }
+
+  function getExerciseInList(exerciseID: string): IExercise {
     var index = getIndexByExerciseID(exerciseID);
     return allExercises[index];
-  };
+  }
 
-  const getIndexByExerciseID = (IdStr: string) => {
+  function getIndexByExerciseID(IdStr: string) {
     var index = 0;
 
     for (var exerciseIndex = 0; exerciseIndex < allExercises.length; exerciseIndex++) {
@@ -411,27 +417,27 @@ export function Configuration() {
     }
 
     return index;
-  };
+  }
 
-  return (
-    <div className="Configuration">
-      <div id="menu">
-        <ul>
-          <li>
-            <button className="navBtn" onClick={() => loadSubject('AE')}>
-              Anwendungsentwicklung
-            </button>
-          </li>
-        </ul>
-      </div>
-      <div id="workingArea">
-        {workingTable}
-        <br />
-        <br />
-      </div>
-      <div>{renderShowingTable()}</div>
-    </div>
-  );
+  function setLabel(labelInput: string) {
+    workingExercise.label = labelInput;
+  }
+
+  function setDifficulty(difficultyInput: string) {
+    workingExercise.difficulty = difficultyInput;
+  }
+
+  function setCorrect(correctInput: string) {
+    workingExercise.correctAnswers = correctInput;
+  }
+
+  function setPossible(possibleInput: string) {
+    workingExercise.possibleAnswers = possibleInput;
+  }
+
+  function setType(typeInput: string) {
+    workingExercise.exerciseType = typeInput;
+  }
 }
 
 export function fetchGetSubject(subjectId: string): Promise<ISubject> {
@@ -488,11 +494,11 @@ export function fetchCreateExercise(exerciseId: string, exerciseType: any, newEx
     .then((json) => {});
 }
 
-function arrayContains(array: string[], searchElement: string): boolean {
+function arrayContains(array: any[], searchElement: any): boolean {
   var contains = false;
 
   array.forEach((element) => {
-    if (element.trim() == searchElement.trim()) contains = true;
+    if (element == searchElement) contains = true;
   });
 
   return contains;

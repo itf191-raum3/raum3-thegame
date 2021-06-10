@@ -3,7 +3,7 @@ import {GameSession} from "../../../backend/src/entities/GameSession";
 import {Exercise} from "../../../backend/src/entities/Exercise";
 
 export interface IGameSessionService {
-    createGameSession(subject: Subject): Promise<GameSession>;
+    createGameSession(subject: Subject, username: string): Promise<GameSession>;
 
     getRandomExercise(gameSession: GameSession): Promise<Exercise | undefined>;
 

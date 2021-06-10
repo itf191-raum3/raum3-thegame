@@ -2,9 +2,8 @@ import {ApiRoute} from "../../../types/common"
 import {NextFunction, Request, Response} from "express";
 import {SubjectService} from "@/service/SubjectService";
 import {GameSessionService} from "@/service/GameSessionService";
-import {each, every, isEmpty} from "lodash";
+import {each, every, isEmpty, isUndefined, uniq} from "lodash";
 import {ExerciseService} from "@/service/ExerciseService";
-import {Exercise} from "@/entities/Exercise";
 
 const subjectService = new SubjectService();
 const gameSessionService = new GameSessionService();
@@ -13,7 +12,7 @@ const exerciseService = new ExerciseService();
 export const createGameSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const subject = await subjectService.getSubjectByLabel(<string>req.params.subjectLabel);
-        const gameSession = await gameSessionService.createGameSession(subject);
+        const gameSession = await gameSessionService.createGameSession(subject, req.body.username);
         res.send(gameSession.id)
     } catch (err) {
         next(err);
@@ -27,18 +26,49 @@ export const getNextExercise = async (req: Request, res: Response, next: NextFun
         const gameSession = await gameSessionService.getGameSessionById(gameSessionId);
         const exercise = await gameSessionService.getRandomExercise(gameSession);
 
+        if(!isUndefined(exercise)) {
+            each(exercise.correctAnswers, (value, index) => {
+                exercise.correctAnswers[index] = "";
+            });
+        }
+
         return res.send(exercise)
     } catch (err) {
         return next(err);
     }
 }
 
-export const getGameSessionScore = async (req: Request, res: Response, next: NextFunction) => {
+export const getGameSessionStats = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const gameSessionId = req.params.gameSessionId;
         const gameSession = await gameSessionService.getGameSessionById(gameSessionId);
 
-        return res.status(200).send(gameSession.score.toString())
+        return res.status(200).send({
+            score: gameSession.score,
+            maxDifficulty: gameSession.maxDifficulty,
+            answeredAmount: gameSession.answeredAmount
+        })
+    } catch (err) {
+        return next(err);
+    }
+}
+
+export const getGameSessionsStats = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const gameSessionId = req.params.gameSessionId;
+        const gameSessions = await gameSessionService.listGameSessions();
+        // @ts-ignore
+        const stats = [];
+        each(gameSessions, e => {
+            stats.push({
+                username: e.username,
+                score: e.score,
+                maxDifficulty: e.maxDifficulty,
+                answeredAmount: e.answeredAmount
+            })
+        })
+        // @ts-ignore
+        return res.status(200).send(stats)
     } catch (err) {
         return next(err);
     }
@@ -58,11 +88,13 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
 
 
         if (!isEmpty(isCorrect) && every(isCorrect)) {
-            gameSession.answered.push(exercise);
+            gameSession.answered.push(exercise.id);
+            gameSession.answered = uniq(gameSession.answered);
             gameSession.score += exercise.difficulty * 360;
+            gameSession.answeredAmount++;
 
-            if (gameSession.answered.length >= 5) { //TODO CHANGE BACK TO 10!
-                gameSession.answered = Array<Exercise>();
+            if (gameSession.answered.length >= 10) {
+                gameSession.answered = [];
                 gameSession.maxDifficulty++;
             }
 
@@ -80,22 +112,27 @@ export const checkExerciseAnswers = async (req: Request, res: Response, next: Ne
 
 export const gameSessionApi: Array<ApiRoute> = [
     {
-        path: "/session/:subjectLabel/create",
+        path: "/sessions/:subjectLabel/create",
         method: "POST",
         handler: createGameSession
     },
     {
-        path: "/session/:gameSessionId/next",
+        path: "/sessions/:gameSessionId/next",
         method: "GET",
         handler: getNextExercise
     },
     {
-        path: "/session/:gameSessionId/score",
+        path: "/sessions/:gameSessionId/stats",
         method: "GET",
-        handler: getGameSessionScore
+        handler: getGameSessionStats
     },
     {
-        path: "/session/:gameSessionId/checkAnswers/:exerciseId",
+        path: "/sessions/stats",
+        method: "GET",
+        handler: getGameSessionsStats
+    },
+    {
+        path: "/sessions/:gameSessionId/checkAnswers/:exerciseId",
         method: "POST",
         handler: checkExerciseAnswers
     }
