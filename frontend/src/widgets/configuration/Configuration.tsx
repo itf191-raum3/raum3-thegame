@@ -7,12 +7,12 @@ import addIcon from './add_icon.png';
 import { IExercise } from '../../../../common/src/entities/IExercise';
 import { useState } from 'react';
 import { ISubject } from '../../../../common/src/entities/ISubject';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, TableContainer, Paper, Table } from '@material-ui/core';
 
 export function Configuration() {
   var workingExercise = clearExercise();
 
-  var subject = 'AE';
+  const [subject] = useState<string>('AE');
   const [allExercises, setAllExercises] = useState<IExercise[]>(Array<IExercise>());
   const [workingTable, setWorkingTable] = useState<JSX.Element>();
 
@@ -21,7 +21,12 @@ export function Configuration() {
       <div id="menu">
         <ul>
           <li>
-            <button className="navBtn" onClick={() => loadSubject('AE')}>
+            <button
+              className="navBtn"
+              onClick={() => {
+                loadSubject();
+              }}
+            >
               Anwendungsentwicklung
             </button>
           </li>
@@ -43,17 +48,17 @@ export function Configuration() {
     return (
       <table id="createTabel">
         <thead>
-          <th>Schwierigkeit</th>
-          <th>Aufgabentype</th>
-          <th>Aufgabe</th>
-          <th>Richtige Antworten</th>
-          <th>Antwortmöglichkeiten</th>
-          <th></th>
-          <th></th>
+          <th className="working">Schwierigkeit</th>
+          <th className="working">Aufgabentype</th>
+          <th className="working">Aufgabe</th>
+          <th className="working">Richtige Antworten</th>
+          <th className="working">Antwortmöglichkeiten</th>
+          <th className="working"></th>
+          <th className="working"></th>
         </thead>
         <tbody>
-          <tr className="information">
-            <td>
+          <tr>
+            <td className="working">
               <input
                 type="number"
                 min="0"
@@ -62,13 +67,13 @@ export function Configuration() {
                 onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
-            <td>
+            <td className="working">
               <select onChange={(e) => setType(e.target.value)}>
                 <option value="IChoice">Auswahlaufgabe</option>
                 <option value="ICloze">Lückentext</option>
               </select>
             </td>
-            <td>
+            <td className="working">
               <Tooltip title="Eingabefelder für den Lückentext werden mit _ gekennzeichnet">
                 <input
                   type="text"
@@ -78,7 +83,7 @@ export function Configuration() {
                 />
               </Tooltip>
             </td>
-            <td>
+            <td className="working">
               <Tooltip title="Mehrere Antworten werden mit ; getrennt">
                 <input
                   type="text"
@@ -88,7 +93,7 @@ export function Configuration() {
                 />
               </Tooltip>
             </td>
-            <td>
+            <td className="working">
               <Tooltip title="Mehrere Antworten werden mit ; getrennt">
                 <input
                   type="text"
@@ -98,10 +103,10 @@ export function Configuration() {
                 />
               </Tooltip>
             </td>
-            <td>
+            <td className="working">
               <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()} />
             </td>
-            <td>
+            <td className="working">
               <img src={addIcon} alt="Bearbeiten" className="bntLogo" onClick={() => addDataSet()} />
             </td>
           </tr>
@@ -133,17 +138,17 @@ export function Configuration() {
     var editTabel = (
       <table id="editTabel">
         <thead>
-          <th>Schwierigkeit</th>
-          <th>Aufgabentype</th>
-          <th>Aufgabe</th>
-          <th>Richtige Antworten</th>
-          <th>Antwortmöglichkeiten</th>
-          <th></th>
-          <th></th>
+          <th className="working">Schwierigkeit</th>
+          <th className="working">Aufgabentype</th>
+          <th className="working">Aufgabe</th>
+          <th className="working">Richtige Antworten</th>
+          <th className="working">Antwortmöglichkeiten</th>
+          <th className="working"></th>
+          <th className="working"></th>
         </thead>
         <tbody>
-          <tr className="information">
-            <td>
+          <tr>
+            <td className="working">
               <input
                 type="number"
                 min="0"
@@ -153,8 +158,8 @@ export function Configuration() {
                 onChange={(e) => setDifficulty(e.target.value)}
               />
             </td>
-            <td id="exersiceType">{exerciseType}</td>
-            <td>
+            <td className="working">{exerciseType}</td>
+            <td className="working">
               <input
                 type="text"
                 id="label"
@@ -163,7 +168,7 @@ export function Configuration() {
                 onChange={(e) => setLabel(e.target.value)}
               />
             </td>
-            <td>
+            <td className="working">
               <input
                 type="text"
                 id="correctAnswers"
@@ -172,7 +177,7 @@ export function Configuration() {
                 onChange={(e) => setCorrect(e.target.value)}
               />
             </td>
-            <td>
+            <td className="working">
               <input
                 type="text"
                 id="allChoices"
@@ -181,10 +186,10 @@ export function Configuration() {
                 onChange={(e) => setPossible(e.target.value)}
               />
             </td>
-            <td>
+            <td className="working">
               <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => cancelEditing()} />
             </td>
-            <td>
+            <td className="working">
               <img src={acceptIcon} alt="Bearbeiten" className="bntLogo" onClick={() => changeData()} />
             </td>
           </tr>
@@ -196,20 +201,26 @@ export function Configuration() {
   }
 
   function renderShowingTable() {
-    return (
-      <table id="showingTable">
-        <thead>
-          <th>Schwierigkeit</th>
-          <th>Aufgabentype</th>
-          <th>Aufgabe</th>
-          <th>Richtige Antworten</th>
-          <th>Antwortmöglichkeiten</th>
-          <th></th>
-          <th></th>
-        </thead>
-        <tbody>{generateBody()}</tbody>
-      </table>
+    var showingTable = (
+      <TableContainer component={Paper} className="tableCell" style={{ maxHeight: 700 }}>
+        <Table stickyHeader>
+          <thead>
+            <tr>
+              <th className="showing">Schwierigkeit</th>
+              <th className="showing">Aufgabentype</th>
+              <th className="showing">Aufgabe</th>
+              <th className="showing">Richtige Antworten</th>
+              <th className="showing">Antwortmöglichkeiten</th>
+              <th className="showing"></th>
+              <th className="showing"></th>
+            </tr>
+          </thead>
+          <tbody>{generateBody()}</tbody>
+        </Table>
+      </TableContainer>
     );
+
+    return showingTable;
   }
 
   function generateBody() {
@@ -222,16 +233,16 @@ export function Configuration() {
       else if ('isMultipleChoice' in exercise) exerciseType = 'Auswahlaufgabe';
 
       dataRows.push(
-        <tr id={id}>
-          <td>{difficulty}</td>
-          <td>{exerciseType}</td>
-          <td>{label}</td>
-          <td>{correctAnswers.join(' | ')}</td>
-          <td>{possibleAnswers.join(' | ')}</td>
-          <td>
+        <tr key={id}>
+          <td className="showing">{difficulty}</td>
+          <td className="showing">{exerciseType}</td>
+          <td className="showing">{label}</td>
+          <td className="showing">{correctAnswers.join(' | ')}</td>
+          <td className="showing">{possibleAnswers.join(' | ')}</td>
+          <td className="img showing">
             <img src={deleteIcon} alt="Löschen" className="bntLogo" onClick={() => deleteDataSet(id)} />
           </td>
-          <td>
+          <td className="img showing">
             <img src={editIcon} alt="Bearbeiten" className="bntLogo" onClick={() => editDataSet(id)} />
           </td>
         </tr>
@@ -241,9 +252,7 @@ export function Configuration() {
     return dataRows;
   }
 
-  function loadSubject(subjectID: string) {
-    subject = subjectID;
-
+  function loadSubject() {
     fetchGetSubject(subject)
       .then((subjectObj) => {
         setAllExercises(subjectObj.exercises);
@@ -277,7 +286,7 @@ export function Configuration() {
 
       setWorkingTable(loadCreateTable());
 
-      loadSubject(subject);
+      loadSubject();
     }
   }
 
@@ -288,7 +297,7 @@ export function Configuration() {
   function deleteDataSet(id: string) {
     fetchDeleteExercise(id);
 
-    loadSubject(subject);
+    loadSubject();
   }
 
   function cancelEditing() {
@@ -316,7 +325,7 @@ export function Configuration() {
       fetchUpdateExercise(id, exerciseType, newExercise);
 
       setWorkingTable(loadCreateTable());
-      loadSubject(subject);
+      loadSubject();
     }
   }
 

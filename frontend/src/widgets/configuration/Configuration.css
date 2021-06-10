@@ -25,10 +25,11 @@ input {
   width: 95%;
 }
 
-table,
-td,
-th {
+.showing,
+.working {
   border: 1px solid #fff;
+  background-color: #282c34;
+  color: #0c0;
 }
 
 table {
