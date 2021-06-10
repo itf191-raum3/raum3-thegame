@@ -395,6 +395,7 @@ export function Configuration() {
     var cleanArray: any[] = [];
 
     array.forEach((element) => {
+      // eslint-disable-next-line eqeqeq
       if (arrayContains(cleanArray, element) == false) cleanArray.push(element);
     });
 
@@ -498,6 +499,7 @@ function arrayContains(array: any[], searchElement: any): boolean {
   var contains = false;
 
   array.forEach((element) => {
+    // eslint-disable-next-line eqeqeq
     if (element == searchElement) contains = true;
   });
 
